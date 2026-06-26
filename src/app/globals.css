@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  /* Font (dari next/font di layout) */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Warna brand platform MayWeb (statis) */
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+
+  /* Warna dasar */
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-muted-foreground: #6b7280;
+
+  /* Warna semantik status — satu sumber kebenaran (dipakai badge-*) */
+  --color-success: #15803d;
+  --color-success-soft: #dcfce7;
+  --color-warning: #a16207;
+  --color-warning-soft: #fef9c3;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fee2e2;
+  --color-info: #1d4ed8;
+  --color-info-soft: #dbeafe;
+  --color-accent: #7e22ce;
+  --color-accent-soft: #f3e8ff;
+  --color-muted: #4b5563;
+  --color-muted-soft: #f3f4f6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Custom class badge — dipakai <StatusBadge> & di mana saja. Jangan hardcode
+   warna status (bg-green-100) berulang; ubah palet cukup dari @theme di atas. */
+@layer components {
+  .badge-success {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+  }
+  .badge-warning {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+  }
+  .badge-danger {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+  .badge-info {
+    background: var(--color-info-soft);
+    color: var(--color-info);
+  }
+  .badge-accent {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+  .badge-muted {
+    background: var(--color-muted-soft);
+    color: var(--color-muted);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
