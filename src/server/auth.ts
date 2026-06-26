@@ -1,0 +1,40 @@
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { authConfig } from "./auth.config";
+import { prisma } from "./db";
+import { loginSchema } from "@/lib/validations/auth.schema";
+
+/**
+ * Instance Auth.js LENGKAP (Node runtime) — Credentials provider pakai Prisma +
+ * bcrypt. Dipakai oleh route handler /api/auth dan server actions.
+ */
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
+  providers: [
+    Credentials({
+      credentials: { email: {}, password: {} },
+      async authorize(credentials) {
+        const parsed = loginSchema.safeParse(credentials);
+        if (!parsed.success) return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email: parsed.data.email },
+          include: { tenant: { select: { id: true } } },
+        });
+        if (!user) return null;
+
+        const valid = await bcrypt.compare(parsed.data.password, user.password);
+        if (!valid) return null;
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          tenantId: user.tenant?.id ?? null,
+        };
+      },
+    }),
+  ],
+});
