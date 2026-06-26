@@ -1,4 +1,5 @@
 import { router, protectedProcedure } from "@/server/trpc";
+import { dashboardRouter } from "./tenant/dashboard";
 
 /**
  * Root router — gabungan semua feature router.
@@ -8,6 +9,8 @@ import { router, protectedProcedure } from "@/server/trpc";
 export const appRouter = router({
   /** Echo sesi user saat ini — untuk smoke test client/server tRPC. */
   me: protectedProcedure.query(({ ctx }) => ctx.user),
+
+  dashboard: dashboardRouter,
 });
 
 export type AppRouter = typeof appRouter;
