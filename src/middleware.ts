@@ -49,7 +49,10 @@ export default auth((req) => {
   if (path.startsWith("/super-admin") && role !== "SUPERADMIN") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
-  if (path.startsWith("/dashboard") && role !== "MERCHANT") {
+  if (
+    (path.startsWith("/dashboard") || path.startsWith("/onboarding")) &&
+    role !== "MERCHANT"
+  ) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 

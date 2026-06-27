@@ -120,6 +120,7 @@ model Tenant {
   customDomain String?      @unique
   status       TenantStatus @default(TRIAL)
   trialEndsAt  DateTime?
+  onboardedAt  DateTime? // null = merchant belum menyelesaikan wizard setup
 
   // Kontak
   phone    String?

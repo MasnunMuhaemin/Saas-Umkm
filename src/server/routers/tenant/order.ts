@@ -22,6 +22,10 @@ export const orderRouter = router({
     orderService.getInvoices(ctx.tenantId),
   ),
 
+  exportRows: invoiceProcedure.query(({ ctx }) =>
+    orderService.exportRows(ctx.tenantId),
+  ),
+
   byId: invoiceProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) =>

@@ -140,6 +140,20 @@ export default function LandingPage() {
               MayWeb
             </span>
           </div>
+          <div className="flex items-center gap-5 text-sm">
+            <Link
+              href="/syarat-ketentuan"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              Syarat &amp; Ketentuan
+            </Link>
+            <Link
+              href="/kebijakan-privasi"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              Kebijakan Privasi
+            </Link>
+          </div>
           <p className="text-gray-400 text-sm font-medium">
             &copy; {new Date().getFullYear()} MayWeb. All rights reserved.
           </p>

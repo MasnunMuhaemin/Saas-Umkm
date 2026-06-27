@@ -3,6 +3,7 @@ import { FileText } from "lucide-react";
 import { getServerTrpc } from "@/lib/trpc/server";
 import { PlanUpgradeNotice } from "@/components/shared/upgrade-notice";
 import { formatRupiah, formatDate } from "@/lib/helpers/format";
+import { ExportOrdersButton } from "./_components/export-orders-button";
 
 const PAYMENT_LABEL: Record<string, string> = {
   cash: "Tunai",
@@ -21,9 +22,12 @@ export default async function InvoicesPage() {
 
   return (
     <div className="p-6">
-      <div className="mb-5">
-        <h2 className="font-bold text-gray-900">Riwayat Invoice</h2>
-        <p className="text-sm text-gray-500">{invoices.length} transaksi</p>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div>
+          <h2 className="font-bold text-gray-900">Riwayat Invoice</h2>
+          <p className="text-sm text-gray-500">{invoices.length} transaksi</p>
+        </div>
+        {invoices.length > 0 && <ExportOrdersButton />}
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">

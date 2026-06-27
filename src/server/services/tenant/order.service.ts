@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db";
+import { formatDate } from "@/lib/helpers/format";
 import type { PosOrderInput } from "@/lib/validations/order.schema";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -28,6 +29,32 @@ function genOrderNumber() {
 }
 
 export const orderService = {
+  /** Baris untuk export CSV riwayat order (sudah di-coerce, aman ke client). */
+  async exportRows(tenantId: string) {
+    const rows = await prisma.order.findMany({
+      where: { tenantId },
+      orderBy: { createdAt: "desc" },
+      select: {
+        orderNumber: true,
+        total: true,
+        paymentMethod: true,
+        paymentStatus: true,
+        status: true,
+        customer: { select: { name: true } },
+        createdAt: true,
+      },
+    });
+    return rows.map((o) => ({
+      orderNumber: o.orderNumber,
+      date: formatDate(o.createdAt),
+      customer: o.customer?.name ?? "Umum",
+      total: o.total,
+      paymentMethod: o.paymentMethod ?? "",
+      paymentStatus: o.paymentStatus,
+      status: o.status,
+    }));
+  },
+
   /** Data untuk terminal POS: produk aktif + daftar pelanggan. */
   async getPosData(tenantId: string) {
     const [products, customers] = await Promise.all([

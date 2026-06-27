@@ -13,6 +13,11 @@ export default async function DashboardLayout({
   if (session?.user?.role !== "MERCHANT") redirect("/login");
 
   const api = await getServerTrpc();
+
+  // Merchant baru → arahkan ke wizard onboarding dulu.
+  const ob = await api.onboarding.status();
+  if (!ob.onboarded) redirect("/onboarding");
+
   const shell = await api.dashboard.shell();
 
   return (

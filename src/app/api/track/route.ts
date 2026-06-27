@@ -2,10 +2,17 @@ import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { captureError } from "@/lib/logger";
+import { checkRateLimit } from "@/lib/auth/rate-limit";
 
 /** Beacon analytics first-party: catat 1 pageview toko (anonim). */
 export async function POST(req: Request) {
   try {
+    // Anti-spam: maksimal 60 event/menit per IP.
+    const ipKey = req.headers.get("x-forwarded-for") ?? "0";
+    if (!checkRateLimit(`track:${ipKey}`, 60, 60_000)) {
+      return NextResponse.json({ ok: false }, { status: 429 });
+    }
+
     const { domain, path } = await req.json();
     if (typeof domain !== "string" || typeof path !== "string") {
       return NextResponse.json({ ok: false }, { status: 400 });
