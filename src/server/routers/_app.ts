@@ -2,6 +2,7 @@ import { router, protectedProcedure } from "@/server/trpc";
 import { dashboardRouter } from "./tenant/dashboard";
 import { productRouter } from "./tenant/product";
 import { categoryRouter } from "./tenant/category";
+import { settingsRouter } from "./tenant/settings";
 
 /**
  * Root router — gabungan semua feature router.
@@ -15,6 +16,7 @@ export const appRouter = router({
   dashboard: dashboardRouter,
   product: productRouter,
   category: categoryRouter,
+  settings: settingsRouter,
 });
 
 export type AppRouter = typeof appRouter;
