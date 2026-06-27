@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BadgeCheck, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
+import { ShoppingBag, Sparkles } from "lucide-react";
 import {
   getStorefront,
   type StorefrontData,
 } from "@/server/services/public/storefront.service";
 import { buildTenantMetadata, tenantBaseUrl } from "@/lib/seo/metadata";
 import { JsonLd } from "@/lib/seo/json-ld";
-import { buildWaLink } from "@/lib/helpers/whatsapp";
 import { formatRupiah } from "@/lib/helpers/format";
+import { WaButton, waPhone } from "./_components/storefront-chrome";
 
 type Tenant = StorefrontData["tenant"];
 
@@ -28,86 +28,6 @@ export async function generateMetadata({
     customDomain: tenant.customDomain,
     logo: tenant.logo,
   });
-}
-
-function waPhone(t: Tenant) {
-  return t.whatsapp || t.phone || "";
-}
-
-function WaButton({
-  tenant,
-  message,
-  children,
-  className = "",
-}: {
-  tenant: Tenant;
-  message?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const phone = waPhone(tenant);
-  if (!phone) return null;
-  return (
-    <a
-      href={buildWaLink(phone, message ?? `Halo ${tenant.name}, saya mau bertanya.`)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`inline-flex items-center gap-2 rounded-xl font-semibold transition-colors ${className}`}
-    >
-      <MessageCircle size={16} /> {children}
-    </a>
-  );
-}
-
-function Header({ tenant }: { tenant: Tenant }) {
-  return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 gap-4">
-        <a href="#" className="flex items-center gap-2.5">
-          {tenant.logo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={tenant.logo}
-              alt={tenant.name}
-              className="h-9 w-auto max-w-[120px] rounded-lg object-contain"
-            />
-          ) : (
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-              <ShoppingBag size={17} className="text-white" />
-            </div>
-          )}
-          <div className="text-left">
-            {tenant.showBusinessName && (
-              <p className="font-bold text-gray-900 text-sm leading-tight">
-                {tenant.name}
-              </p>
-            )}
-            {tenant.showTagline && tenant.tagline && (
-              <p className="text-gray-500 text-xs leading-tight">
-                {tenant.tagline}
-              </p>
-            )}
-          </div>
-        </a>
-        <nav className="hidden md:flex items-center gap-6">
-          <a href="#produk" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-            Produk
-          </a>
-          <a href="#kategori" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-            Kategori
-          </a>
-        </nav>
-        {tenant.showWhatsappButton && (
-          <WaButton
-            tenant={tenant}
-            className="bg-primary text-white text-sm py-2 px-3"
-          >
-            WhatsApp
-          </WaButton>
-        )}
-      </div>
-    </header>
-  );
 }
 
 function Hero({ tenant }: { tenant: Tenant }) {
@@ -197,46 +117,50 @@ function ProductCard({
       : 0;
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden">
-      <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-        {product.mainImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.mainImage}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <ShoppingBag size={52} className="text-gray-300" />
+      <a href={`/produk/${product.slug}`} className="block">
+        <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+          {product.mainImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={product.mainImage}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <ShoppingBag size={52} className="text-gray-300" />
+            </div>
+          )}
+          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+            {product.isBest && (
+              <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
+                Terlaris
+              </span>
+            )}
+            {product.isNew && (
+              <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
+                Baru
+              </span>
+            )}
+            {tenant.showDiscount && discount > 0 && (
+              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
+                -{discount}%
+              </span>
+            )}
           </div>
-        )}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          {product.isBest && (
-            <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
-              Terlaris
-            </span>
-          )}
-          {product.isNew && (
-            <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
-              Baru
-            </span>
-          )}
-          {tenant.showDiscount && discount > 0 && (
-            <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-lg font-semibold">
-              -{discount}%
-            </span>
-          )}
         </div>
-      </div>
+      </a>
       <div className="p-4">
         {tenant.showCategory && product.category && (
           <p className="text-xs text-primary font-semibold mb-1">
             {product.category.name}
           </p>
         )}
-        <h3 className="text-sm font-bold text-gray-900 mb-2 line-clamp-1">
-          {product.name}
-        </h3>
+        <a href={`/produk/${product.slug}`}>
+          <h3 className="text-sm font-bold text-gray-900 mb-2 line-clamp-1 hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+        </a>
         {tenant.showPrice && (
           <div className="flex items-end justify-between mb-3">
             <div>
@@ -298,31 +222,7 @@ function Products({ data }: { data: StorefrontData }) {
   );
 }
 
-function Footer({ tenant }: { tenant: Tenant }) {
-  return (
-    <footer className="bg-gray-900 text-gray-300 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-            <ShoppingBag size={17} className="text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-white">{tenant.name}</p>
-            {tenant.tagline && (
-              <p className="text-xs text-gray-400">{tenant.tagline}</p>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <BadgeCheck size={15} className="text-primary" />
-          Didukung oleh MayWeb
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-export default async function StorefrontPage({
+export default async function StorefrontHome({
   params,
 }: {
   params: Promise<{ domain: string }>;
@@ -335,7 +235,7 @@ export default async function StorefrontPage({
   const baseUrl = tenantBaseUrl(tenant.slug, tenant.customDomain);
 
   return (
-    <div style={{ ["--color-primary" as string]: tenant.primaryColor }}>
+    <>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -347,13 +247,9 @@ export default async function StorefrontPage({
           ...(waPhone(tenant) ? { telephone: waPhone(tenant) } : {}),
         }}
       />
-      <Header tenant={tenant} />
-      <main>
-        <Hero tenant={tenant} />
-        <Categories data={data} />
-        <Products data={data} />
-      </main>
-      <Footer tenant={tenant} />
-    </div>
+      <Hero tenant={tenant} />
+      <Categories data={data} />
+      <Products data={data} />
+    </>
   );
 }

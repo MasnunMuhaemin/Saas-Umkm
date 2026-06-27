@@ -14,10 +14,14 @@ export default auth((req) => {
   const url = req.nextUrl;
   const path = url.pathname;
 
-  // 1. Subdomain tenant → rewrite ke route publik (_sites/[domain])
-  const subdomain = hostname.endsWith(`.${ROOT_DOMAIN}`)
-    ? hostname.replace(`.${ROOT_DOMAIN}`, "")
-    : null;
+  // 1. Subdomain tenant → rewrite ke route publik /s/[domain]
+  //    Dukung domain produksi (slug.tokopintar.id) & dev (slug.localhost).
+  let subdomain: string | null = null;
+  if (hostname.endsWith(`.${ROOT_DOMAIN}`)) {
+    subdomain = hostname.replace(`.${ROOT_DOMAIN}`, "");
+  } else if (hostname.endsWith(".localhost")) {
+    subdomain = hostname.replace(".localhost", "");
+  }
 
   if (subdomain && !RESERVED_SUBDOMAINS.includes(subdomain)) {
     // Rewrite ke route publik /s/[domain]. (Hindari prefix "_" — folder
