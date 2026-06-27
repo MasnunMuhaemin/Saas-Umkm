@@ -1,6 +1,36 @@
-# CLAUDE.md — Panduan Konteks AI untuk TokoPintar
-> File ini digunakan sebagai konteks untuk AI coding assistant (Claude, Gemini, dll).
-> Baca file ini sebelum mengerjakan task apapun di project ini.
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+> Panduan konteks AI untuk **TokoPintar** (nama codebase). **Brand publik = "MayWeb"** (bukan TokoPintar). Baca file ini sebelum mengerjakan task. Konvensi lengkap ada di bawah; bagian berikut adalah **realita as-built** yang sering menjebak.
+
+---
+
+## ⚡ Perintah & Realita Implementasi (As-Built — baca dulu)
+
+### Perintah
+```bash
+npm run dev                  # Next dev (localhost:3000)
+npm run build                # build + TypeScript check (gate utama; jalankan setiap selesai edit)
+npm run lint                 # eslint
+npm run db:seed              # seed via tsx (plans, super admin, merchant demo "Toko Demo")
+npx prisma migrate dev --name x   # buat+apply migration
+npx prisma generate          # WAJIB setelah migrate (Prisma 7 tidak auto-generate)
+```
+**Belum ada test runner** (Vitest belum dipasang). Verifikasi = `npm run build` + jalankan dev server + curl endpoint tRPC/HTTP + cek DB pakai driver `mariadb` langsung.
+
+**Kredensial dev (dari seed):** Super Admin `admin@tokopintar.id`/`superadmin123` (→ `/super-admin`) · Merchant `owner@tokodemo.id`/`merchant123` (→ `/dashboard`) · Toko publik dev: `http://toko-demo.localhost:3000`.
+
+### Gotcha penting (tidak terlihat dari membaca 1 file)
+1. **Prisma 7 — generator baru**: client di-generate ke `src/generated/prisma` (BUKAN `@prisma/client`). Import: `@/generated/prisma/client`. Client **WAJIB** diinstansiasi dengan adapter `PrismaMariaDb` (lihat `src/server/db.ts`) — `DATABASE_URL` di-parse jadi PoolConfig karena driver mariadb menolak skema `mysql://`. Jangan `new PrismaClient()` polos.
+2. **Auth split (edge vs node)**: `server/auth.config.ts` = edge-safe (tanpa Prisma, dipakai `middleware.ts` untuk baca sesi JWT) · `server/auth.ts` = lengkap (Credentials + bcrypt + Prisma, dipakai route handler). Sesi memuat `id`, `role`, `tenantId`.
+3. **tRPC layering**: context = `{ session, prisma }`. Procedure: `public/protected/merchant/superAdmin` + `planProcedure(feature)` untuk gating paket Plus (`hasPos`/`hasInvoice`/`hasCustomerDb`). Router tipis → service → Prisma. Server caller untuk RSC: `await getServerTrpc()`.
+4. **Routing storefront**: `src/middleware.ts` me-*rewrite* `slug.ROOT_DOMAIN`, `slug.localhost` (dev), dan **custom domain** → `/s/[domain]/...`. `getStorefront(domain)` mencocokkan `slug` ATAU `customDomain`. Di-cache `unstable_cache` (tag `storefront-<domain>`, revalidate 300s); panggil `revalidateStorefront(tenantId)` di service setelah edit yang mengubah toko.
+5. **Pola mock/fallback** (production-ready saat env key diisi): Pakasir `lib/pakasir/client.ts`, email `lib/email/client.ts`, rate-limit `lib/auth/rate-limit.ts`, reset-token `lib/auth/reset-token.ts` (HMAC stateless). Tanpa key → mock/log/in-memory. Upload gambar = tempel URL sampai storage dikonfigurasi.
+6. **Tipe tRPC "excessively deep"**: untuk list/byId pakai Prisma `select` **sempit** (jangan full model); mutasi yang hasilnya tak dipakai klien kembalikan `{ ok: true }`. Model penuh (apalagi Tenant/Plan/Order dgn Json) memicu error instantiasi tipe.
+7. **Serialisasi RSC→client**: JANGAN lewatkan `Decimal`/`Date`/`Json` Prisma ke Client Component. Coerce di service (`Number(rating)`, `formatDate(...)`, `Array.isArray(json) ? json : []`).
+8. **Next 16**: `revalidateTag(tag, profile)` butuh arg ke-2 (mis. `"max"`); `params` adalah `Promise` (await dulu); warning `middleware.ts` deprecated → `proxy` aman diabaikan.
+9. **Saat verifikasi via shell**: `grep -oP` bisa gagal (locale non-UTF-8) → pakai `sed`. SSR memisah teks `{a}{b}` dengan `<!-- -->`, jadi grep gabungan (mis. `slug.domain`, "Paket Basic") sering meleset walau ter-render.
 
 ---
 

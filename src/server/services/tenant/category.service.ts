@@ -2,6 +2,7 @@ import { prisma } from "@/server/db";
 import { createBaseService } from "@/server/services/shared/base.service";
 import { generateUniqueSlug } from "@/lib/helpers/slug";
 import { assertTenantOwns } from "@/lib/helpers/ownership";
+import { revalidateStorefront } from "@/server/services/public/storefront.service";
 import type { StoreCategoryInput } from "@/lib/validations/category.schema";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -41,7 +42,9 @@ export const categoryService = {
 
   async store(tenantId: string, data: StoreCategoryInput) {
     const slug = await generateUniqueSlug("category", tenantId, data.name);
-    return prisma.category.create({ data: { ...data, tenantId, slug } });
+    const c = await prisma.category.create({ data: { ...data, tenantId, slug } });
+    await revalidateStorefront(tenantId);
+    return c;
   },
 
   async update(
@@ -58,8 +61,15 @@ export const categoryService = {
     if (data.name && data.name !== existing.name) {
       patch.slug = await generateUniqueSlug("category", tenantId, data.name, id);
     }
-    return prisma.category.update({ where: { id }, data: patch });
+    const c = await prisma.category.update({ where: { id }, data: patch });
+    await revalidateStorefront(tenantId);
+    return c;
   },
 
-  destroy: (tenantId: string, id: string) => base.delete(tenantId, id),
+  async destroy(tenantId: string, id: string) {
+    const r = await base.delete(tenantId, id);
+    await revalidateStorefront(tenantId);
+    return r;
+  },
 };
+

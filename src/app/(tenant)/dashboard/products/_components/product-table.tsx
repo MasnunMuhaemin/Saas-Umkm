@@ -38,6 +38,7 @@ export function ProductTable({
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [bulkConfirm, setBulkConfirm] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -219,7 +220,7 @@ export function ProductTable({
               Nonaktifkan
             </button>
             <button
-              onClick={() => bulkDelete.mutate({ ids: selected })}
+              onClick={() => setBulkConfirm(true)}
               disabled={busy}
               className="text-xs font-bold text-red-600 hover:underline disabled:opacity-50"
             >
@@ -457,6 +458,53 @@ export function ProductTable({
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   "Ya, Hapus"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Konfirmasi hapus massal */}
+      {bulkConfirm && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          onClick={() => setBulkConfirm(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+              <AlertCircle size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Hapus {selected.length} Produk?
+            </h3>
+            <p className="text-gray-500 text-sm mb-6">
+              {selected.length} produk terpilih akan dihapus permanen. Tindakan
+              ini tidak dapat dibatalkan.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setBulkConfirm(false)}
+                disabled={bulkDelete.isPending}
+                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  bulkDelete.mutate({ ids: selected });
+                  setBulkConfirm(false);
+                }}
+                disabled={bulkDelete.isPending}
+                className="flex-1 px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {bulkDelete.isPending ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  "Ya, Hapus Semua"
                 )}
               </button>
             </div>

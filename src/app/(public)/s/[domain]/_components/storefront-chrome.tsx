@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { BadgeCheck, MessageCircle, ShoppingBag } from "lucide-react";
 import { buildWaLink } from "@/lib/helpers/whatsapp";
 import type { StorefrontData } from "@/server/services/public/storefront.service";
@@ -39,10 +40,11 @@ export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 gap-4">
         <a href="/" className="flex items-center gap-2.5">
           {tenant.logo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={tenant.logo}
               alt={tenant.name}
+              width={120}
+              height={36}
               className="h-9 w-auto max-w-[120px] rounded-lg object-contain"
             />
           ) : (

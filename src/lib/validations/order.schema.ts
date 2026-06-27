@@ -6,6 +6,7 @@ export const posOrderSchema = z.object({
     .array(
       z.object({
         productId: z.string(),
+        variantId: z.string().nullable().optional(),
         quantity: z.number().int().min(1),
       }),
     )

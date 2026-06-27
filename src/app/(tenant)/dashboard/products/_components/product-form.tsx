@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -205,12 +206,13 @@ export function ProductForm({
                 </p>
               </div>
               {mainImage && (
-                <div className="w-40 h-40 rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                <div className="relative w-40 h-40 rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
+                  <Image
                     src={mainImage}
                     alt="Preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="160px"
+                    className="object-cover"
                   />
                 </div>
               )}

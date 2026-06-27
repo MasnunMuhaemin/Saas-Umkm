@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db";
+import { revalidateStorefront } from "@/server/services/public/storefront.service";
 import type { UpdateWebsiteInput } from "@/lib/validations/website.schema";
 
 /** Tipe eksplisit (bukan Json mentah) agar tipe tRPC tetap ringan. */
@@ -45,6 +46,7 @@ export const websiteService = {
   /** Update konten website. Return minimal agar tipe tRPC ringan. */
   async updateWebsite(tenantId: string, data: UpdateWebsiteInput) {
     await prisma.tenant.update({ where: { id: tenantId }, data });
+    await revalidateStorefront(tenantId);
     return { ok: true };
   },
 };

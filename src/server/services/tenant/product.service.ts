@@ -3,6 +3,7 @@ import { createBaseService } from "@/server/services/shared/base.service";
 import { generateUniqueSlug } from "@/lib/helpers/slug";
 import { assertTenantOwns } from "@/lib/helpers/ownership";
 import { assertProductQuota } from "@/lib/helpers/plan-guard";
+import { revalidateStorefront } from "@/server/services/public/storefront.service";
 import type {
   StoreProductInput,
   ListProductInput,
@@ -76,7 +77,9 @@ export const productService = {
   async store(tenantId: string, data: StoreProductInput) {
     await assertProductQuota(tenantId);
     const slug = await generateUniqueSlug("product", tenantId, data.name);
-    return prisma.product.create({ data: { ...data, tenantId, slug } });
+    const p = await prisma.product.create({ data: { ...data, tenantId, slug } });
+    await revalidateStorefront(tenantId);
+    return p;
   },
 
   /** Update produk — ownership via helper, slug regen jika nama berubah. */
@@ -94,22 +97,40 @@ export const productService = {
     if (data.name && data.name !== existing.name) {
       patch.slug = await generateUniqueSlug("product", tenantId, data.name, id);
     }
-    return prisma.product.update({ where: { id }, data: patch });
+    const p = await prisma.product.update({ where: { id }, data: patch });
+    await revalidateStorefront(tenantId);
+    return p;
   },
 
   /** Hapus — reuse base.delete (sudah cek ownership). */
-  destroy: (tenantId: string, id: string) => base.delete(tenantId, id),
+  async destroy(tenantId: string, id: string) {
+    const r = await base.delete(tenantId, id);
+    await revalidateStorefront(tenantId);
+    return r;
+  },
 
   /** Hapus banyak — filter tenantId memastikan hanya milik sendiri. */
-  bulkDelete: (tenantId: string, ids: string[]) =>
-    prisma.product.deleteMany({ where: { tenantId, id: { in: ids } } }),
+  async bulkDelete(tenantId: string, ids: string[]) {
+    const r = await prisma.product.deleteMany({
+      where: { tenantId, id: { in: ids } },
+    });
+    await revalidateStorefront(tenantId);
+    return r;
+  },
 
   /** Ubah status banyak produk sekaligus. */
-  bulkSetStatus: (tenantId: string, ids: string[], status: $Enums.ProductStatus) =>
-    prisma.product.updateMany({
+  async bulkSetStatus(
+    tenantId: string,
+    ids: string[],
+    status: $Enums.ProductStatus,
+  ) {
+    const r = await prisma.product.updateMany({
       where: { tenantId, id: { in: ids } },
       data: { status },
-    }),
+    });
+    await revalidateStorefront(tenantId);
+    return r;
+  },
 
   /** Baris untuk export CSV (semua produk tenant). */
   exportRows: (tenantId: string) =>
@@ -155,6 +176,7 @@ export const productService = {
       });
       created++;
     }
+    await revalidateStorefront(tenantId);
     return { created };
   },
 };

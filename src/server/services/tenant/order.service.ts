@@ -39,6 +39,10 @@ export const orderService = {
           price: true,
           stock: true,
           category: { select: { name: true } },
+          variants: {
+            select: { id: true, name: true, price: true, stock: true },
+            orderBy: { createdAt: "asc" },
+          },
         },
         orderBy: { name: "asc" },
         take: 200,
@@ -60,33 +64,61 @@ export const orderService = {
   async createPos(tenantId: string, input: PosOrderInput) {
     const products = await prisma.product.findMany({
       where: { tenantId, id: { in: input.items.map((i) => i.productId) } },
-      select: { id: true, name: true, price: true, stock: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        stock: true,
+        variants: { select: { id: true, name: true, price: true, stock: true } },
+      },
     });
     const byId = new Map(products.map((p) => [p.id, p]));
 
     let subtotal = 0;
-    const orderItems = input.items.map((i) => {
+    const lines = input.items.map((i) => {
       const p = byId.get(i.productId);
       if (!p)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Produk tidak ditemukan atau bukan milik Anda.",
         });
-      if (p.stock < i.quantity)
+
+      // Pakai harga/stok/nama dari varian bila dipilih.
+      let name = p.name;
+      let price = p.price;
+      let stock = p.stock;
+      let variantId: string | null = null;
+      if (i.variantId) {
+        const v = p.variants.find((x) => x.id === i.variantId);
+        if (!v)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Varian tidak ditemukan.",
+          });
+        name = `${p.name} - ${v.name}`;
+        price = v.price;
+        stock = v.stock;
+        variantId = v.id;
+      }
+
+      if (stock < i.quantity)
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Stok "${p.name}" tidak mencukupi (tersisa ${p.stock}).`,
+          message: `Stok "${name}" tidak mencukupi (tersisa ${stock}).`,
         });
-      const lineSubtotal = p.price * i.quantity;
+
+      const lineSubtotal = price * i.quantity;
       subtotal += lineSubtotal;
       return {
         productId: p.id,
-        productName: p.name,
-        price: p.price,
+        variantId,
+        productName: name,
+        price,
         quantity: i.quantity,
         subtotal: lineSubtotal,
       };
     });
+    const orderItems = lines.map(({ variantId, ...rest }) => rest);
 
     const discount = Math.min(input.discount, subtotal);
     const total = subtotal - discount;
@@ -109,14 +141,25 @@ export const orderService = {
         select: { id: true, orderNumber: true, total: true },
       });
 
-      for (const it of orderItems) {
-        await tx.product.update({
-          where: { id: it.productId },
-          data: {
-            stock: { decrement: it.quantity },
-            soldCount: { increment: it.quantity },
-          },
-        });
+      for (const line of lines) {
+        if (line.variantId) {
+          await tx.productVariant.update({
+            where: { id: line.variantId },
+            data: { stock: { decrement: line.quantity } },
+          });
+          await tx.product.update({
+            where: { id: line.productId },
+            data: { soldCount: { increment: line.quantity } },
+          });
+        } else {
+          await tx.product.update({
+            where: { id: line.productId },
+            data: {
+              stock: { decrement: line.quantity },
+              soldCount: { increment: line.quantity },
+            },
+          });
+        }
       }
 
       if (input.customerId) {

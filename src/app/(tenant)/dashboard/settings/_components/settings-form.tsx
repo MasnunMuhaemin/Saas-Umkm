@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ExternalLink, Loader2 } from "lucide-react";
@@ -274,12 +275,13 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             <h3 className="font-bold text-gray-900">Logo & Favicon</h3>
             <div className="flex items-start gap-4">
               {form.logo && (
-                <div className="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex-none">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                <div className="relative w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex-none">
+                  <Image
                     src={form.logo}
                     alt="Logo"
-                    className="w-full h-full object-contain"
+                    fill
+                    sizes="64px"
+                    className="object-contain"
                   />
                 </div>
               )}

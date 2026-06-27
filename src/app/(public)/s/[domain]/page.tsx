@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BadgePercent, ShoppingBag, Sparkles } from "lucide-react";
 import {
@@ -162,11 +163,12 @@ function ProductCard({
       <a href={`/produk/${product.slug}`} className="block">
         <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
           {product.mainImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={product.mainImage}
               alt={product.name}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">

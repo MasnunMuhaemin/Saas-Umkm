@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ChevronRight, ShoppingBag, Star } from "lucide-react";
 import {
@@ -7,8 +8,7 @@ import {
 } from "@/server/services/public/storefront.service";
 import { buildTenantMetadata, tenantBaseUrl } from "@/lib/seo/metadata";
 import { JsonLd } from "@/lib/seo/json-ld";
-import { formatRupiah } from "@/lib/helpers/format";
-import { BuyBox } from "../../_components/buy-box";
+import { ProductPurchase } from "../../_components/product-purchase";
 
 type Params = Promise<{ domain: string; productSlug: string }>;
 
@@ -96,11 +96,12 @@ export default async function ProductDetailPage({
           <div className="w-full lg:w-[45%] flex-none">
             <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden border border-gray-100">
               {product.mainImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={product.mainImage}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  className="object-cover"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -145,36 +146,20 @@ export default async function ProductDetailPage({
               </div>
             )}
 
-            {tenant.showPrice && (
-              <div className="mb-8 flex items-end gap-3">
-                <p className="text-4xl font-black text-gray-900">
-                  {formatRupiah(product.price)}
-                </p>
-                {tenant.showDiscount && product.originalPrice && (
-                  <p className="text-lg text-gray-400 line-through mb-1">
-                    {formatRupiah(product.originalPrice)}
-                  </p>
-                )}
-              </div>
-            )}
-
             <div className="mb-8">
-              <BuyBox
+              <ProductPurchase
                 productName={product.name}
+                basePrice={product.price}
+                originalPrice={product.originalPrice}
+                baseStock={product.stock}
+                variants={product.variants}
                 phone={phone}
-                showQty={tenant.showPrice}
+                showPrice={tenant.showPrice}
+                showStock={tenant.showStock}
+                showDiscount={tenant.showDiscount}
                 showWhatsapp={tenant.showWhatsappButton}
               />
             </div>
-
-            {tenant.showStock && (
-              <p className="text-sm text-gray-500 mb-8">
-                Stok tersedia:{" "}
-                <span className="font-semibold text-gray-900">
-                  {product.stock}
-                </span>
-              </p>
-            )}
 
             {product.description && (
               <div className="border-t border-gray-100 pt-6">

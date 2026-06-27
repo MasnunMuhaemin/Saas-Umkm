@@ -1,13 +1,39 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/server/db";
+import { tenantBaseUrl } from "@/lib/seo/metadata";
 
 /**
- * Ambil data toko publik berdasarkan slug subdomain.
- * - Hanya tenant yang LIVE (ACTIVE/TRIAL) yang tampil.
- * - HANYA field publik yang di-expose (tanpa email/billing/internal).
- * - `cache` agar generateMetadata & page berbagi 1 query per request.
+ * Ambil data toko publik berdasarkan slug/customDomain.
+ * - Hanya tenant LIVE (ACTIVE/TRIAL). Hanya field publik.
+ * - Lapisan cache: `cache` (dedup per request) + `unstable_cache`
+ *   (Data Cache persisten, revalidate 1 jam, tag per domain untuk
+ *   invalidasi on-demand saat merchant edit → revalidateStorefront()).
  */
-export const getStorefront = cache(async (slug: string) => {
+export const getStorefront = cache((slug: string) =>
+  unstable_cache(() => fetchStorefront(slug), ["storefront", slug], {
+    tags: [`storefront-${slug}`],
+    revalidate: 300, // fallback: tersegarkan ≤5 menit walau on-demand gagal
+  })(),
+);
+
+/** Invalidasi cache storefront tenant (panggil setelah edit yang memengaruhi toko). */
+export async function revalidateStorefront(tenantId: string) {
+  try {
+    const t = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { slug: true, customDomain: true },
+    });
+    if (!t) return;
+    revalidateTag(`storefront-${t.slug}`, "max");
+    if (t.customDomain) revalidateTag(`storefront-${t.customDomain}`, "max");
+  } catch {
+    // on-demand gagal → andalkan revalidate time-based (300s) di atas
+  }
+}
+
+async function fetchStorefront(slug: string) {
   const tenant = await prisma.tenant.findFirst({
     where: {
       OR: [{ slug }, { customDomain: slug }],
@@ -88,7 +114,7 @@ export const getStorefront = cache(async (slug: string) => {
   ]);
 
   return { tenant, categories, products };
-});
+}
 
 export type StorefrontData = NonNullable<
   Awaited<ReturnType<typeof getStorefront>>
@@ -113,6 +139,10 @@ export const getStorefrontProduct = cache(
         rating: true,
         reviewsCount: true,
         category: { select: { name: true } },
+        variants: {
+          select: { id: true, name: true, price: true, stock: true },
+          orderBy: { createdAt: "asc" },
+        },
       },
     });
     if (!p) return null;
@@ -124,3 +154,24 @@ export const getStorefrontProduct = cache(
 export type StorefrontProduct = NonNullable<
   Awaited<ReturnType<typeof getStorefrontProduct>>
 >;
+
+/** URL untuk sitemap.xml: base + semua slug produk aktif. Null jika toko tak ada. */
+export async function getSitemapUrls(domain: string) {
+  const tenant = await prisma.tenant.findFirst({
+    where: {
+      OR: [{ slug: domain }, { customDomain: domain }],
+      status: { in: ["ACTIVE", "TRIAL"] },
+    },
+    select: { id: true, slug: true, customDomain: true },
+  });
+  if (!tenant) return null;
+  const products = await prisma.product.findMany({
+    where: { tenantId: tenant.id, status: "ACTIVE" },
+    select: { slug: true, updatedAt: true },
+    orderBy: { updatedAt: "desc" },
+  });
+  return {
+    base: tenantBaseUrl(tenant.slug, tenant.customDomain),
+    products,
+  };
+}

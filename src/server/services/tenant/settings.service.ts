@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db";
+import { revalidateStorefront } from "@/server/services/public/storefront.service";
 import type { UpdateProfileInput } from "@/lib/validations/settings.schema";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -44,6 +45,7 @@ export const settingsService = {
    *  Return minimal (bukan full Tenant) agar tipe tRPC tetap ringan. */
   async updateProfile(tenantId: string, data: UpdateProfileInput) {
     await prisma.tenant.update({ where: { id: tenantId }, data });
+    await revalidateStorefront(tenantId);
     return { ok: true };
   },
 };

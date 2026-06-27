@@ -18,9 +18,12 @@ import type { AppRouter } from "@/server/routers/_app";
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type PosData = RouterOutput["order"]["posData"];
 type PosProduct = PosData["products"][number];
+type PosVariant = PosProduct["variants"][number];
 
 type CartItem = {
+  key: string; // productId + variantId (unik per varian)
   productId: string;
+  variantId: string | null;
   name: string;
   price: number;
   quantity: number;
@@ -47,6 +50,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
   const [paymentMethod, setPaymentMethod] =
     useState<(typeof PAYMENTS)[number]["id"]>("cash");
   const [customerId, setCustomerId] = useState("");
+  const [pickProduct, setPickProduct] = useState<PosProduct | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -59,37 +63,50 @@ export function PosTerminal({ initial }: { initial: PosData }) {
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const total = Math.max(0, subtotal - discount);
 
-  function addToCart(p: PosProduct) {
-    if (p.stock <= 0) return;
+  function onProductClick(p: PosProduct) {
+    if (p.variants.length > 0) {
+      setPickProduct(p); // pilih varian dulu
+    } else {
+      addLine(p, null);
+    }
+  }
+
+  function addLine(p: PosProduct, variant: PosVariant | null) {
+    const stock = variant ? variant.stock : p.stock;
+    if (stock <= 0) return;
+    const key = `${p.id}|${variant?.id ?? ""}`;
+    const name = variant ? `${p.name} - ${variant.name}` : p.name;
     setCart((prev) => {
-      const existing = prev.find((i) => i.productId === p.id);
+      const existing = prev.find((i) => i.key === key);
       if (existing) {
-        if (existing.quantity >= p.stock) {
-          toast.error(`Stok "${p.name}" hanya ${p.stock}.`);
+        if (existing.quantity >= stock) {
+          toast.error(`Stok "${name}" hanya ${stock}.`);
           return prev;
         }
         return prev.map((i) =>
-          i.productId === p.id ? { ...i, quantity: i.quantity + 1 } : i,
+          i.key === key ? { ...i, quantity: i.quantity + 1 } : i,
         );
       }
       return [
         ...prev,
         {
+          key,
           productId: p.id,
-          name: p.name,
-          price: p.price,
+          variantId: variant?.id ?? null,
+          name,
+          price: variant ? variant.price : p.price,
           quantity: 1,
-          stock: p.stock,
+          stock,
         },
       ];
     });
   }
 
-  function setQty(productId: string, qty: number) {
+  function setQty(key: string, qty: number) {
     setCart((prev) =>
       prev
         .map((i) =>
-          i.productId === productId
+          i.key === key
             ? { ...i, quantity: Math.max(0, Math.min(qty, i.stock)) }
             : i,
         )
@@ -111,7 +128,11 @@ export function PosTerminal({ initial }: { initial: PosData }) {
   const submit = () => {
     if (cart.length === 0) return toast.error("Keranjang masih kosong");
     checkout.mutate({
-      items: cart.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+      items: cart.map((i) => ({
+        productId: i.productId,
+        variantId: i.variantId,
+        quantity: i.quantity,
+      })),
       customerId: customerId || null,
       paymentMethod,
       discount,
@@ -139,8 +160,8 @@ export function PosTerminal({ initial }: { initial: PosData }) {
           {filtered.map((p) => (
             <button
               key={p.id}
-              onClick={() => addToCart(p)}
-              disabled={p.stock <= 0}
+              onClick={() => onProductClick(p)}
+              disabled={p.variants.length === 0 && p.stock <= 0}
               className="text-left bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-md hover:border-brand-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <p className="font-semibold text-gray-900 text-sm line-clamp-2 mb-1">
@@ -150,10 +171,12 @@ export function PosTerminal({ initial }: { initial: PosData }) {
                 {p.category?.name ?? "Tanpa kategori"}
               </p>
               <p className="font-bold text-brand-600 text-sm">
-                {formatRupiah(p.price)}
+                {p.variants.length > 0 ? "Pilih varian" : formatRupiah(p.price)}
               </p>
               <p className="text-[11px] text-gray-500 mt-0.5">
-                Stok: {p.stock}
+                {p.variants.length > 0
+                  ? `${p.variants.length} varian`
+                  : `Stok: ${p.stock}`}
               </p>
             </button>
           ))}
@@ -183,7 +206,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
               </p>
             ) : (
               cart.map((i) => (
-                <div key={i.productId} className="flex items-center gap-2">
+                <div key={i.key} className="flex items-center gap-2">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {i.name}
@@ -194,7 +217,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
                   </div>
                   <div className="flex items-center border border-gray-200 rounded-lg">
                     <button
-                      onClick={() => setQty(i.productId, i.quantity - 1)}
+                      onClick={() => setQty(i.key, i.quantity - 1)}
                       className="w-7 h-7 flex items-center justify-center hover:bg-gray-50"
                     >
                       <Minus size={13} />
@@ -203,14 +226,14 @@ export function PosTerminal({ initial }: { initial: PosData }) {
                       {i.quantity}
                     </span>
                     <button
-                      onClick={() => setQty(i.productId, i.quantity + 1)}
+                      onClick={() => setQty(i.key, i.quantity + 1)}
                       className="w-7 h-7 flex items-center justify-center hover:bg-gray-50"
                     >
                       <Plus size={13} />
                     </button>
                   </div>
                   <button
-                    onClick={() => setQty(i.productId, 0)}
+                    onClick={() => setQty(i.key, 0)}
                     className="p-1.5 text-gray-400 hover:text-red-500"
                   >
                     <Trash2 size={14} />
@@ -286,6 +309,48 @@ export function PosTerminal({ initial }: { initial: PosData }) {
           </div>
         </div>
       </div>
+
+      {/* Modal pilih varian */}
+      {pickProduct && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          onClick={() => setPickProduct(null)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-sm shadow-xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-bold text-gray-900 mb-1">{pickProduct.name}</h3>
+            <p className="text-sm text-gray-500 mb-4">Pilih varian:</p>
+            <div className="space-y-2">
+              {pickProduct.variants.map((v) => (
+                <button
+                  key={v.id}
+                  disabled={v.stock <= 0}
+                  onClick={() => {
+                    addLine(pickProduct, v);
+                    setPickProduct(null);
+                  }}
+                  className="w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl hover:border-brand-300 hover:bg-brand-50/40 transition-colors disabled:opacity-40"
+                >
+                  <span className="text-sm font-semibold text-gray-900">
+                    {v.name}
+                  </span>
+                  <span className="text-sm text-gray-600">
+                    {formatRupiah(v.price)} · stok {v.stock}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setPickProduct(null)}
+              className="mt-4 w-full px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-sm transition-colors"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
