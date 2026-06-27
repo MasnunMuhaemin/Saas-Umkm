@@ -4,6 +4,8 @@ import { productService } from "@/server/services/tenant/product.service";
 import {
   storeProductSchema,
   listProductSchema,
+  productStatusEnum,
+  bulkImportSchema,
 } from "@/lib/validations/product.schema";
 
 export const productRouter = router({
@@ -30,4 +32,29 @@ export const productRouter = router({
     .mutation(({ ctx, input }) =>
       productService.destroy(ctx.tenantId, input.id),
     ),
+
+  bulkDelete: merchantProcedure
+    .input(z.object({ ids: z.array(z.string()).min(1) }))
+    .mutation(({ ctx, input }) =>
+      productService.bulkDelete(ctx.tenantId, input.ids),
+    ),
+
+  bulkSetStatus: merchantProcedure
+    .input(
+      z.object({ ids: z.array(z.string()).min(1), status: productStatusEnum }),
+    )
+    .mutation(({ ctx, input }) =>
+      productService.bulkSetStatus(ctx.tenantId, input.ids, input.status),
+    ),
+
+  exportRows: merchantProcedure.query(({ ctx }) =>
+    productService.exportRows(ctx.tenantId),
+  ),
+
+  bulkImport: merchantProcedure
+    .input(bulkImportSchema)
+    .mutation(({ ctx, input }) =>
+      productService.bulkImport(ctx.tenantId, input.rows),
+    ),
 });
+

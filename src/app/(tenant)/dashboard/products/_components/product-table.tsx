@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import Papa from "papaparse";
 import { keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   AlertCircle,
+  Download,
   Edit2,
   Loader2,
   Package,
   Plus,
   Search,
   Trash2,
+  Upload,
 } from "lucide-react";
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc/client";
@@ -35,6 +38,8 @@ export function ProductTable({
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const isInitial = page === 1 && !search && !category && !status;
   const { data, isFetching } = trpc.product.list.useQuery(
@@ -59,9 +64,95 @@ export function ProductTable({
     onError: (e) => toast.error(e.message),
   });
 
+  const refresh = () => {
+    utils.product.list.invalidate();
+    setSelected([]);
+  };
+  const onError = (e: { message: string }) => toast.error(e.message);
+  const bulkDelete = trpc.product.bulkDelete.useMutation({
+    onSuccess: (r) => {
+      toast.success(`${r.count} produk dihapus`);
+      refresh();
+    },
+    onError,
+  });
+  const bulkStatus = trpc.product.bulkSetStatus.useMutation({
+    onSuccess: (r) => {
+      toast.success(`${r.count} produk diperbarui`);
+      refresh();
+    },
+    onError,
+  });
+  const bulkImport = trpc.product.bulkImport.useMutation({
+    onSuccess: (r) => {
+      toast.success(`${r.created} produk diimpor`);
+      refresh();
+    },
+    onError,
+  });
+
   const products = data?.data ?? [];
   const total = data?.total ?? 0;
   const lastPage = data?.lastPage ?? 1;
+  const allChecked = products.length > 0 && selected.length === products.length;
+  const busy = bulkDelete.isPending || bulkStatus.isPending;
+
+  function toggleAll() {
+    setSelected(allChecked ? [] : products.map((p) => p.id));
+  }
+  function toggleOne(id: string) {
+    setSelected((s) =>
+      s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
+    );
+  }
+
+  async function handleExport() {
+    const rows = await utils.product.exportRows.fetch();
+    const csv = Papa.unparse(
+      rows.map((r) => ({
+        name: r.name,
+        sku: r.sku ?? "",
+        price: r.price,
+        stock: r.stock,
+        status: r.status,
+        category: r.category?.name ?? "",
+      })),
+    );
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "produk.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    Papa.parse<Record<string, string>>(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (res) => {
+        const rows = res.data
+          .map((r) => ({
+            name: (r.name ?? r.Nama ?? "").trim(),
+            sku: r.sku ?? r.SKU ?? "",
+            price: r.price ?? r.Harga ?? "0",
+            stock: r.stock ?? r.Stok ?? "0",
+            description: r.description ?? r.Deskripsi ?? "",
+          }))
+          .filter((r) => r.name);
+        if (rows.length === 0) {
+          toast.error("CSV kosong atau kolom 'name' tidak ditemukan");
+        } else {
+          bulkImport.mutate({ rows });
+        }
+      },
+      error: () => toast.error("Gagal membaca file CSV"),
+    });
+    e.target.value = "";
+  }
 
   return (
     <div className="p-6">
@@ -70,13 +161,73 @@ export function ProductTable({
           <h2 className="font-bold text-gray-900">Manajemen Produk</h2>
           <p className="text-sm text-gray-500">{total} produk total</p>
         </div>
-        <Link
-          href="/dashboard/products/new"
-          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
-        >
-          <Plus size={16} /> Tambah Produk
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1.5 border border-gray-200 text-gray-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+          >
+            <Download size={15} /> Export
+          </button>
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={bulkImport.isPending}
+            className="flex items-center gap-1.5 border border-gray-200 text-gray-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {bulkImport.isPending ? (
+              <Loader2 size={15} className="animate-spin" />
+            ) : (
+              <Upload size={15} />
+            )}{" "}
+            Import
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".csv,text/csv"
+            onChange={handleImport}
+            className="hidden"
+          />
+          <Link
+            href="/dashboard/products/new"
+            className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+          >
+            <Plus size={16} /> Tambah
+          </Link>
+        </div>
       </div>
+
+      {selected.length > 0 && (
+        <div className="flex items-center gap-3 mb-3 bg-brand-50 border border-brand-100 rounded-xl px-4 py-2.5">
+          <span className="text-sm font-semibold text-brand-700">
+            {selected.length} dipilih
+          </span>
+          <div className="flex items-center gap-2 ml-auto">
+            <button
+              onClick={() => bulkStatus.mutate({ ids: selected, status: "ACTIVE" })}
+              disabled={busy}
+              className="text-xs font-bold text-green-700 hover:underline disabled:opacity-50"
+            >
+              Aktifkan
+            </button>
+            <button
+              onClick={() =>
+                bulkStatus.mutate({ ids: selected, status: "INACTIVE" })
+              }
+              disabled={busy}
+              className="text-xs font-bold text-gray-600 hover:underline disabled:opacity-50"
+            >
+              Nonaktifkan
+            </button>
+            <button
+              onClick={() => bulkDelete.mutate({ ids: selected })}
+              disabled={busy}
+              className="text-xs font-bold text-red-600 hover:underline disabled:opacity-50"
+            >
+              Hapus
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border border-gray-100">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -130,6 +281,14 @@ export function ProductTable({
           <table className="w-full">
             <thead>
               <tr className="text-left border-b border-gray-100">
+                <th className="px-4 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={allChecked}
+                    onChange={toggleAll}
+                    className="rounded accent-brand-600"
+                  />
+                </th>
                 <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
                   Produk
                 </th>
@@ -156,6 +315,14 @@ export function ProductTable({
             <tbody className="divide-y divide-gray-50">
               {products.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(p.id)}
+                      onChange={() => toggleOne(p.id)}
+                      className="rounded accent-brand-600"
+                    />
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-100 to-indigo-200 flex items-center justify-center flex-none">
@@ -211,7 +378,7 @@ export function ProductTable({
               ))}
               {products.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-16 text-center">
+                  <td colSpan={8} className="px-4 py-16 text-center">
                     <Package size={40} className="text-gray-300 mx-auto mb-3" />
                     <p className="text-gray-500 font-medium mb-3">
                       {isFetching ? "Memuat..." : "Belum ada produk"}

@@ -98,4 +98,62 @@ export const productService = {
 
   /** Hapus — reuse base.delete (sudah cek ownership). */
   destroy: (tenantId: string, id: string) => base.delete(tenantId, id),
+
+  /** Hapus banyak — filter tenantId memastikan hanya milik sendiri. */
+  bulkDelete: (tenantId: string, ids: string[]) =>
+    prisma.product.deleteMany({ where: { tenantId, id: { in: ids } } }),
+
+  /** Ubah status banyak produk sekaligus. */
+  bulkSetStatus: (tenantId: string, ids: string[], status: $Enums.ProductStatus) =>
+    prisma.product.updateMany({
+      where: { tenantId, id: { in: ids } },
+      data: { status },
+    }),
+
+  /** Baris untuk export CSV (semua produk tenant). */
+  exportRows: (tenantId: string) =>
+    prisma.product.findMany({
+      where: { tenantId },
+      select: {
+        name: true,
+        sku: true,
+        price: true,
+        stock: true,
+        status: true,
+        category: { select: { name: true } },
+      },
+      orderBy: { name: "asc" },
+    }),
+
+  /** Import produk massal dari CSV. Slug di-generate per baris. */
+  async bulkImport(
+    tenantId: string,
+    rows: {
+      name: string;
+      sku?: string | null;
+      price?: number;
+      stock?: number;
+      description?: string | null;
+    }[],
+  ) {
+    let created = 0;
+    for (const r of rows) {
+      if (!r.name?.trim()) continue;
+      const slug = await generateUniqueSlug("product", tenantId, r.name);
+      await prisma.product.create({
+        data: {
+          tenantId,
+          name: r.name,
+          slug,
+          sku: r.sku || null,
+          price: r.price ?? 0,
+          stock: r.stock ?? 0,
+          description: r.description || null,
+          status: "ACTIVE",
+        },
+      });
+      created++;
+    }
+    return { created };
+  },
 };

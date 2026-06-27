@@ -18,6 +18,19 @@ export const storeProductSchema = z.object({
 });
 export type StoreProductInput = z.infer<typeof storeProductSchema>;
 
+/** Satu baris import CSV produk. Nilai CSV string → coerce ke number. */
+export const importProductRowSchema = z.object({
+  name: z.string().min(1),
+  sku: z.string().nullable().optional(),
+  price: z.coerce.number().int().min(0).default(0),
+  stock: z.coerce.number().int().min(0).default(0),
+  description: z.string().nullable().optional(),
+});
+
+export const bulkImportSchema = z.object({
+  rows: z.array(importProductRowSchema).min(1).max(500),
+});
+
 /** Filter daftar produk (search + kategori + status + paginasi). */
 export const listProductSchema = z.object({
   search: z.string().optional(),
