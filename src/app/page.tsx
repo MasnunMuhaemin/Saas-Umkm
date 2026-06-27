@@ -120,10 +120,10 @@ export default function LandingPage() {
               Masuk
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className="text-sm font-semibold bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors"
             >
-              Mulai Sekarang
+              Daftar
             </Link>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/login"
+              href="/register"
               className="w-full sm:w-auto px-6 py-3 bg-brand-600 text-white rounded-lg font-semibold hover:bg-brand-700 transition-colors flex items-center justify-center gap-2"
             >
               Mulai Sekarang <ArrowRight size={17} />
@@ -312,7 +312,7 @@ export default function LandingPage() {
             {PLANS.map((p) => (
               <div
                 key={p.name}
-                className={`relative rounded-xl p-7 ${
+                className={`relative flex flex-col rounded-xl p-7 ${
                   p.highlighted
                     ? "border-2 border-brand-600"
                     : "border border-slate-200"
@@ -350,8 +350,8 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/login"
-                  className={`block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
+                  href={`/register?plan=${p.name.toLowerCase()}`}
+                  className={`mt-auto block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
                     p.highlighted
                       ? "bg-brand-600 text-white hover:bg-brand-700"
                       : "bg-white text-slate-800 border border-slate-300 hover:bg-slate-50"
@@ -375,7 +375,7 @@ export default function LandingPage() {
             Bergabung dengan UMKM yang berjualan lebih cerdas bersama MayWeb.
           </p>
           <Link
-            href="/login"
+            href="/register"
             className="inline-flex items-center gap-2 px-7 py-3 bg-white text-brand-700 rounded-lg font-semibold hover:bg-brand-50 transition-colors"
           >
             Buat Toko Sekarang <ArrowRight size={17} />

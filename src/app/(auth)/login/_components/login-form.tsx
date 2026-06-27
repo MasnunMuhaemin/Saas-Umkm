@@ -119,10 +119,9 @@ export function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 border border-slate-200 rounded-2xl overflow-hidden shadow-card bg-white">
-        {/* ---- Brand panel ---- */}
-        <div className="relative hidden lg:flex flex-col justify-between p-10 bg-brand-600 overflow-hidden">
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* ---- Brand panel ---- */}
+      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-brand-600 overflow-hidden">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl" />
           <div className="relative">
             <Link href="/" className="flex items-center gap-2.5">
@@ -160,13 +159,14 @@ export function LoginForm() {
           </p>
         </div>
 
-        {/* ---- Form ---- */}
-        <div className="bg-white p-8 sm:p-10">
+      {/* ---- Form ---- */}
+      <div className="flex items-center justify-center bg-white p-6 sm:p-12">
+        <div className="w-full max-w-md">
           <Link
             href="/"
-            className="lg:hidden inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 mb-7 transition-colors"
           >
-            <ArrowLeft size={15} /> Beranda
+            <ArrowLeft size={16} /> Kembali ke Beranda
           </Link>
 
           <div className="mb-7">
@@ -176,7 +176,7 @@ export function LoginForm() {
             <p className="text-sm text-slate-500">
               Belum punya toko?{" "}
               <Link
-                href="/login"
+                href="/register"
                 className="font-semibold text-brand-600 hover:text-brand-700"
               >
                 Daftar sekarang
