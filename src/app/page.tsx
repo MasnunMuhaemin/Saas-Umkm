@@ -11,6 +11,8 @@ import {
   Store,
   Users,
 } from "lucide-react";
+import { getServerTrpc } from "@/lib/trpc/server";
+import { formatRupiah } from "@/lib/helpers/format";
 
 const FEATURES = [
   {
@@ -65,9 +67,8 @@ const STEPS = [
 
 const PLANS = [
   {
+    slug: "basic",
     name: "Basic",
-    price: "Rp100rb",
-    period: "/ bulan",
     features: [
       "Website toko + subdomain",
       "Manajemen produk & kategori",
@@ -77,9 +78,8 @@ const PLANS = [
     highlighted: false,
   },
   {
+    slug: "plus",
     name: "Plus",
-    price: "Rp150rb",
-    period: "/ bulan",
     features: [
       "Semua fitur Basic",
       "Kasir Pintar (POS)",
@@ -98,7 +98,13 @@ const STATS = [
   { value: "24/7", label: "Toko selalu buka" },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const api = await getServerTrpc();
+  const plans = await api.plans();
+  const priceBySlug: Record<string, number> = Object.fromEntries(
+    plans.map((p) => [p.slug, p.price]),
+  );
+
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
       {/* ===== Navigation ===== */}
@@ -328,11 +334,9 @@ export default function LandingPage() {
                 </h3>
                 <div className="flex items-end gap-1 mb-6">
                   <span className="font-display text-4xl font-extrabold text-slate-900">
-                    {p.price}
+                    {formatRupiah(priceBySlug[p.slug] ?? 0)}
                   </span>
-                  <span className="text-sm text-slate-400 mb-1.5">
-                    {p.period}
-                  </span>
+                  <span className="text-sm text-slate-400 mb-1.5">/ bulan</span>
                 </div>
                 <ul className="space-y-2.5 mb-7">
                   {p.features.map((feat) => (

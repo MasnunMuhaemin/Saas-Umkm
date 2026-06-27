@@ -23,7 +23,6 @@ const PLANS = [
   {
     slug: "basic" as const,
     name: "Basic",
-    price: "Rp100.000",
     features: [
       "Website toko + subdomain",
       "Produk, kategori & varian",
@@ -33,7 +32,6 @@ const PLANS = [
   {
     slug: "plus" as const,
     name: "Plus",
-    price: "Rp150.000",
     features: [
       "Semua fitur Basic",
       "Kasir (POS) & Invoice",
@@ -63,8 +61,10 @@ type Invoice = {
 
 export function RegisterForm({
   defaultPlan,
+  priceBySlug,
 }: {
   defaultPlan: "basic" | "plus";
+  priceBySlug: Record<string, number>;
 }) {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -370,7 +370,7 @@ export function RegisterForm({
                         </span>
                       </div>
                       <p className="font-display text-xl font-extrabold text-slate-900 mb-2">
-                        {p.price}
+                        {formatRupiah(priceBySlug[p.slug] ?? 0)}
                         <span className="text-xs font-normal text-slate-400">
                           {" "}
                           / bulan

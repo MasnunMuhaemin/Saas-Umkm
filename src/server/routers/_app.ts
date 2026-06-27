@@ -1,4 +1,5 @@
-import { router, protectedProcedure } from "@/server/trpc";
+import { router, protectedProcedure, publicProcedure } from "@/server/trpc";
+import { billingService } from "@/server/services/shared/billing.service";
 import { authRouter } from "./auth";
 import { dashboardRouter } from "./tenant/dashboard";
 import { productRouter } from "./tenant/product";
@@ -24,6 +25,9 @@ import { couponAdminRouter } from "./superadmin/coupon";
 export const appRouter = router({
   /** Echo sesi user saat ini — untuk smoke test client/server tRPC. */
   me: protectedProcedure.query(({ ctx }) => ctx.user),
+
+  /** Daftar paket publik (harga dari DB) — dipakai landing & form daftar. */
+  plans: publicProcedure.query(() => billingService.listPlans()),
 
   auth: authRouter,
   dashboard: dashboardRouter,
