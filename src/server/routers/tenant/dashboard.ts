@@ -8,4 +8,7 @@ export const dashboardRouter = router({
   overview: merchantProcedure.query(({ ctx }) =>
     dashboardService.getOverview(ctx.tenantId),
   ),
+  stats: merchantProcedure.query(({ ctx }) =>
+    dashboardService.getStats(ctx.tenantId),
+  ),
 });

@@ -105,4 +105,72 @@ export const dashboardService = {
       })),
     };
   },
+
+  /** Statistik penjualan merchant (halaman /dashboard/stats). */
+  async getStats(tenantId: string) {
+    const now = new Date();
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+    const [revenueAgg, txCount, itemsAgg, monthOrders, topItems, payments] =
+      await Promise.all([
+        prisma.order.aggregate({ where: { tenantId }, _sum: { total: true } }),
+        prisma.order.count({ where: { tenantId } }),
+        prisma.orderItem.aggregate({
+          where: { order: { tenantId } },
+          _sum: { quantity: true },
+        }),
+        prisma.order.findMany({
+          where: { tenantId, createdAt: { gte: sixMonthsAgo } },
+          select: { total: true, createdAt: true },
+        }),
+        prisma.orderItem.groupBy({
+          by: ["productName"],
+          where: { order: { tenantId } },
+          _sum: { quantity: true },
+          orderBy: { _sum: { quantity: "desc" } },
+          take: 5,
+        }),
+        prisma.order.groupBy({
+          by: ["paymentMethod"],
+          where: { tenantId },
+          _count: { _all: true },
+          _sum: { total: true },
+        }),
+      ]);
+
+    const revenue = revenueAgg._sum.total ?? 0;
+    const itemsSold = itemsAgg._sum.quantity ?? 0;
+    const avg = txCount > 0 ? Math.round(revenue / txCount) : 0;
+
+    const series = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+      const pendapatan = monthOrders
+        .filter((o) => {
+          const od = new Date(o.createdAt);
+          return (
+            od.getMonth() === d.getMonth() &&
+            od.getFullYear() === d.getFullYear()
+          );
+        })
+        .reduce((s, o) => s + o.total, 0);
+      return { label: d.toLocaleDateString("id-ID", { month: "short" }), pendapatan };
+    });
+
+    return {
+      revenue,
+      txCount,
+      itemsSold,
+      avg,
+      series,
+      topProducts: topItems.map((t) => ({
+        name: t.productName,
+        sold: t._sum.quantity ?? 0,
+      })),
+      payments: payments.map((p) => ({
+        method: p.paymentMethod ?? "lainnya",
+        count: p._count._all,
+        total: p._sum.total ?? 0,
+      })),
+    };
+  },
 };
