@@ -16,7 +16,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // ─── Plans ─────────────────────────────────────────────────────────────────
-  await prisma.plan.upsert({
+  const basic = await prisma.plan.upsert({
     where: { slug: "basic" },
     update: {},
     create: {
@@ -97,6 +97,7 @@ async function main() {
       name: "Toko Demo",
       slug: "toko-demo",
       status: "ACTIVE",
+      onboardedAt: new Date(),
       whatsapp: "081234567890",
       city: "Bandung",
       province: "Jawa Barat",
@@ -222,9 +223,100 @@ async function main() {
     }
   }
 
+  // ─── Merchant paket BASIC (User + Tenant + Subscription + isi toko) ──────────
+  const merchantBasic = await prisma.user.upsert({
+    where: { email: "owner@tokobasic.id" },
+    update: {},
+    create: {
+      name: "Siti Aminah",
+      email: "owner@tokobasic.id",
+      password: await bcrypt.hash("merchant123", 10),
+      role: "MERCHANT",
+    },
+  });
+
+  const tenantBasic = await prisma.tenant.upsert({
+    where: { slug: "toko-basic" },
+    update: {},
+    create: {
+      userId: merchantBasic.id,
+      planId: basic.id, // paket Basic — POS/Invoice/Pelanggan terkunci
+      name: "Toko Basic",
+      slug: "toko-basic",
+      status: "ACTIVE",
+      onboardedAt: new Date(),
+      whatsapp: "081200001111",
+      city: "Yogyakarta",
+      province: "DI Yogyakarta",
+      tagline: "Oleh-oleh & kerajinan khas Jogja",
+      description: "Toko demo paket Basic untuk pengembangan MayWeb.",
+      subscriptionStart: new Date(),
+      subscriptionEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  await prisma.tenantUser.upsert({
+    where: {
+      tenantId_userId: { tenantId: tenantBasic.id, userId: merchantBasic.id },
+    },
+    update: {},
+    create: {
+      tenantId: tenantBasic.id,
+      userId: merchantBasic.id,
+      role: "OWNER",
+    },
+  });
+
+  await prisma.subscription.upsert({
+    where: { tenantId: tenantBasic.id },
+    update: {},
+    create: {
+      tenantId: tenantBasic.id,
+      planId: basic.id,
+      status: "ACTIVE",
+      startedAt: new Date(),
+      currentEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  const katBasic = await prisma.category.upsert({
+    where: { tenantId_slug: { tenantId: tenantBasic.id, slug: "oleh-oleh" } },
+    update: {},
+    create: {
+      tenantId: tenantBasic.id,
+      name: "Oleh-oleh",
+      slug: "oleh-oleh",
+      sortOrder: 1,
+    },
+  });
+
+  const produkBasic = [
+    { name: "Bakpia Original", slug: "bakpia-original", price: 35000, stock: 50, isBest: true },
+    { name: "Gudeg Kaleng", slug: "gudeg-kaleng", price: 45000, stock: 30 },
+    { name: "Batik Tulis", slug: "batik-tulis", price: 150000, stock: 12, isNew: true },
+  ];
+  for (const p of produkBasic) {
+    await prisma.product.upsert({
+      where: { tenantId_slug: { tenantId: tenantBasic.id, slug: p.slug } },
+      update: {},
+      create: {
+        tenantId: tenantBasic.id,
+        categoryId: katBasic.id,
+        name: p.name,
+        slug: p.slug,
+        price: p.price,
+        stock: p.stock,
+        status: "ACTIVE",
+        isBest: p.isBest ?? false,
+        isNew: p.isNew ?? false,
+      },
+    });
+  }
+
   console.log("✅ Seed selesai:");
-  console.log("   Super Admin : admin@tokopintar.id / superadmin123");
-  console.log("   Merchant    : owner@tokodemo.id   / merchant123  (Toko Demo)");
+  console.log("   Super Admin     : admin@tokopintar.id / superadmin123");
+  console.log("   Merchant (Plus) : owner@tokodemo.id   / merchant123  (Toko Demo)");
+  console.log("   Merchant (Basic): owner@tokobasic.id  / merchant123  (Toko Basic)");
 }
 
 main()

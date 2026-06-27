@@ -19,7 +19,7 @@ npx prisma generate          # WAJIB setelah migrate (Prisma 7 tidak auto-genera
 ```
 **Belum ada test runner** (Vitest belum dipasang). Verifikasi = `npm run build` + jalankan dev server + curl endpoint tRPC/HTTP + cek DB pakai driver `mariadb` langsung.
 
-**Kredensial dev (dari seed):** Super Admin `admin@tokopintar.id`/`superadmin123` (→ `/super-admin`) · Merchant `owner@tokodemo.id`/`merchant123` (→ `/dashboard`) · Toko publik dev: `http://toko-demo.localhost:3000`.
+**Kredensial dev (dari seed):** Super Admin `admin@tokopintar.id`/`superadmin123` (→ `/super-admin`) · Merchant **Plus** `owner@tokodemo.id`/`merchant123` (Toko Demo) · Merchant **Basic** `owner@tokobasic.id`/`merchant123` (Toko Basic) — keduanya → `/dashboard`. Toko publik dev: `http://toko-demo.localhost:3000` & `http://toko-basic.localhost:3000`.
 
 ### Gotcha penting (tidak terlihat dari membaca 1 file)
 1. **Prisma 7 — generator baru**: client di-generate ke `src/generated/prisma` (BUKAN `@prisma/client`). Import: `@/generated/prisma/client`. Client **WAJIB** diinstansiasi dengan adapter `PrismaMariaDb` (lihat `src/server/db.ts`) — `DATABASE_URL` di-parse jadi PoolConfig karena driver mariadb menolak skema `mysql://`. Jangan `new PrismaClient()` polos.
