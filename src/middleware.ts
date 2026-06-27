@@ -20,9 +20,9 @@ export default auth((req) => {
     : null;
 
   if (subdomain && !RESERVED_SUBDOMAINS.includes(subdomain)) {
-    return NextResponse.rewrite(
-      new URL(`/_sites/${subdomain}${path}`, req.url),
-    );
+    // Rewrite ke route publik /s/[domain]. (Hindari prefix "_" — folder
+    // berawalan underscore bersifat private di Next App Router.)
+    return NextResponse.rewrite(new URL(`/s/${subdomain}${path}`, req.url));
   }
 
   // 2. Guard role berbasis sesi (req.auth diisi oleh wrapper auth())
