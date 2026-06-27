@@ -22,6 +22,7 @@ export const authConfig = {
       if (session.user) {
         // Cast: augmentasi JWT tak ter-merge lintas package (next-auth/jwt
         // vs @auth/core/jwt), jadi token.* bertipe unknown di sini.
+        session.user.id = (token.sub ?? "") as string;
         session.user.role = token.role as AppRole;
         session.user.tenantId = (token.tenantId ?? null) as string | null;
       }

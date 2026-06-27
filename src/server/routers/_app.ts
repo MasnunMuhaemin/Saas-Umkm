@@ -6,6 +6,8 @@ import { settingsRouter } from "./tenant/settings";
 import { websiteRouter } from "./tenant/website";
 import { customerRouter } from "./tenant/customer";
 import { orderRouter } from "./tenant/order";
+import { superDashboardRouter } from "./superadmin/dashboard";
+import { tenantAdminRouter } from "./superadmin/tenant";
 
 /**
  * Root router — gabungan semua feature router.
@@ -23,6 +25,11 @@ export const appRouter = router({
   website: websiteRouter,
   customer: customerRouter,
   order: orderRouter,
+
+  superadmin: router({
+    dashboard: superDashboardRouter,
+    tenant: tenantAdminRouter,
+  }),
 });
 
 export type AppRouter = typeof appRouter;
