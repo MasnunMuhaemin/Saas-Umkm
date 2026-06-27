@@ -70,6 +70,9 @@ export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
           <a href="/#produk" className="text-sm font-medium text-gray-600 hover:text-gray-900">
             Produk
           </a>
+          <a href="/tentang" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+            Tentang
+          </a>
           <a href="/kontak" className="text-sm font-medium text-gray-600 hover:text-gray-900">
             Kontak
           </a>

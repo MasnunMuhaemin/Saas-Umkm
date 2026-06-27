@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ShoppingBag, Sparkles } from "lucide-react";
+import { BadgePercent, ShoppingBag, Sparkles } from "lucide-react";
 import {
   getStorefront,
   type StorefrontData,
@@ -66,6 +66,48 @@ function Hero({ tenant }: { tenant: Tenant }) {
               </WaButton>
             )}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PromoBanner({ tenant }: { tenant: Tenant }) {
+  if (!tenant.promoEnabled) return null;
+  return (
+    <section className="py-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="rounded-2xl overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 text-white flex flex-col md:flex-row items-center justify-between gap-6 p-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <BadgePercent size={20} />
+              <span className="font-semibold text-sm">Promo Spesial</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-1">
+              {tenant.promoTitle || "Promo Eksklusif untuk Anda!"}
+            </h3>
+            {tenant.promoSubtitle && (
+              <p className="text-white/85 text-sm">{tenant.promoSubtitle}</p>
+            )}
+            {tenant.promoCode && (
+              <p className="text-white/85 text-sm mt-1">
+                Gunakan kode:{" "}
+                <span className="bg-white/20 px-2 py-0.5 rounded font-mono font-bold">
+                  {tenant.promoCode}
+                </span>{" "}
+                saat pesan via WhatsApp
+              </p>
+            )}
+          </div>
+          {tenant.showWhatsappButton && (
+            <WaButton
+              tenant={tenant}
+              message={`Halo, saya mau klaim promo${tenant.promoCode ? ` (kode ${tenant.promoCode})` : ""}.`}
+              className="flex-none bg-white text-orange-600 hover:bg-orange-50 px-6 py-3"
+            >
+              Klaim Promo
+            </WaButton>
+          )}
         </div>
       </div>
     </section>
@@ -248,6 +290,7 @@ export default async function StorefrontHome({
         }}
       />
       <Hero tenant={tenant} />
+      <PromoBanner tenant={tenant} />
       <Categories data={data} />
       <Products data={data} />
     </>

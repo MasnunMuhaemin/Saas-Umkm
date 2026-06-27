@@ -31,6 +31,16 @@ export const getStorefront = cache(async (slug: string) => {
       bannerSubtitle: true,
       bannerImage: true,
       heroCtaText: true,
+      // Tentang
+      aboutHeadline: true,
+      aboutBody: true,
+      aboutChecklist: true,
+      yearsExperience: true,
+      // Promo
+      promoEnabled: true,
+      promoTitle: true,
+      promoSubtitle: true,
+      promoCode: true,
       // Visibilitas elemen
       showBusinessName: true,
       showTagline: true,
