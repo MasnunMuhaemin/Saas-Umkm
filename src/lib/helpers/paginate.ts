@@ -20,6 +20,7 @@ export async function paginate<T>(
   options: {
     where?: unknown;
     include?: unknown;
+    select?: unknown;
     orderBy?: unknown;
     page?: number;
     perPage?: number;
@@ -28,6 +29,7 @@ export async function paginate<T>(
   const {
     where,
     include,
+    select,
     orderBy = { createdAt: "desc" },
     page = 1,
     perPage = PER_PAGE,
@@ -36,7 +38,8 @@ export async function paginate<T>(
   const [data, total] = await Promise.all([
     delegate.findMany({
       where,
-      include,
+      // include & select tidak boleh dikirim bersamaan ke Prisma
+      ...(select ? { select } : { include }),
       orderBy,
       skip: (page - 1) * perPage,
       take: perPage,
