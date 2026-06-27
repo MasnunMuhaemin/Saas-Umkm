@@ -30,19 +30,19 @@ export default function SystemSettingsPage() {
   ];
 
   return (
-    <div className="p-6 max-w-2xl">
+    <div className="p-6 max-w-2xl animate-fade-up">
       <div className="mb-5">
-        <h2 className="font-bold text-slate-900">Pengaturan Sistem</h2>
+        <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">Pengaturan Sistem</h2>
         <p className="text-sm text-slate-500">
           Status konfigurasi platform (dari environment)
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 divide-y divide-slate-50">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft divide-y divide-slate-100">
         {rows.map((r) => (
           <div key={r.label} className="flex items-center gap-3 p-4">
             {r.ok ? (
-              <CheckCircle2 size={18} className="text-green-500 flex-none" />
+              <CheckCircle2 size={18} className="text-emerald-500 flex-none" />
             ) : (
               <Circle size={18} className="text-amber-400 flex-none" />
             )}

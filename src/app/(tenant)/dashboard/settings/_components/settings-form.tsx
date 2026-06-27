@@ -48,7 +48,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       onClick={onToggle}
       className={cn(
         "relative w-10 h-6 rounded-full transition-colors flex-none",
-        on ? "bg-primary" : "bg-gray-300",
+        on ? "bg-primary" : "bg-slate-300",
       )}
     >
       <span
@@ -73,7 +73,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
 
   const storeUrl = form.customDomain ?? `${form.slug}.${ROOT_DOMAIN}`;
   const inputCls =
-    "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-colors";
+    "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-colors";
 
   const update = trpc.settings.update.useMutation({
     onSuccess: () => {
@@ -117,10 +117,12 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
   };
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="p-6 max-w-3xl animate-fade-up">
       <div className="flex items-start justify-between mb-5 gap-4">
         <div>
-          <h2 className="font-bold text-gray-900">Profil Bisnis</h2>
+          <h2 className="font-display text-xl font-bold tracking-tight text-slate-900">
+            Profil Bisnis
+          </h2>
           <a
             href={`https://${storeUrl}`}
             target="_blank"
@@ -133,14 +135,14 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
         <button
           onClick={save}
           disabled={update.isPending}
-          className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
+          className="bg-linear-to-r from-brand-600 to-violet-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:shadow-glow active:scale-[0.98] disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 flex items-center gap-2"
         >
           {update.isPending && <Loader2 size={16} className="animate-spin" />}
           {update.isPending ? "Menyimpan..." : "Simpan Perubahan"}
         </button>
       </div>
 
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-5 max-w-md">
+      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-5 max-w-md">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -148,8 +150,8 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             className={cn(
               "flex-1 py-2 rounded-lg text-sm font-semibold transition-colors",
               tab === t.id
-                ? "bg-white shadow text-gray-900"
-                : "text-gray-500 hover:text-gray-700",
+                ? "bg-white shadow text-slate-900"
+                : "text-slate-500 hover:text-slate-700",
             )}
           >
             {t.label}
@@ -158,10 +160,10 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
       </div>
 
       {tab === "identitas" && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-bold text-gray-700">
+              <label className="text-sm font-bold text-slate-700">
                 Nama Toko *
               </label>
               <Toggle
@@ -179,7 +181,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
           </div>
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-bold text-gray-700">Tagline</label>
+              <label className="text-sm font-bold text-slate-700">Tagline</label>
               <Toggle
                 on={form.showTagline}
                 onToggle={() => set("showTagline", !form.showTagline)}
@@ -194,7 +196,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Deskripsi
             </label>
             <textarea
@@ -209,7 +211,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
       )}
 
       {tab === "kontak" && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 grid sm:grid-cols-2 gap-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 grid sm:grid-cols-2 gap-5">
           {(
             [
               { key: "whatsapp", label: "WhatsApp", ph: "6281234567890" },
@@ -221,7 +223,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             ] as const
           ).map((f) => (
             <div key={f.key}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">
                 {f.label}
               </label>
               <input
@@ -234,7 +236,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             </div>
           ))}
           <div className="sm:col-span-2">
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Alamat
             </label>
             <input
@@ -250,8 +252,8 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
 
       {tab === "tampilan" && (
         <div className="space-y-5">
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-            <h3 className="font-bold text-gray-900">Domain Custom</h3>
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-3">
+            <h3 className="font-display font-bold text-slate-900">Domain Custom</h3>
             <input
               type="text"
               value={form.customDomain ?? ""}
@@ -259,8 +261,8 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
               placeholder="tokosaya.com"
               className={inputCls}
             />
-            <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-xs text-gray-600">
-              <p className="font-semibold text-gray-700 mb-1">
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-xs text-slate-600">
+              <p className="font-semibold text-slate-700 mb-1">
                 Cara menghubungkan:
               </p>
               <p>
@@ -271,11 +273,11 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-            <h3 className="font-bold text-gray-900">Logo & Favicon</h3>
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-4">
+            <h3 className="font-display font-bold text-slate-900">Logo & Favicon</h3>
             <div className="flex items-start gap-4">
               {form.logo && (
-                <div className="relative w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex-none">
+                <div className="relative w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 flex-none">
                   <Image
                     src={form.logo}
                     alt="Logo"
@@ -302,26 +304,26 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
                 />
               </div>
             </div>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-slate-400">
               Tempel URL gambar. Upload file langsung tersedia setelah storage
               dikonfigurasi.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="font-bold text-gray-900 mb-4">Warna Tema</h3>
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+            <h3 className="font-display font-bold text-slate-900 mb-4">Warna Tema</h3>
             <div className="flex items-center gap-3 mb-4">
               <input
                 type="color"
                 value={form.primaryColor}
                 onChange={(e) => set("primaryColor", e.target.value)}
-                className="w-12 h-12 rounded-xl border border-gray-200 cursor-pointer"
+                className="w-12 h-12 rounded-xl border border-slate-200 cursor-pointer"
               />
               <input
                 type="text"
                 value={form.primaryColor}
                 onChange={(e) => set("primaryColor", e.target.value)}
-                className="w-32 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono uppercase"
+                className="w-32 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono uppercase focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-colors"
               />
             </div>
             <div className="flex flex-wrap gap-2">
@@ -334,7 +336,7 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
                   className={cn(
                     "w-8 h-8 rounded-lg border-2 transition-transform hover:scale-110",
                     form.primaryColor.toUpperCase() === c
-                      ? "border-gray-900"
+                      ? "border-slate-900"
                       : "border-transparent",
                   )}
                   aria-label={c}
@@ -343,12 +345,12 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="font-bold text-gray-900 mb-4">Visibilitas Elemen</h3>
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+            <h3 className="font-display font-bold text-slate-900 mb-4">Visibilitas Elemen</h3>
             <div className="space-y-3">
               {VISIBILITY.map((v) => (
                 <div key={v.key} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{v.label}</span>
+                  <span className="text-sm text-slate-700">{v.label}</span>
                   <Toggle
                     on={form[v.key] as boolean}
                     onToggle={() => set(v.key, !form[v.key] as never)}

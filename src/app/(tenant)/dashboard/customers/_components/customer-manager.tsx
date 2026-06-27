@@ -65,20 +65,21 @@ function CustomerModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+      className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl w-full max-w-lg shadow-xl"
+        className="glass-card rounded-2xl w-full max-w-lg shadow-float animate-fade-up"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+          <h3 className="text-lg font-display font-bold tracking-tight text-slate-900">
             {customer ? "Edit Pelanggan" : "Tambah Pelanggan"}
           </h3>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="Tutup"
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           >
             <X size={18} />
           </button>
@@ -86,7 +87,7 @@ function CustomerModal({
         <div className="p-6 grid sm:grid-cols-2 gap-4">
           {FIELDS.map((f) => (
             <div key={f.key}>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">
                 {f.label}
               </label>
               <input
@@ -96,12 +97,12 @@ function CustomerModal({
                   setForm((s) => ({ ...s, [f.key]: e.target.value }))
                 }
                 placeholder={f.ph}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
               />
             </div>
           ))}
           <div className="sm:col-span-2">
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Alamat
             </label>
             <input
@@ -111,22 +112,22 @@ function CustomerModal({
                 setForm((s) => ({ ...s, address: e.target.value }))
               }
               placeholder="Jl. Merdeka No. 10"
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
             />
           </div>
         </div>
-        <div className="p-6 border-t border-gray-100 flex gap-3">
+        <div className="p-6 border-t border-slate-100 flex gap-3">
           <button
             onClick={onClose}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
           >
             Batal
           </button>
           <button
             onClick={save}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-brand-600 text-white hover:bg-brand-700 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 bg-linear-to-r from-brand-600 to-violet-600 text-white rounded-xl font-bold hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving ? "Menyimpan..." : "Simpan"}
@@ -157,36 +158,40 @@ export function CustomerManager({ initial }: { initial: CustomerRow[] }) {
   });
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-5">
+    <div className="p-6 animate-fade-up">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="font-bold text-gray-900">Manajemen Pelanggan</h2>
-          <p className="text-sm text-gray-500">{customers.length} pelanggan</p>
+          <h2 className="font-display font-bold tracking-tight text-slate-900 text-xl">
+            Manajemen Pelanggan
+          </h2>
+          <p className="text-sm text-slate-500">{customers.length} pelanggan</p>
         </div>
         <button
           onClick={() => setModal({ open: true, editing: null })}
-          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+          className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow active:scale-[0.98] transition-all"
         >
           <Plus size={16} /> Tambah Pelanggan
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
         {customers.length === 0 ? (
-          <div className="p-16 text-center text-gray-400 flex flex-col items-center">
-            <Users size={40} className="mb-3 opacity-20" />
-            <p className="font-medium text-gray-500">Belum ada pelanggan</p>
+          <div className="p-16 text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+              <Users size={28} className="text-slate-300" />
+            </div>
+            <p className="font-semibold text-slate-700">Belum ada pelanggan</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left border-b border-gray-100 bg-gray-50/50">
+                <tr className="text-left border-b border-slate-100 bg-slate-50">
                   {["Nama", "Kontak", "Kota", "Pesanan", "Total Belanja", "Aksi"].map(
                     (h) => (
                       <th
                         key={h}
-                        className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wide whitespace-nowrap"
+                        className="px-4 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wide whitespace-nowrap"
                       >
                         {h}
                       </th>
@@ -194,38 +199,40 @@ export function CustomerManager({ initial }: { initial: CustomerRow[] }) {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-slate-100">
                 {customers.map((c) => (
-                  <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-4 py-4 font-semibold text-gray-900 text-sm whitespace-nowrap">
+                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-4 py-4 font-semibold text-slate-900 text-sm whitespace-nowrap">
                       {c.name}
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-600">
+                    <td className="px-4 py-4 text-sm text-slate-600">
                       <div>{c.phone || "-"}</div>
                       {c.email && (
-                        <div className="text-xs text-gray-400">{c.email}</div>
+                        <div className="text-xs text-slate-400">{c.email}</div>
                       )}
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="px-4 py-4 text-sm text-slate-600 whitespace-nowrap">
                       {c.city || "-"}
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-700 font-bold whitespace-nowrap">
+                    <td className="px-4 py-4 text-sm text-slate-700 font-bold whitespace-nowrap">
                       {c.totalOrders}
                     </td>
-                    <td className="px-4 py-4 text-sm font-semibold text-gray-900 whitespace-nowrap">
+                    <td className="px-4 py-4 text-sm font-semibold text-slate-900 whitespace-nowrap">
                       {formatRupiah(c.totalSpent)}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex gap-2">
                         <button
                           onClick={() => setModal({ open: true, editing: c })}
-                          className="p-2 text-gray-400 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
+                          aria-label="Edit pelanggan"
+                          className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
                         >
                           <Edit2 size={16} />
                         </button>
                         <button
                           onClick={() => setDeleteId(c.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                          aria-label="Hapus pelanggan"
+                          className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -249,34 +256,34 @@ export function CustomerManager({ initial }: { initial: CustomerRow[] }) {
 
       {deleteId && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
           onClick={() => setDeleteId(null)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            className="glass-card rounded-2xl p-6 w-full max-w-sm shadow-float animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
               <Trash2 size={24} />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <h3 className="text-lg font-display font-bold tracking-tight text-slate-900 mb-2">
               Hapus Pelanggan?
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-6">
               Data pelanggan ini akan dihapus permanen.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={del.isPending}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
               >
                 Batal
               </button>
               <button
                 onClick={() => del.mutate({ id: deleteId })}
                 disabled={del.isPending}
-                className="flex-1 px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2.5 bg-linear-to-r from-rose-500 to-rose-600 text-white rounded-xl font-bold hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {del.isPending ? (
                   <Loader2 size={16} className="animate-spin" />

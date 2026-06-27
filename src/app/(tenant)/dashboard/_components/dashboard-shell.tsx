@@ -80,11 +80,11 @@ export function DashboardShell({
     activeItem && "label" in activeItem ? activeItem.label : "Dashboard";
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-slate-50">
       {/* Overlay mobile */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-800/60 z-40 md:hidden"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -93,23 +93,23 @@ export function DashboardShell({
       <aside
         className={`${collapsed ? "md:w-16" : "md:w-56"} w-64 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-white border-r border-gray-100 h-full flex flex-col transition-all duration-300`}
+        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-white/85 backdrop-blur-xl border-r border-slate-200/70 h-full flex flex-col transition-all duration-300`}
       >
         <div
-          className={`flex items-center gap-3 p-4 border-b border-gray-100 ${
+          className={`flex items-center gap-3 p-4 border-b border-slate-100 ${
             collapsed ? "md:justify-center" : ""
           } justify-between md:justify-start`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center flex-none">
+            <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-xl flex items-center justify-center flex-none shadow-glow">
               <Store size={17} className="text-white" />
             </div>
             {(!collapsed || mobileOpen) && (
               <div className="flex flex-col flex-1 min-w-0">
-                <p className="font-bold text-gray-900 text-sm truncate">
+                <p className="font-display font-bold text-slate-900 text-sm truncate">
                   {shell.businessName}
                 </p>
-                <p className="text-gray-500 text-xs truncate">
+                <p className="text-slate-400 text-xs truncate">
                   Paket {shell.planName}
                 </p>
               </div>
@@ -119,7 +119,7 @@ export function DashboardShell({
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Tutup menu"
-              className="md:hidden p-2 text-gray-500 hover:text-gray-900 rounded-lg"
+              className="md:hidden p-2 text-slate-500 hover:text-slate-900 rounded-lg"
             >
               <X size={20} />
             </button>
@@ -130,11 +130,11 @@ export function DashboardShell({
           {NAV.map((item, i) => {
             if ("section" in item) {
               return collapsed ? (
-                <div key={i} className="my-2 border-t border-gray-100" />
+                <div key={i} className="my-2 border-t border-slate-100" />
               ) : (
                 <p
                   key={i}
-                  className="text-xs font-bold text-gray-400 uppercase tracking-widest px-3 pt-4 pb-1"
+                  className="text-xs font-bold text-slate-400 uppercase tracking-widest px-3 pt-4 pb-1"
                 >
                   {item.section}
                 </p>
@@ -143,13 +143,13 @@ export function DashboardShell({
             const Icon = item.icon;
             const isActive = pathname === item.href;
             const isLocked = isBasic && item.plus;
-            const cls = `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+            const cls = `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
               isActive
-                ? "bg-brand-50 text-brand-700"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                ? "bg-linear-to-r from-brand-50 to-violet-50 text-brand-700 font-semibold ring-1 ring-brand-100/70"
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             } ${collapsed && !mobileOpen ? "justify-center" : ""} ${
               isLocked
-                ? "opacity-60 cursor-not-allowed hover:bg-transparent hover:text-gray-600"
+                ? "opacity-60 cursor-not-allowed hover:bg-transparent hover:text-slate-600"
                 : ""
             }`;
 
@@ -160,7 +160,7 @@ export function DashboardShell({
                   <span className="flex-1 text-left">{item.label}</span>
                 )}
                 {(!collapsed || mobileOpen) && isLocked && (
-                  <Lock size={14} className="text-gray-400" />
+                  <Lock size={14} className="text-slate-400" />
                 )}
               </>
             );
@@ -197,10 +197,10 @@ export function DashboardShell({
           })}
         </nav>
 
-        <div className="p-3 border-t border-gray-100 flex flex-col gap-1">
+        <div className="p-3 border-t border-slate-100 flex flex-col gap-1">
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={`hidden md:flex items-center gap-2.5 text-sm text-gray-500 hover:text-gray-900 transition-colors px-3 py-2 rounded-xl hover:bg-gray-100 ${
+            className={`hidden md:flex items-center gap-2.5 text-sm text-slate-500 hover:text-slate-900 transition-colors px-3 py-2 rounded-xl hover:bg-slate-100 ${
               collapsed ? "justify-center" : "w-full"
             }`}
             title={collapsed ? "Perluas Sidebar" : undefined}
@@ -210,7 +210,7 @@ export function DashboardShell({
           </button>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className={`flex items-center gap-2.5 text-sm text-gray-600 hover:text-red-500 transition-colors px-3 py-2 rounded-xl hover:bg-red-50 ${
+            className={`flex items-center gap-2.5 text-sm text-slate-600 hover:text-red-500 transition-colors px-3 py-2 rounded-xl hover:bg-red-50 ${
               collapsed ? "justify-center" : "w-full"
             }`}
             title={collapsed ? "Keluar" : undefined}
@@ -223,23 +223,28 @@ export function DashboardShell({
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-gray-100 bg-white">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3.5 border-b border-slate-200/70 glass sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
               aria-label="Buka menu"
-              className="md:hidden p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+              className="md:hidden p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <Menu size={20} />
             </button>
-            <h1 className="font-bold text-gray-900">{activeLabel}</h1>
+            <h1 className="font-display font-bold text-slate-900 text-lg">
+              {activeLabel}
+            </h1>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors">
+            <button
+              aria-label="Notifikasi"
+              className="relative p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+            >
               <Bell size={18} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-pink-500 rounded-full ring-2 ring-white" />
             </button>
-            <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-indigo-600 rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-full flex items-center justify-center shadow-soft">
               <span className="text-white text-xs font-bold">
                 {initials(userName)}
               </span>

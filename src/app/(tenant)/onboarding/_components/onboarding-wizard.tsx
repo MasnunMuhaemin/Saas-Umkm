@@ -81,10 +81,10 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
   };
 
   const inputCls =
-    "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-colors";
+    "w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100 bg-slate-50 focus:bg-white transition-all";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         {/* Progress */}
         <div className="flex items-center gap-2 mb-6">
@@ -92,28 +92,30 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
             <div
               key={i}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-brand-600" : "bg-gray-200"
+                i <= step
+                  ? "bg-linear-to-r from-brand-600 to-violet-600"
+                  : "bg-slate-200"
               }`}
             />
           ))}
         </div>
 
-        <div className="bg-white rounded-3xl shadow-xl shadow-blue-100/50 border border-gray-100 p-7">
+        <div className="glass-card rounded-3xl p-7 shadow-float">
           {step === 0 && (
             <div>
-              <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-linear-to-br from-brand-600 to-violet-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
                 <Store size={24} />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 mb-1">
+              <h1 className="font-display text-xl font-extrabold text-slate-900 mb-1">
                 Siapkan Toko Anda
               </h1>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm text-slate-500 mb-6">
                 Beberapa info dasar agar toko langsung tampil profesional.
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Nama Toko *
                   </label>
                   <input
@@ -128,16 +130,16 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                   {nameErr && (
                     <p className="text-xs text-red-500 mt-1">{nameErr}</p>
                   )}
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-slate-400 mt-1">
                     Alamat toko:{" "}
-                    <span className="font-mono text-gray-500">
+                    <span className="font-mono text-slate-500">
                       {initial.slug}.{ROOT}
                     </span>
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Nomor WhatsApp{" "}
                     <span className="text-brand-600">(disarankan)</span>
                   </label>
@@ -147,13 +149,13 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                     placeholder="08123456789"
                     className={inputCls}
                   />
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-slate-400 mt-1">
                     Semua pesanan pelanggan masuk ke nomor ini.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Deskripsi Singkat
                   </label>
                   <textarea
@@ -166,7 +168,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     URL Logo (opsional)
                   </label>
                   <input
@@ -180,7 +182,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
 
               <button
                 onClick={next}
-                className="mt-6 w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                className="mt-6 w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
               >
                 Lanjut <ArrowRight size={16} />
               </button>
@@ -189,19 +191,19 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
 
           {step === 1 && (
             <div>
-              <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-linear-to-br from-brand-600 to-violet-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
                 <Package size={24} />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 mb-1">
+              <h1 className="font-display text-xl font-extrabold text-slate-900 mb-1">
                 Tambah Produk Pertama
               </h1>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm text-slate-500 mb-6">
                 Opsional — bisa dilewati dan ditambah nanti dari dashboard.
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Nama Produk
                   </label>
                   <input
@@ -213,7 +215,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-bold text-slate-700 mb-1.5">
                       Harga (Rp)
                     </label>
                     <input
@@ -225,7 +227,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-bold text-slate-700 mb-1.5">
                       Stok
                     </label>
                     <input
@@ -242,7 +244,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
               <div className="mt-6 flex items-center gap-3">
                 <button
                   onClick={() => setStep(0)}
-                  className="p-3 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+                  className="p-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
                   aria-label="Kembali"
                 >
                   <ArrowLeft size={16} />
@@ -250,7 +252,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                 <button
                   onClick={finish}
                   disabled={complete.isPending}
-                  className="flex-1 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                  className="flex-1 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
                 >
                   {complete.isPending ? (
                     <Loader2 size={16} className="animate-spin" />

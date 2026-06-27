@@ -36,7 +36,7 @@ export function WaButton({
 
 export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 gap-4">
         <a href="/" className="flex items-center gap-2.5">
           {tenant.logo ? (
@@ -48,39 +48,42 @@ export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
               className="h-9 w-auto max-w-[120px] rounded-lg object-contain"
             />
           ) : (
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-sm">
               <ShoppingBag size={17} className="text-white" />
             </div>
           )}
           <div className="text-left">
             {tenant.showBusinessName && (
-              <p className="font-bold text-gray-900 text-sm leading-tight">
+              <p className="font-display font-bold text-slate-900 text-sm leading-tight">
                 {tenant.name}
               </p>
             )}
             {tenant.showTagline && tenant.tagline && (
-              <p className="text-gray-500 text-xs leading-tight">
+              <p className="text-slate-500 text-xs leading-tight">
                 {tenant.tagline}
               </p>
             )}
           </div>
         </a>
-        <nav className="hidden md:flex items-center gap-6">
-          <a href="/" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+        <nav className="hidden md:flex items-center gap-7">
+          <a href="/" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
             Beranda
           </a>
-          <a href="/#produk" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+          <a href="/#produk" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
             Produk
           </a>
-          <a href="/tentang" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+          <a href="/tentang" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
             Tentang
           </a>
-          <a href="/kontak" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+          <a href="/kontak" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
             Kontak
           </a>
         </nav>
         {tenant.showWhatsappButton && (
-          <WaButton tenant={tenant} className="bg-primary text-white text-sm py-2 px-3">
+          <WaButton
+            tenant={tenant}
+            className="bg-primary text-white text-sm py-2.5 px-4 shadow-sm hover:opacity-90 active:scale-95"
+          >
             WhatsApp
           </WaButton>
         )}
@@ -91,22 +94,23 @@ export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
 
 export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12">
+    <footer className="relative bg-slate-950 text-slate-300 py-14 overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-60" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-            <ShoppingBag size={17} className="text-white" />
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+            <ShoppingBag size={18} className="text-white" />
           </div>
           <div>
-            <p className="font-bold text-white">{tenant.name}</p>
+            <p className="font-display font-bold text-white">{tenant.name}</p>
             {tenant.tagline && (
-              <p className="text-xs text-gray-400">{tenant.tagline}</p>
+              <p className="text-xs text-slate-400">{tenant.tagline}</p>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-slate-400">
           <BadgeCheck size={15} className="text-primary" />
-          Didukung oleh MayWeb
+          Didukung oleh <span className="font-semibold text-slate-200">MayWeb</span>
         </div>
       </div>
     </footer>

@@ -12,10 +12,10 @@ type Notif =
   inferRouterOutputs<AppRouter>["superadmin"]["notification"]["list"][number];
 
 const TYPE_STYLE: Record<string, string> = {
-  info: "bg-blue-50 text-blue-600",
-  warning: "bg-amber-50 text-amber-600",
-  success: "bg-green-50 text-green-600",
-  error: "bg-red-50 text-red-600",
+  info: "bg-linear-to-br from-brand-500 to-violet-600 text-white",
+  warning: "bg-linear-to-br from-amber-500 to-orange-600 text-white",
+  success: "bg-linear-to-br from-emerald-500 to-green-600 text-white",
+  error: "bg-linear-to-br from-rose-500 to-red-600 text-white",
 };
 
 export function NotificationCenter({ initial }: { initial: Notif[] }) {
@@ -58,32 +58,32 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
   });
 
   return (
-    <div className="p-6 max-w-3xl space-y-6">
+    <div className="p-6 max-w-3xl space-y-6 animate-fade-up">
       <div className="flex items-center justify-between">
-        <h2 className="font-bold text-slate-900">Pusat Notifikasi</h2>
+        <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">Pusat Notifikasi</h2>
         <button
           onClick={() => markAll.mutate()}
           disabled={markAll.isPending}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline disabled:opacity-50"
         >
           <CheckCheck size={15} /> Tandai semua dibaca
         </button>
       </div>
 
       {/* Buat notifikasi */}
-      <div className="bg-white rounded-2xl border border-slate-100 p-5 space-y-3">
-        <h3 className="font-bold text-slate-900 text-sm">Buat Notifikasi</h3>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 space-y-3">
+        <h3 className="font-display font-bold text-slate-900 text-sm">Buat Notifikasi</h3>
         <div className="grid sm:grid-cols-3 gap-2">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Judul"
-            className="sm:col-span-2 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            className="sm:col-span-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           />
           <select
             value={type}
             onChange={(e) => setType(e.target.value as typeof type)}
-            className="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none"
+            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           >
             <option value="info">Info</option>
             <option value="warning">Peringatan</option>
@@ -96,7 +96,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
           onChange={(e) => setMessage(e.target.value)}
           rows={2}
           placeholder="Pesan..."
-          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 resize-none"
+          className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all resize-none"
         />
         <button
           onClick={() => {
@@ -105,7 +105,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
             create.mutate({ title, message, type });
           }}
           disabled={create.isPending}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors"
+          className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow active:scale-[0.98] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all"
         >
           {create.isPending ? (
             <Loader2 size={15} className="animate-spin" />
@@ -117,25 +117,25 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
       </div>
 
       {/* Daftar */}
-      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
         {items.length === 0 ? (
           <div className="p-12 text-center text-slate-400">
             <Bell size={36} className="mx-auto mb-2 opacity-20" />
             <p className="text-sm">Belum ada notifikasi.</p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-slate-100">
             {items.map((n) => (
               <div
                 key={n.id}
                 className={cn(
-                  "flex items-start gap-3 p-4",
-                  !n.isRead && "bg-blue-50/40",
+                  "flex items-start gap-3 p-4 transition-colors",
+                  !n.isRead && "bg-brand-50/40",
                 )}
               >
                 <div
                   className={cn(
-                    "w-9 h-9 rounded-xl flex items-center justify-center flex-none",
+                    "w-9 h-9 rounded-xl flex items-center justify-center flex-none shadow-soft",
                     TYPE_STYLE[n.type] ?? TYPE_STYLE.info,
                   )}
                 >
@@ -147,7 +147,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
                       {n.title}
                     </p>
                     {!n.isRead && (
-                      <span className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <span className="w-2 h-2 bg-pink-500 rounded-full" />
                     )}
                   </div>
                   <p className="text-sm text-slate-600">{n.message}</p>
@@ -156,7 +156,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
                 {!n.isRead && (
                   <button
                     onClick={() => markRead.mutate({ id: n.id })}
-                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex-none"
+                    className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors flex-none"
                     title="Tandai dibaca"
                   >
                     <Check size={16} />

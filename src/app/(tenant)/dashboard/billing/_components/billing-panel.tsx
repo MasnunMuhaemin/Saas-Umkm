@@ -52,68 +52,74 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
   });
 
   return (
-    <div className="p-6 max-w-3xl space-y-6">
+    <div className="p-6 max-w-3xl space-y-6 animate-fade-up">
       <div>
-        <h2 className="font-bold text-gray-900">Langganan</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="font-display font-bold tracking-tight text-slate-900 text-xl">
+          Langganan
+        </h2>
+        <p className="text-sm text-slate-500">
           Kelola paket dan pembayaran toko Anda
         </p>
       </div>
 
       {/* Kartu paket */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div>
-            <p className="text-sm text-gray-500 mb-1">Paket Aktif</p>
-            <p className="text-2xl font-black text-gray-900">
-              {info.planName}
-            </p>
-            <p className="text-sm text-gray-500">
-              {formatRupiah(info.planPrice)} / bulan
-            </p>
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-slate-800 text-white p-6 shadow-float">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="absolute -top-16 -right-16 w-56 h-56 bg-linear-to-tr from-brand-500/30 via-violet-500/20 to-pink-500/20 rounded-full blur-3xl" />
+        <div className="relative">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <p className="text-sm text-slate-300 mb-1">Paket Aktif</p>
+              <p className="text-3xl font-display font-extrabold tracking-tight">
+                {info.planName}
+              </p>
+              <p className="text-sm text-slate-300">
+                {formatRupiah(info.planPrice)} / bulan
+              </p>
+            </div>
+            <StatusBadge status={info.status} variant="subscription" />
           </div>
-          <StatusBadge status={info.status} variant="subscription" />
-        </div>
-        <div className="flex items-center justify-between border-t border-gray-100 pt-4 text-sm">
-          <span className="text-gray-500">Aktif hingga</span>
-          <span className="font-semibold text-gray-900">
-            {info.currentEndLabel ?? "—"}
-          </span>
-        </div>
+          <div className="flex items-center justify-between border-t border-white/10 pt-4 text-sm">
+            <span className="text-slate-300">Aktif hingga</span>
+            <span className="font-semibold text-white">
+              {info.currentEndLabel ?? "—"}
+            </span>
+          </div>
 
-        {!info.pendingQr && (
-          <div className="mt-5">
-            <input
-              value={coupon}
-              onChange={(e) => setCoupon(e.target.value.toUpperCase())}
-              placeholder="Kode kupon (opsional)"
-              className="w-full mb-3 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40"
-            />
-            <button
-              onClick={() =>
-                pay.mutate(coupon.trim() ? { couponCode: coupon.trim() } : undefined)
-              }
-              disabled={pay.isPending}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
-            >
-            {pay.isPending ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <CreditCard size={18} />
-            )}
-            {pay.isPending ? "Membuat tagihan..." : "Bayar / Perpanjang Langganan"}
-            </button>
-          </div>
-        )}
+          {!info.pendingQr && (
+            <div className="mt-5">
+              <input
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                placeholder="Kode kupon (opsional)"
+                className="w-full mb-3 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-400 text-sm focus:outline-none focus:bg-white/15 focus:border-white/40 focus:ring-4 focus:ring-white/10 transition-all"
+              />
+              <button
+                onClick={() =>
+                  pay.mutate(coupon.trim() ? { couponCode: coupon.trim() } : undefined)
+                }
+                disabled={pay.isPending}
+                className="w-full bg-white text-slate-900 hover:bg-slate-100 active:scale-[0.98] disabled:opacity-50 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              >
+              {pay.isPending ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <CreditCard size={18} />
+              )}
+              {pay.isPending ? "Membuat tagihan..." : "Bayar / Perpanjang Langganan"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Perpanjangan otomatis / batal langganan */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 flex items-center justify-between gap-4">
         <div>
-          <p className="font-bold text-gray-900 text-sm">
+          <p className="font-bold text-slate-900 text-sm">
             Perpanjangan Otomatis
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             {info.autoRenew
               ? "Langganan diperpanjang otomatis tiap periode."
               : `Dibatalkan — aktif hingga ${info.currentEndLabel ?? "akhir periode"}, tidak diperpanjang.`}
@@ -122,9 +128,9 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
         <button
           onClick={() => autoRenew.mutate({ autoRenew: !info.autoRenew })}
           disabled={autoRenew.isPending}
-          className={`flex-none text-sm font-bold px-4 py-2 rounded-xl disabled:opacity-50 ${
+          className={`flex-none text-sm font-bold px-4 py-2.5 rounded-xl transition-colors disabled:opacity-50 ${
             info.autoRenew
-              ? "text-red-600 bg-red-50 hover:bg-red-100"
+              ? "text-rose-600 bg-rose-50 hover:bg-rose-100"
               : "text-emerald-600 bg-emerald-50 hover:bg-emerald-100"
           }`}
         >
@@ -134,9 +140,11 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
 
       {/* Ganti paket (upgrade/downgrade) */}
       {plans && plans.length > 1 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 className="font-bold text-gray-900 mb-1">Ganti Paket</h3>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+          <h3 className="font-display font-bold tracking-tight text-slate-900 mb-1">
+            Ganti Paket
+          </h3>
+          <p className="text-sm text-slate-500 mb-4">
             Upgrade atau downgrade kapan saja.
           </p>
           <div className="grid sm:grid-cols-3 gap-3">
@@ -145,20 +153,24 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
               return (
                 <div
                   key={pl.slug}
-                  className={`rounded-xl border p-4 ${
+                  className={`rounded-2xl border p-4 transition-all ${
                     current
-                      ? "border-brand-500 bg-brand-50/40"
-                      : "border-gray-200"
+                      ? "border-brand-300 bg-linear-to-br from-brand-50 to-violet-50 ring-1 ring-brand-100/70"
+                      : "border-slate-200 hover:border-slate-300 hover:shadow-soft"
                   }`}
                 >
-                  <p className="font-bold text-gray-900">{pl.name}</p>
-                  <p className="text-sm text-gray-500 mb-3">
+                  <p className="font-bold text-slate-900">{pl.name}</p>
+                  <p className="font-display text-sm text-slate-500 mb-3">
                     {formatRupiah(pl.price)}/bln
                   </p>
                   <button
                     disabled={current || changePlan.isPending}
                     onClick={() => changePlan.mutate({ planSlug: pl.slug })}
-                    className="w-full text-sm font-bold py-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-default"
+                    className={`w-full text-sm font-bold py-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-default ${
+                      current
+                        ? "bg-white border border-slate-200 text-slate-500"
+                        : "bg-linear-to-r from-brand-600 to-violet-600 text-white hover:shadow-glow active:scale-[0.98]"
+                    }`}
                   >
                     {current
                       ? "Paket Aktif"
@@ -175,16 +187,20 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
 
       {/* QR pembayaran pending */}
       {info.pendingQr && info.pendingQr.paymentNumber && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
-          <h3 className="font-bold text-gray-900 mb-1">Selesaikan Pembayaran</h3>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="glass-card rounded-2xl p-6 text-center shadow-card">
+          <h3 className="font-display font-bold tracking-tight text-slate-900 mb-1">
+            Selesaikan Pembayaran
+          </h3>
+          <p className="text-sm text-slate-500 mb-4">
             Scan QRIS dengan e-wallet / m-banking ·{" "}
-            {formatRupiah(info.pendingQr.amount)}
+            <span className="font-display font-bold text-gradient">
+              {formatRupiah(info.pendingQr.amount)}
+            </span>
           </p>
-          <div className="inline-block bg-white p-4 rounded-xl border border-gray-200">
+          <div className="inline-block bg-white p-4 rounded-2xl border border-slate-200 shadow-soft">
             <QRCodeSVG value={info.pendingQr.paymentNumber} size={220} />
           </div>
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-xs text-slate-400 mt-3">
             Berlaku hingga {info.pendingQr.expiredLabel ?? "-"} · Order{" "}
             {info.pendingQr.orderId}
           </p>
@@ -192,29 +208,31 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
       )}
 
       {/* Riwayat pembayaran */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-        <div className="p-4 border-b border-gray-100">
-          <h3 className="font-bold text-gray-900">Riwayat Pembayaran</h3>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
+        <div className="p-5 border-b border-slate-100">
+          <h3 className="font-display font-bold tracking-tight text-slate-900">
+            Riwayat Pembayaran
+          </h3>
         </div>
         {info.payments.length === 0 ? (
-          <p className="p-6 text-sm text-gray-500 text-center">
+          <p className="p-6 text-sm text-slate-500 text-center">
             Belum ada pembayaran.
           </p>
         ) : (
           <table className="w-full">
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-100">
               {info.payments.map((p) => (
-                <tr key={p.orderId}>
-                  <td className="px-4 py-3 text-sm font-mono text-gray-600">
+                <tr key={p.orderId} className="hover:bg-slate-50/60 transition-colors">
+                  <td className="px-4 py-3.5 text-sm font-mono text-slate-600">
                     {p.orderId}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3.5 text-sm text-slate-500">
                     {p.dateLabel}
                   </td>
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-900">
+                  <td className="px-4 py-3.5 text-sm font-semibold text-slate-900">
                     {formatRupiah(p.amount)}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <span
                       className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                         p.status === "COMPLETED"

@@ -9,7 +9,7 @@ export default function PrivacyPage() {
   return (
     <>
       <h1>Kebijakan Privasi</h1>
-      <p className="text-gray-400">Terakhir diperbarui: 27 Juni 2026</p>
+      <p className="text-slate-400">Terakhir diperbarui: 27 Juni 2026</p>
 
       <p>
         Kebijakan ini menjelaskan data yang dikumpulkan MayWeb

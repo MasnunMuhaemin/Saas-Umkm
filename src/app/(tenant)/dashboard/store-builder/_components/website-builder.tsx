@@ -21,7 +21,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       onClick={onToggle}
       className={cn(
         "relative w-10 h-6 rounded-full transition-colors flex-none",
-        on ? "bg-primary" : "bg-gray-300",
+        on ? "bg-primary" : "bg-slate-300",
       )}
     >
       <span
@@ -69,28 +69,30 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
     });
 
   const inputCls =
-    "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-colors";
+    "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-colors";
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="p-6 max-w-3xl animate-fade-up">
       <div className="flex items-center justify-between mb-5 gap-4">
         <div>
-          <h2 className="font-bold text-gray-900">Website Builder</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="font-display text-xl font-bold tracking-tight text-slate-900">
+            Website Builder
+          </h2>
+          <p className="text-sm text-slate-500">
             Atur tampilan halaman toko publik Anda
           </p>
         </div>
         <button
           onClick={save}
           disabled={update.isPending}
-          className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
+          className="bg-linear-to-r from-brand-600 to-violet-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:shadow-glow active:scale-[0.98] disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 flex items-center gap-2"
         >
           {update.isPending && <Loader2 size={16} className="animate-spin" />}
           {update.isPending ? "Menyimpan..." : "Simpan Perubahan"}
         </button>
       </div>
 
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-5 max-w-md">
+      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-5 max-w-md">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -98,8 +100,8 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             className={cn(
               "flex-1 py-2 rounded-lg text-sm font-semibold transition-colors",
               tab === t.id
-                ? "bg-white shadow text-gray-900"
-                : "text-gray-500 hover:text-gray-700",
+                ? "bg-white shadow text-slate-900"
+                : "text-slate-500 hover:text-slate-700",
             )}
           >
             {t.label}
@@ -108,9 +110,9 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
       </div>
 
       {tab === "hero" && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Judul Banner
             </label>
             <input
@@ -122,7 +124,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Subjudul Banner
             </label>
             <textarea
@@ -134,7 +136,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Teks Tombol (CTA)
             </label>
             <input
@@ -149,10 +151,10 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
       )}
 
       {tab === "tentang" && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
           <div className="grid sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">
                 Judul Tentang Kami
               </label>
               <input
@@ -164,7 +166,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1.5">
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">
                 Tahun Pengalaman
               </label>
               <input
@@ -177,7 +179,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Cerita / Deskripsi
             </label>
             <textarea
@@ -190,7 +192,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
           </div>
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-bold text-gray-700">
+              <label className="text-sm font-bold text-slate-700">
                 Poin Keunggulan
               </label>
               <button
@@ -213,7 +215,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
                       set("aboutChecklist", arr);
                     }}
                     placeholder="cth: Bahan alami pilihan"
-                    className="flex-1 px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white"
+                    className="flex-1 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
                   />
                   <button
                     type="button"
@@ -223,14 +225,14 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
                         form.aboutChecklist.filter((_, idx) => idx !== i),
                       )
                     }
-                    className="p-2.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                    className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                   >
                     <Trash2 size={15} />
                   </button>
                 </div>
               ))}
               {form.aboutChecklist.length === 0 && (
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-slate-400">
                   Belum ada poin keunggulan.
                 </p>
               )}
@@ -240,11 +242,11 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
       )}
 
       {tab === "promo" && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-gray-700">Aktifkan Promo</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-bold text-slate-700">Aktifkan Promo</p>
+              <p className="text-xs text-slate-500">
                 Tampilkan banner promo di halaman toko
               </p>
             </div>
@@ -254,7 +256,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Judul Promo
             </label>
             <input
@@ -266,7 +268,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Subjudul Promo
             </label>
             <input
@@ -278,7 +280,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Kode Promo
             </label>
             <input

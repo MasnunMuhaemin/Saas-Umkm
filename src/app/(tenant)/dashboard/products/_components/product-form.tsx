@@ -32,8 +32,8 @@ const TABS = [
 ] as const;
 
 const STATUS_OPTIONS = [
-  { val: "ACTIVE", label: "Aktif", icon: CheckCircle, color: "text-green-600" },
-  { val: "INACTIVE", label: "Nonaktif", icon: XCircle, color: "text-gray-500" },
+  { val: "ACTIVE", label: "Aktif", icon: CheckCircle, color: "text-emerald-600" },
+  { val: "INACTIVE", label: "Nonaktif", icon: XCircle, color: "text-slate-500" },
   { val: "OUT_OF_STOCK", label: "Habis", icon: PackageX, color: "text-red-600" },
 ] as const;
 
@@ -126,36 +126,36 @@ export function ProductForm({
   };
 
   const inputCls =
-    "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-colors";
+    "w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100 bg-slate-50 focus:bg-white transition-all";
 
   return (
-    <div className="p-6">
+    <div className="p-6 animate-fade-up">
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/dashboard/products"
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
+          className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
         >
           <ChevronRight size={18} className="rotate-180" />
         </Link>
         <div>
-          <h2 className="font-bold text-gray-900">
+          <h2 className="font-display font-bold text-slate-900 text-xl tracking-tight">
             {isEdit ? "Edit Produk" : "Tambah Produk Baru"}
           </h2>
-          <p className="text-sm text-gray-500">Isi informasi produk dengan lengkap</p>
+          <p className="text-sm text-slate-500">Isi informasi produk dengan lengkap</p>
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1">
-          <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-5">
+          <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-5">
             {visibleTabs.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
                   tab === t.id
-                    ? "bg-white shadow text-gray-900"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-white shadow-soft text-brand-700"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 {t.label}
@@ -164,9 +164,9 @@ export function ProductForm({
           </div>
 
           {tab === "basic" && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Nama Produk *
                 </label>
                 <input
@@ -180,11 +180,11 @@ export function ProductForm({
                   }`}
                 />
                 {fieldErrors.name && (
-                  <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>
+                  <p className="text-xs text-red-600 mt-1 font-medium">{fieldErrors.name}</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Kategori
                 </label>
                 <select
@@ -201,7 +201,7 @@ export function ProductForm({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   Deskripsi Produk
                 </label>
                 <textarea
@@ -216,8 +216,8 @@ export function ProductForm({
           )}
 
           {tab === "foto" && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-              <p className="text-xs text-gray-400">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-4">
+              <p className="text-xs text-slate-400">
                 Foto pertama menjadi <b>foto utama</b>. Tempel URL gambar; upload
                 file langsung tersedia setelah storage dikonfigurasi.
               </p>
@@ -225,7 +225,7 @@ export function ProductForm({
                 {images.map((url, i) => (
                   <div key={i} className="flex items-center gap-3">
                     {url ? (
-                      <div className="relative w-16 h-16 rounded-lg border border-gray-200 overflow-hidden bg-gray-50 flex-none">
+                      <div className="relative w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 flex-none shadow-soft">
                         <Image
                           src={url}
                           alt=""
@@ -235,7 +235,7 @@ export function ProductForm({
                         />
                       </div>
                     ) : (
-                      <div className="w-16 h-16 rounded-lg border border-dashed border-gray-200 bg-gray-50 flex-none flex items-center justify-center text-gray-300">
+                      <div className="w-16 h-16 rounded-xl border border-dashed border-slate-300 bg-slate-50 flex-none flex items-center justify-center text-slate-300">
                         <ImagePlus size={20} />
                       </div>
                     )}
@@ -247,7 +247,7 @@ export function ProductForm({
                       className={`${inputCls} flex-1`}
                     />
                     {i === 0 && (
-                      <span className="text-[10px] font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded flex-none">
+                      <span className="text-[10px] font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-md flex-none">
                         UTAMA
                       </span>
                     )}
@@ -257,7 +257,7 @@ export function ProductForm({
                         onClick={() =>
                           setImages(images.filter((_, idx) => idx !== i))
                         }
-                        className="p-2 text-gray-400 hover:text-red-500 flex-none"
+                        className="p-2 text-slate-400 hover:text-red-500 flex-none"
                       >
                         <Trash2 size={15} />
                       </button>
@@ -278,18 +278,18 @@ export function ProductForm({
           )}
 
           {tab === "price" && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Harga Normal *
                   </label>
                   <div
-                    className={`flex items-center border rounded-xl overflow-hidden focus-within:border-brand-400 ${
-                      fieldErrors.price ? "border-red-300" : "border-gray-200"
+                    className={`flex items-center border rounded-xl overflow-hidden bg-slate-50 focus-within:bg-white focus-within:border-brand-400 focus-within:ring-4 focus-within:ring-brand-100 transition-all ${
+                      fieldErrors.price ? "border-red-300" : "border-slate-200"
                     }`}
                   >
-                    <span className="px-3 py-3 bg-gray-50 text-gray-500 text-sm border-r border-gray-200">
+                    <span className="px-3 py-3 bg-slate-100 text-slate-500 text-sm border-r border-slate-200">
                       Rp
                     </span>
                     <input
@@ -298,21 +298,21 @@ export function ProductForm({
                       onChange={(e) => setPrice(e.target.value)}
                       placeholder="65000"
                       aria-invalid={!!fieldErrors.price}
-                      className="flex-1 px-3 py-3 text-sm focus:outline-none bg-white"
+                      className="flex-1 px-3 py-3 text-sm focus:outline-none bg-transparent"
                     />
                   </div>
                   {fieldErrors.price && (
-                    <p className="text-xs text-red-500 mt-1">
+                    <p className="text-xs text-red-600 mt-1 font-medium">
                       {fieldErrors.price}
                     </p>
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Harga Coret (sebelum diskon)
                   </label>
-                  <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden focus-within:border-brand-400">
-                    <span className="px-3 py-3 bg-gray-50 text-gray-500 text-sm border-r border-gray-200">
+                  <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50 focus-within:bg-white focus-within:border-brand-400 focus-within:ring-4 focus-within:ring-brand-100 transition-all">
+                    <span className="px-3 py-3 bg-slate-100 text-slate-500 text-sm border-r border-slate-200">
                       Rp
                     </span>
                     <input
@@ -320,14 +320,14 @@ export function ProductForm({
                       value={originalPrice}
                       onChange={(e) => setOriginalPrice(e.target.value)}
                       placeholder="Kosongkan jika tidak ada"
-                      className="flex-1 px-3 py-3 text-sm focus:outline-none bg-white"
+                      className="flex-1 px-3 py-3 text-sm focus:outline-none bg-transparent"
                     />
                   </div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     SKU
                   </label>
                   <input
@@ -339,7 +339,7 @@ export function ProductForm({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Stok
                   </label>
                   <input
@@ -351,7 +351,7 @@ export function ProductForm({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
                     Berat (gram)
                   </label>
                   <input
@@ -367,9 +367,9 @@ export function ProductForm({
           )}
 
           {tab === "seo" && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   SEO Title
                 </label>
                 <input
@@ -379,12 +379,12 @@ export function ProductForm({
                   placeholder="Contoh: Kue Nastar Premium Homemade - Toko Demo"
                   className={inputCls}
                 />
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   Rekomendasi 50-60 karakter untuk pencarian Google.
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
                   SEO Description
                 </label>
                 <textarea
@@ -394,7 +394,7 @@ export function ProductForm({
                   placeholder="Deskripsi singkat untuk hasil pencarian..."
                   className={`${inputCls} resize-none`}
                 />
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   Rekomendasi 150-160 karakter.
                 </p>
               </div>
@@ -409,14 +409,14 @@ export function ProductForm({
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex-1 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold transition-colors flex justify-center items-center gap-2"
+              className="flex-1 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-50 text-white py-3 rounded-xl font-bold transition-all active:scale-[0.98] flex justify-center items-center gap-2"
             >
               {loading && <Loader2 size={18} className="animate-spin" />}
               {loading ? "Menyimpan..." : "Simpan Produk"}
             </button>
             <Link
               href="/dashboard/products"
-              className="px-6 border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center"
+              className="px-6 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors flex items-center"
             >
               Batal
             </Link>
@@ -424,15 +424,19 @@ export function ProductForm({
         </div>
 
         <div className="w-full lg:w-72 flex-none">
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <h4 className="font-bold text-gray-900 mb-3 text-sm">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5">
+            <h4 className="font-display font-bold text-slate-900 mb-3 text-sm">
               Status Publikasi
             </h4>
             <div className="space-y-2">
               {STATUS_OPTIONS.map(({ val, label, icon: Icon, color }) => (
                 <label
                   key={val}
-                  className="flex items-center gap-2.5 cursor-pointer"
+                  className={`flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-2.5 border transition-all ${
+                    status === val
+                      ? "bg-brand-50 border-brand-200"
+                      : "border-transparent hover:bg-slate-50"
+                  }`}
                 >
                   <input
                     type="radio"
@@ -442,7 +446,7 @@ export function ProductForm({
                     className="accent-brand-600"
                   />
                   <Icon size={16} className={color} />
-                  <span className="text-sm text-gray-700">{label}</span>
+                  <span className="text-sm font-medium text-slate-700">{label}</span>
                 </label>
               ))}
             </div>

@@ -38,7 +38,7 @@ export function ExportOrdersButton() {
   return (
     <button
       onClick={handleExport}
-      className="flex items-center gap-1.5 border border-gray-200 text-gray-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+      className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-soft hover:bg-slate-50 active:scale-[0.98] transition-all"
     >
       <Download size={15} /> Export
     </button>

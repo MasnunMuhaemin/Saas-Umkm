@@ -25,25 +25,25 @@ export default async function StatsPage() {
       label: "Total Pendapatan",
       value: formatRupiah(s.revenue),
       icon: DollarSign,
-      color: "bg-green-50 text-green-600",
+      color: "from-emerald-500 to-green-600",
     },
     {
       label: "Total Transaksi",
       value: String(s.txCount),
       icon: ShoppingCart,
-      color: "bg-brand-50 text-brand-600",
+      color: "from-brand-500 to-indigo-600",
     },
     {
       label: "Produk Terjual",
       value: String(s.itemsSold),
       icon: Package,
-      color: "bg-amber-50 text-amber-600",
+      color: "from-amber-500 to-orange-600",
     },
     {
       label: "Rata-rata / Transaksi",
       value: formatRupiah(s.avg),
       icon: BarChart2,
-      color: "bg-purple-50 text-purple-600",
+      color: "from-violet-500 to-purple-600",
     },
   ];
 
@@ -51,12 +51,12 @@ export default async function StatsPage() {
   const totalPay = Math.max(1, s.payments.reduce((a, p) => a + p.total, 0));
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-up">
       <div>
-        <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900">
           Statistik Penjualan
         </h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-500">
           Ringkasan performa toko Anda
         </p>
       </div>
@@ -65,58 +65,58 @@ export default async function StatsPage() {
         {cards.map(({ label, value, icon: Icon, color }) => (
           <div
             key={label}
-            className="bg-white rounded-2xl border border-gray-100 p-5"
+            className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 transition-all hover:-translate-y-0.5 hover:shadow-card"
           >
             <div
-              className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center mb-4`}
+              className={`w-11 h-11 rounded-xl bg-linear-to-br ${color} flex items-center justify-center mb-4 shadow-soft`}
             >
-              <Icon size={18} />
+              <Icon size={18} className="text-white" />
             </div>
-            <p className="text-2xl font-black text-gray-900 tracking-tight">
+            <p className="font-display text-2xl font-extrabold tracking-tight text-slate-900">
               {value}
             </p>
-            <p className="text-sm font-medium text-gray-500 mt-1">{label}</p>
+            <p className="text-sm font-medium text-slate-500 mt-1">{label}</p>
           </div>
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-5">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
         <div className="mb-5">
-          <h3 className="font-bold text-gray-900 text-lg">Pendapatan</h3>
-          <p className="text-sm text-gray-500">6 bulan terakhir</p>
+          <h3 className="font-display font-bold text-slate-900 text-lg">Pendapatan</h3>
+          <p className="text-sm text-slate-500">6 bulan terakhir</p>
         </div>
         <RevenueChart data={s.series} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-5">
         {/* Top produk */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <h3 className="font-bold text-gray-900 text-lg mb-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+          <h3 className="font-display font-bold text-slate-900 text-lg mb-5">
             Produk Terlaris
           </h3>
           {s.topProducts.length === 0 ? (
-            <p className="text-sm text-gray-500 py-6 text-center">
+            <p className="text-sm text-slate-500 py-6 text-center">
               Belum ada penjualan.
             </p>
           ) : (
             <div className="space-y-4">
               {s.topProducts.map((p, i) => (
                 <div key={p.name} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xs flex-none">
+                  <div className="w-7 h-7 rounded-lg bg-linear-to-br from-brand-500 to-violet-600 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
                     #{i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm truncate mb-1">
+                    <p className="font-semibold text-slate-900 text-sm truncate mb-1">
                       {p.name}
                     </p>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-brand-500 rounded-full"
+                        className="h-full bg-linear-to-r from-brand-500 to-violet-500 rounded-full"
                         style={{ width: `${(p.sold / maxSold) * 100}%` }}
                       />
                     </div>
                   </div>
-                  <span className="text-sm font-bold text-gray-900 flex-none">
+                  <span className="text-sm font-bold text-slate-900 flex-none">
                     {p.sold}
                   </span>
                 </div>
@@ -126,33 +126,33 @@ export default async function StatsPage() {
         </div>
 
         {/* Metode bayar */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5">
-          <h3 className="font-bold text-gray-900 text-lg mb-5">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+          <h3 className="font-display font-bold text-slate-900 text-lg mb-5">
             Metode Pembayaran
           </h3>
           {s.payments.length === 0 ? (
-            <p className="text-sm text-gray-500 py-6 text-center">
+            <p className="text-sm text-slate-500 py-6 text-center">
               Belum ada transaksi.
             </p>
           ) : (
             <div className="space-y-4">
               {s.payments.map((p) => (
                 <div key={p.method} className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center flex-none">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-none">
                     <Wallet size={15} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between mb-1">
-                      <span className="font-semibold text-gray-900 text-sm">
+                      <span className="font-semibold text-slate-900 text-sm">
                         {PAYMENT_LABEL[p.method] ?? p.method}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-slate-500">
                         {p.count}× · {formatRupiah(p.total)}
                       </span>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-green-500 rounded-full"
+                        className="h-full bg-linear-to-r from-emerald-500 to-green-500 rounded-full"
                         style={{ width: `${(p.total / totalPay) * 100}%` }}
                       />
                     </div>

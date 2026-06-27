@@ -156,23 +156,23 @@ export function ProductTable({
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 animate-fade-up">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="font-bold text-gray-900">Manajemen Produk</h2>
-          <p className="text-sm text-gray-500">{total} produk total</p>
+          <h2 className="font-display font-bold text-slate-900 text-xl tracking-tight">Manajemen Produk</h2>
+          <p className="text-sm text-slate-500">{total} produk total</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
-            className="flex items-center gap-1.5 border border-gray-200 text-gray-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors"
           >
             <Download size={15} /> Export
           </button>
           <button
             onClick={() => fileRef.current?.click()}
             disabled={bulkImport.isPending}
-            className="flex items-center gap-1.5 border border-gray-200 text-gray-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             {bulkImport.isPending ? (
               <Loader2 size={15} className="animate-spin" />
@@ -190,7 +190,7 @@ export function ProductTable({
           />
           <Link
             href="/dashboard/products/new"
-            className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+            className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
           >
             <Plus size={16} /> Tambah
           </Link>
@@ -198,15 +198,15 @@ export function ProductTable({
       </div>
 
       {selected.length > 0 && (
-        <div className="flex items-center gap-3 mb-3 bg-brand-50 border border-brand-100 rounded-xl px-4 py-2.5">
+        <div className="flex items-center gap-3 mb-3 bg-linear-to-r from-brand-50 to-violet-50 border border-brand-100 rounded-xl px-4 py-2.5 shadow-soft">
           <span className="text-sm font-semibold text-brand-700">
             {selected.length} dipilih
           </span>
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-3 ml-auto">
             <button
               onClick={() => bulkStatus.mutate({ ids: selected, status: "ACTIVE" })}
               disabled={busy}
-              className="text-xs font-bold text-green-700 hover:underline disabled:opacity-50"
+              className="text-xs font-bold text-emerald-700 hover:underline disabled:opacity-50"
             >
               Aktifkan
             </button>
@@ -215,7 +215,7 @@ export function ProductTable({
                 bulkStatus.mutate({ ids: selected, status: "INACTIVE" })
               }
               disabled={busy}
-              className="text-xs font-bold text-gray-600 hover:underline disabled:opacity-50"
+              className="text-xs font-bold text-slate-600 hover:underline disabled:opacity-50"
             >
               Nonaktifkan
             </button>
@@ -230,12 +230,12 @@ export function ProductTable({
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-gray-100">
-        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
+        <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative flex-1">
             <Search
               size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
             <input
               type="text"
@@ -245,7 +245,7 @@ export function ProductTable({
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
             />
           </div>
           <select
@@ -254,7 +254,7 @@ export function ProductTable({
               setCategory(e.target.value);
               setPage(1);
             }}
-            className="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus:outline-none"
+            className="text-sm border border-slate-200 rounded-xl px-3 py-2.5 bg-slate-50 focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           >
             <option value="">Semua Kategori</option>
             {categories.map((c) => (
@@ -269,7 +269,7 @@ export function ProductTable({
               setStatus(e.target.value);
               setPage(1);
             }}
-            className="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus:outline-none"
+            className="text-sm border border-slate-200 rounded-xl px-3 py-2.5 bg-slate-50 focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           >
             <option value="">Semua Status</option>
             <option value="ACTIVE">Aktif</option>
@@ -281,7 +281,7 @@ export function ProductTable({
         <div className="overflow-x-auto min-h-[300px]">
           <table className="w-full">
             <thead>
-              <tr className="text-left border-b border-gray-100">
+              <tr className="text-left bg-slate-50 border-b border-slate-100">
                 <th className="px-4 py-3 w-10">
                   <input
                     type="checkbox"
@@ -290,32 +290,32 @@ export function ProductTable({
                     className="rounded accent-brand-600"
                   />
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Produk
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   SKU
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Kategori
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Harga
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Stok
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Status
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                   Aksi
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-100">
               {products.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+                <tr key={p.id} className="hover:bg-slate-50/60 transition-colors">
                   <td className="px-4 py-3">
                     <input
                       type="checkbox"
@@ -326,21 +326,21 @@ export function ProductTable({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-100 to-indigo-200 flex items-center justify-center flex-none">
-                        <Package size={16} className="text-brand-600/70" />
+                      <div className="w-10 h-10 rounded-xl bg-linear-to-br from-brand-100 to-violet-200 flex items-center justify-center flex-none shadow-soft">
+                        <Package size={16} className="text-brand-600/80" />
                       </div>
-                      <p className="font-semibold text-gray-900 text-sm">
+                      <p className="font-semibold text-slate-900 text-sm">
                         {p.name}
                       </p>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 font-mono">
+                  <td className="px-4 py-3 text-sm text-slate-500 font-mono">
                     {p.sku || "-"}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-sm text-slate-600">
                     {p.category?.name || "-"}
                   </td>
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-900">
+                  <td className="px-4 py-3 text-sm font-semibold text-slate-900">
                     {formatRupiah(p.price)}
                   </td>
                   <td className="px-4 py-3">
@@ -349,8 +349,8 @@ export function ProductTable({
                         p.stock === 0
                           ? "text-red-600"
                           : p.stock <= 10
-                            ? "text-orange-600"
-                            : "text-gray-900"
+                            ? "text-amber-600"
+                            : "text-slate-900"
                       }`}
                     >
                       {p.stock}
@@ -363,13 +363,13 @@ export function ProductTable({
                     <div className="flex items-center gap-1">
                       <Link
                         href={`/dashboard/products/${p.id}/edit`}
-                        className="p-1.5 text-gray-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                       >
                         <Edit2 size={15} />
                       </Link>
                       <button
                         onClick={() => setDeleteId(p.id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                       >
                         <Trash2 size={15} />
                       </button>
@@ -380,13 +380,15 @@ export function ProductTable({
               {products.length === 0 && (
                 <tr>
                   <td colSpan={8} className="px-4 py-16 text-center">
-                    <Package size={40} className="text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500 font-medium mb-3">
+                    <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
+                      <Package size={28} className="text-slate-400" />
+                    </div>
+                    <p className="text-slate-500 font-medium mb-3">
                       {isFetching ? "Memuat..." : "Belum ada produk"}
                     </p>
                     <Link
                       href="/dashboard/products/new"
-                      className="inline-flex items-center gap-2 bg-brand-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+                      className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
                     >
                       <Plus size={16} /> Tambah Produk
                     </Link>
@@ -397,8 +399,8 @@ export function ProductTable({
           </table>
         </div>
 
-        <div className="p-4 border-t border-gray-100 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+          <p className="text-sm text-slate-500">
             Menampilkan {products.length} dari {total} produk
           </p>
           <div className="flex items-center gap-1">
@@ -408,10 +410,10 @@ export function ProductTable({
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium ${
+                  className={`w-8 h-8 rounded-lg text-sm font-semibold transition-all ${
                     p === page
-                      ? "bg-brand-600 text-white"
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-linear-to-r from-brand-600 to-violet-600 text-white shadow-soft"
+                      : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
                   {p}
@@ -424,20 +426,20 @@ export function ProductTable({
       {/* Konfirmasi hapus */}
       {deleteId && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in"
           onClick={() => setDeleteId(null)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <AlertCircle size={24} />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <h3 className="font-display text-lg font-bold text-slate-900 mb-2">
               Hapus Produk?
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-6">
               Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak
               dapat dibatalkan.
             </p>
@@ -445,7 +447,7 @@ export function ProductTable({
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={del.isPending}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
               >
                 Batal
               </button>
@@ -468,20 +470,20 @@ export function ProductTable({
       {/* Konfirmasi hapus massal */}
       {bulkConfirm && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in"
           onClick={() => setBulkConfirm(false)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <AlertCircle size={24} />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <h3 className="font-display text-lg font-bold text-slate-900 mb-2">
               Hapus {selected.length} Produk?
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-6">
               {selected.length} produk terpilih akan dihapus permanen. Tindakan
               ini tidak dapat dibatalkan.
             </p>
@@ -489,7 +491,7 @@ export function ProductTable({
               <button
                 onClick={() => setBulkConfirm(false)}
                 disabled={bulkDelete.isPending}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
               >
                 Batal
               </button>

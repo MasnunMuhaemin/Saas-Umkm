@@ -18,7 +18,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden border border-gray-100">
+      <div className="relative aspect-square bg-linear-to-br from-slate-100 to-slate-200 rounded-3xl overflow-hidden border border-slate-100 shadow-card">
         {main ? (
           <Image
             src={main}
@@ -29,7 +29,7 @@ export function ProductGallery({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <ShoppingBag size={80} className="text-gray-300" />
+            <ShoppingBag size={80} className="text-slate-300" />
           </div>
         )}
         {children}
@@ -41,8 +41,11 @@ export function ProductGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`relative w-20 h-20 flex-none rounded-xl overflow-hidden border-2 transition-colors ${
-                active === i ? "border-primary" : "border-transparent"
+              aria-label={`Lihat gambar ${i + 1}`}
+              className={`relative w-20 h-20 flex-none rounded-2xl overflow-hidden border-2 transition-all duration-200 ${
+                active === i
+                  ? "border-primary ring-2 ring-primary/20 scale-[1.03] shadow-soft"
+                  : "border-slate-200 hover:border-slate-300 opacity-70 hover:opacity-100"
               }`}
             >
               <Image

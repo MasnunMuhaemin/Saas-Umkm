@@ -78,27 +78,27 @@ function CategoryModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+      className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl w-full max-w-md shadow-xl"
+        className="bg-white rounded-2xl w-full max-w-md shadow-float border border-slate-100 animate-fade-up"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+          <h3 className="font-display text-lg font-bold text-slate-900">
             {category ? "Edit Kategori" : "Tambah Kategori Baru"}
           </h3>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
           >
             <X size={18} />
           </button>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Nama Kategori *
             </label>
             <input
@@ -106,11 +106,11 @@ function CategoryModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Contoh: Kue Kering"
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100 bg-slate-50 focus:bg-white transition-all"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Deskripsi
             </label>
             <textarea
@@ -118,11 +118,11 @@ function CategoryModal({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Deskripsi singkat mengenai kategori ini"
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white resize-none"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100 bg-slate-50 focus:bg-white resize-none transition-all"
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Ikon Kategori
             </label>
             <div className="flex flex-wrap gap-2">
@@ -132,10 +132,10 @@ function CategoryModal({
                   type="button"
                   onClick={() => setIcon(iconName)}
                   className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors border",
+                    "w-10 h-10 rounded-xl flex items-center justify-center transition-all border",
                     icon === iconName
-                      ? "bg-brand-100 border-brand-400 text-brand-600"
-                      : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100",
+                      ? "bg-linear-to-br from-brand-500 to-violet-600 border-transparent text-white shadow-soft"
+                      : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100",
                   )}
                 >
                   <CategoryIcon name={iconName} size={18} />
@@ -150,23 +150,23 @@ function CategoryModal({
               onChange={(e) => setIsActive(e.target.checked)}
               className="w-4 h-4 accent-brand-600 rounded"
             />
-            <span className="text-sm font-semibold text-gray-700">
+            <span className="text-sm font-semibold text-slate-700">
               Kategori Aktif
             </span>
           </label>
         </div>
-        <div className="p-6 border-t border-gray-100 flex gap-3">
+        <div className="p-6 border-t border-slate-100 flex gap-3">
           <button
             onClick={onClose}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
           >
             Batal
           </button>
           <button
             onClick={save}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-brand-600 text-white hover:bg-brand-700 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2 bg-linear-to-r from-brand-600 to-violet-600 text-white hover:shadow-glow rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving ? "Menyimpan..." : "Simpan"}
@@ -200,26 +200,28 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-6 animate-fade-up">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="font-bold text-gray-900">Manajemen Kategori</h2>
-          <p className="text-sm text-gray-500">{categories.length} kategori</p>
+          <h2 className="font-display font-bold text-slate-900 text-xl tracking-tight">Manajemen Kategori</h2>
+          <p className="text-sm text-slate-500">{categories.length} kategori</p>
         </div>
         <button
           onClick={() => setModal({ open: true, editing: null })}
-          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-colors"
+          className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
         >
           <Plus size={16} /> Tambah Kategori
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
         {categories.length === 0 ? (
-          <div className="p-16 text-center text-gray-400 flex flex-col items-center">
-            <Tag size={40} className="mb-3 opacity-20" />
-            <p className="font-medium text-gray-500">Belum ada kategori</p>
-            <p className="text-xs mt-1">
+          <div className="p-16 text-center flex flex-col items-center">
+            <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-4">
+              <Tag size={28} className="text-slate-400" />
+            </div>
+            <p className="font-medium text-slate-500">Belum ada kategori</p>
+            <p className="text-xs mt-1 text-slate-400">
               Klik &quot;Tambah Kategori&quot; untuk mulai.
             </p>
           </div>
@@ -227,41 +229,41 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left border-b border-gray-100 bg-gray-50/50">
+                <tr className="text-left border-b border-slate-100 bg-slate-50">
                   {["Kategori", "Slug", "Produk", "Status", "Aksi"].map((h) => (
                     <th
                       key={h}
-                      className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wide whitespace-nowrap"
+                      className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap"
                     >
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-slate-100">
                 {categories.map((cat) => (
-                  <tr key={cat.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={cat.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-brand-100 to-indigo-200 rounded-xl flex items-center justify-center shrink-0 text-brand-600">
+                        <div className="w-10 h-10 bg-linear-to-br from-brand-100 to-violet-200 rounded-xl flex items-center justify-center shrink-0 text-brand-600 shadow-soft">
                           <CategoryIcon name={cat.icon} />
                         </div>
                         <div>
-                          <div className="font-bold text-gray-900 text-sm whitespace-nowrap">
+                          <div className="font-bold text-slate-900 text-sm whitespace-nowrap">
                             {cat.name}
                           </div>
                           {cat.description && (
-                            <div className="text-xs text-gray-500 truncate max-w-[200px]">
+                            <div className="text-xs text-slate-500 truncate max-w-[200px]">
                               {cat.description}
                             </div>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-500 font-mono whitespace-nowrap">
+                    <td className="px-4 py-4 text-sm text-slate-500 font-mono whitespace-nowrap">
                       {cat.slug}
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-700 font-bold whitespace-nowrap">
+                    <td className="px-4 py-4 text-sm text-slate-700 font-bold whitespace-nowrap">
                       {cat._count.products}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
@@ -278,13 +280,13 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => setModal({ open: true, editing: cat })}
-                          className="p-2 text-gray-400 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
                         >
                           <Edit2 size={16} />
                         </button>
                         <button
                           onClick={() => setDeleteId(cat.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -308,20 +310,20 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
 
       {deleteId && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in"
           onClick={() => setDeleteId(null)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl"
+            className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <Trash2 size={24} />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <h3 className="font-display text-lg font-bold text-slate-900 mb-2">
               Hapus Kategori?
             </h3>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-6">
               Produk dalam kategori ini tidak ikut terhapus, hanya kehilangan
               kategorinya. Tindakan ini tidak dapat dibatalkan.
             </p>
@@ -329,7 +331,7 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={del.isPending}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
               >
                 Batal
               </button>

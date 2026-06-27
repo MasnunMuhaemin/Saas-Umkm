@@ -48,48 +48,48 @@ export function VariantManager({ productId }: { productId: string }) {
   };
 
   const inputCls =
-    "px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white";
+    "px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-brand-400 focus:ring-4 focus:ring-brand-100 bg-slate-50 focus:bg-white transition-all";
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <h3 className="font-bold text-gray-900 mb-1">Varian Produk</h3>
-      <p className="text-sm text-gray-500 mb-5">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
+      <h3 className="font-display font-bold text-slate-900 mb-1">Varian Produk</h3>
+      <p className="text-sm text-slate-500 mb-5">
         Mis. ukuran/warna dengan harga & stok berbeda.
       </p>
 
       {variants.length > 0 && (
-        <div className="border border-gray-100 rounded-xl overflow-hidden mb-4">
+        <div className="border border-slate-100 rounded-xl overflow-hidden mb-4">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50/50 text-left">
+              <tr className="bg-slate-50 text-left">
                 {["Varian", "SKU", "Harga", "Stok", ""].map((h) => (
                   <th
                     key={h}
-                    className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-wide"
+                    className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wide"
                   >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-100">
               {variants.map((v) => (
-                <tr key={v.id}>
-                  <td className="px-3 py-2 text-sm font-medium text-gray-900">
+                <tr key={v.id} className="hover:bg-slate-50/60 transition-colors">
+                  <td className="px-3 py-2 text-sm font-medium text-slate-900">
                     {v.name}
                   </td>
-                  <td className="px-3 py-2 text-sm text-gray-500 font-mono">
+                  <td className="px-3 py-2 text-sm text-slate-500 font-mono">
                     {v.sku || "-"}
                   </td>
-                  <td className="px-3 py-2 text-sm text-gray-900">
+                  <td className="px-3 py-2 text-sm text-slate-900">
                     {formatRupiah(v.price)}
                   </td>
-                  <td className="px-3 py-2 text-sm text-gray-700">{v.stock}</td>
+                  <td className="px-3 py-2 text-sm text-slate-700">{v.stock}</td>
                   <td className="px-3 py-2 text-right">
                     <button
                       type="button"
                       onClick={() => del.mutate({ id: v.id })}
-                      className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -134,7 +134,7 @@ export function VariantManager({ productId }: { productId: string }) {
         type="button"
         onClick={submit}
         disabled={add.isPending}
-        className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors"
+        className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-[0.98]"
       >
         {add.isPending ? (
           <Loader2 size={15} className="animate-spin" />

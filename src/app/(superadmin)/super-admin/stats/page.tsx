@@ -7,34 +7,34 @@ export default async function GlobalStatsPage() {
   const s = await api.superadmin.dashboard.globalStats();
 
   const cards = [
-    { label: "Total Produk", value: String(s.totalProducts), icon: Package, color: "bg-blue-50 text-blue-600" },
-    { label: "Total Transaksi", value: String(s.totalOrders), icon: ShoppingCart, color: "bg-green-50 text-green-600" },
-    { label: "Total Omzet Platform", value: formatRupiah(s.totalRevenue), icon: DollarSign, color: "bg-purple-50 text-purple-600" },
-    { label: "Pageviews (7 hari)", value: String(s.pageviews7d), icon: Eye, color: "bg-amber-50 text-amber-600" },
+    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "from-brand-500 to-violet-600" },
+    { label: "Total Transaksi", value: String(s.totalOrders), icon: ShoppingCart, tint: "from-emerald-500 to-green-600" },
+    { label: "Total Omzet Platform", value: formatRupiah(s.totalRevenue), icon: DollarSign, tint: "from-pink-500 to-rose-600" },
+    { label: "Pageviews (7 hari)", value: String(s.pageviews7d), icon: Eye, tint: "from-amber-500 to-orange-600" },
   ];
   const maxProducts = Math.max(1, ...s.topTenants.map((t) => t.products));
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-up">
       <div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+        <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">
           Statistik Global
         </h2>
         <p className="text-sm text-slate-500">Agregat seluruh tenant platform</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {cards.map(({ label, value, icon: Icon, color }) => (
+        {cards.map(({ label, value, icon: Icon, tint }) => (
           <div
             key={label}
-            className="bg-white rounded-2xl border border-slate-100 p-5"
+            className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 hover:shadow-card transition-shadow"
           >
             <div
-              className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center mb-4`}
+              className={`w-11 h-11 rounded-xl bg-linear-to-br ${tint} flex items-center justify-center mb-4 shadow-soft`}
             >
-              <Icon size={18} />
+              <Icon size={18} className="text-white" />
             </div>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="font-display text-2xl font-extrabold text-slate-900 tracking-tight">
               {value}
             </p>
             <p className="text-sm font-medium text-slate-500 mt-1">{label}</p>
@@ -42,8 +42,8 @@ export default async function GlobalStatsPage() {
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 p-5 max-w-2xl">
-        <h3 className="font-bold text-slate-900 text-lg mb-5">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 max-w-2xl">
+        <h3 className="font-display font-bold text-slate-900 text-lg mb-5">
           Tenant Teratas (produk terbanyak)
         </h3>
         {s.topTenants.length === 0 ? (
@@ -52,7 +52,7 @@ export default async function GlobalStatsPage() {
           <div className="space-y-4">
             {s.topTenants.map((t, i) => (
               <div key={t.slug} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs flex-none">
+                <div className="w-7 h-7 rounded-lg bg-linear-to-br from-brand-500 to-violet-600 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
                   #{i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -64,7 +64,7 @@ export default async function GlobalStatsPage() {
                   </div>
                   <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full"
+                      className="h-full bg-linear-to-r from-brand-500 to-violet-500 rounded-full"
                       style={{ width: `${(t.products / maxProducts) * 100}%` }}
                     />
                   </div>

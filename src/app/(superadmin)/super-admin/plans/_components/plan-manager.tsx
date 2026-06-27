@@ -24,7 +24,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       onClick={onToggle}
       className={cn(
         "relative w-9 h-5 rounded-full transition-colors flex-none",
-        on ? "bg-blue-600" : "bg-slate-300",
+        on ? "bg-linear-to-r from-brand-600 to-violet-600" : "bg-slate-300",
       )}
     >
       <span
@@ -71,10 +71,10 @@ function PlanCard({ plan }: { plan: Plan }) {
     });
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-6">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 hover:shadow-card transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-black text-slate-900 text-lg">{plan.name}</h3>
+          <h3 className="font-display font-bold text-slate-900 text-lg">{plan.name}</h3>
           <p className="text-xs text-slate-500">
             {plan._count.tenants} tenant memakai paket ini
           </p>
@@ -91,7 +91,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           />
         </div>
         <div>
@@ -103,7 +103,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             value={maxProducts}
             onChange={(e) => setMaxProducts(e.target.value)}
             placeholder="unlimited"
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
           />
         </div>
       </div>
@@ -125,7 +125,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <button
         onClick={save}
         disabled={update.isPending}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white py-2.5 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow active:scale-[0.98] disabled:opacity-50 text-white py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
       >
         {update.isPending && <Loader2 size={16} className="animate-spin" />}
         Simpan Paket
@@ -136,8 +136,8 @@ function PlanCard({ plan }: { plan: Plan }) {
 
 export function PlanManager({ plans }: { plans: Plan[] }) {
   return (
-    <div className="p-6">
-      <h2 className="font-bold text-slate-900 mb-5">Paket Langganan</h2>
+    <div className="p-6 animate-fade-up">
+      <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight mb-5">Paket Langganan</h2>
       <div className="grid md:grid-cols-2 gap-5 max-w-3xl">
         {plans.map((p) => (
           <PlanCard key={p.id} plan={p} />

@@ -50,57 +50,70 @@ export default async function ContactPage({ params }: { params: Params }) {
 
   return (
     <div className="bg-white">
-      <div className="border-b border-gray-100 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-gray-500">
-          <a href="/" className="hover:text-primary transition-colors">
+      <div className="border-b border-slate-100 bg-slate-50/60 py-3.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-slate-500">
+          <a href="/" className="font-medium hover:text-primary transition-colors">
             Beranda
           </a>
-          <span>/</span>
-          <span className="text-gray-900 font-medium">Kontak</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-semibold">Kontak</span>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Hubungi Kami</h1>
-        <p className="text-gray-500 mb-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 animate-fade-up">
+        <p className="text-primary text-sm font-bold uppercase tracking-widest mb-3">
+          Kontak
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-2 leading-tight">
+          Hubungi Kami
+        </h1>
+        <p className="text-slate-500 text-lg mb-9">
           Ada pertanyaan atau ingin memesan? Hubungi {tenant.name} langsung.
         </p>
 
-        <div className="space-y-4 mb-8">
+        <div className="grid sm:grid-cols-2 gap-4 mb-9">
           {rows.map((r) => {
             const Icon = r.icon;
             return (
               <div
                 key={r.label}
-                className="flex items-start gap-4 bg-gray-50 rounded-2xl p-4 border border-gray-100"
+                className="group flex items-start gap-4 bg-white rounded-2xl p-5 border border-slate-100 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-none">
+                <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-none group-hover:scale-110 transition-transform duration-300">
                   <Icon size={18} />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">
                     {r.label}
                   </p>
-                  <p className="text-sm font-medium text-gray-900">{r.value}</p>
+                  <p className="text-sm font-semibold text-slate-900 mt-0.5">{r.value}</p>
                 </div>
               </div>
             );
           })}
           {rows.length === 0 && (
-            <p className="text-gray-500 text-sm">
+            <p className="text-slate-500 text-sm sm:col-span-2">
               Informasi kontak belum dilengkapi.
             </p>
           )}
         </div>
 
         {tenant.showWhatsappButton && (
-          <WaButton
-            tenant={tenant}
-            message={`Halo ${tenant.name}, saya ingin bertanya.`}
-            className="bg-primary text-white px-6 py-3"
-          >
-            Chat via WhatsApp
-          </WaButton>
+          <div className="rounded-3xl bg-linear-to-br from-slate-900 to-slate-800 p-6 sm:p-8 text-center shadow-float">
+            <h2 className="font-display text-xl font-extrabold tracking-tight text-white mb-2">
+              Siap membantu Anda
+            </h2>
+            <p className="text-slate-300 text-sm mb-5">
+              Chat langsung dan dapatkan respon cepat dari tim kami.
+            </p>
+            <WaButton
+              tenant={tenant}
+              message={`Halo ${tenant.name}, saya ingin bertanya.`}
+              className="bg-primary text-white px-7 py-3.5 shadow-float active:scale-[0.98]"
+            >
+              Chat via WhatsApp
+            </WaButton>
+          </div>
         )}
       </div>
     </div>

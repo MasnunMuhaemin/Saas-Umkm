@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <>
       <h1>Syarat &amp; Ketentuan</h1>
-      <p className="text-gray-400">Terakhir diperbarui: 27 Juni 2026</p>
+      <p className="text-slate-400">Terakhir diperbarui: 27 Juni 2026</p>
 
       <p>
         Dengan mendaftar dan menggunakan MayWeb (&quot;Layanan&quot;), Anda

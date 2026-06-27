@@ -76,17 +76,17 @@ export default async function ProductDetailPage({
       />
 
       {/* Breadcrumb */}
-      <div className="border-b border-gray-100 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-gray-500">
-          <a href="/" className="hover:text-primary transition-colors">
+      <div className="border-b border-slate-100 bg-slate-50/60 py-3.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-slate-500">
+          <a href="/" className="font-medium hover:text-primary transition-colors">
             Beranda
           </a>
-          <ChevronRight size={14} />
-          <a href="/#produk" className="hover:text-primary transition-colors">
+          <ChevronRight size={14} className="text-slate-300" />
+          <a href="/#produk" className="font-medium hover:text-primary transition-colors">
             Produk
           </a>
-          <ChevronRight size={14} />
-          <span className="text-gray-900 font-medium">{product.name}</span>
+          <ChevronRight size={14} className="text-slate-300" />
+          <span className="text-slate-900 font-semibold line-clamp-1">{product.name}</span>
         </div>
       </div>
 
@@ -106,12 +106,12 @@ export default async function ProductDetailPage({
             >
               <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 {product.isBest && (
-                  <span className="bg-primary text-white text-xs px-3 py-1 rounded-lg font-bold shadow-sm">
+                  <span className="bg-primary text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow-float backdrop-blur-sm">
                     Terlaris
                   </span>
                 )}
                 {tenant.showDiscount && discount > 0 && (
-                  <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-lg font-bold shadow-sm">
+                  <span className="bg-linear-to-r from-rose-500 to-red-600 text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow-float">
                     Diskon {discount}%
                   </span>
                 )}
@@ -122,21 +122,23 @@ export default async function ProductDetailPage({
           {/* Info */}
           <div className="flex-1 pt-2">
             {tenant.showCategory && product.category && (
-              <p className="text-sm text-primary font-bold mb-2 uppercase tracking-wide">
+              <span className="inline-flex items-center text-xs text-primary font-bold mb-3 uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">
                 {product.category.name}
-              </p>
+              </span>
             )}
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-4 leading-tight">
               {product.name}
             </h1>
 
             {tenant.showRating && (
-              <div className="flex items-center gap-2 mb-6 pb-6 border-b border-gray-100">
-                <Star size={16} className="text-amber-400 fill-amber-400" />
-                <span className="text-sm font-semibold text-gray-900">
-                  {product.rating.toFixed(1)}
+              <div className="flex items-center gap-2 mb-6 pb-6 border-b border-slate-100">
+                <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-lg">
+                  <Star size={15} className="text-amber-400 fill-amber-400" />
+                  <span className="font-display text-sm font-bold">
+                    {product.rating.toFixed(1)}
+                  </span>
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-slate-500">
                   ({product.reviewsCount} ulasan)
                 </span>
               </div>
@@ -158,11 +160,13 @@ export default async function ProductDetailPage({
             </div>
 
             {product.description && (
-              <div className="border-t border-gray-100 pt-6">
-                <h2 className="font-bold text-gray-900 mb-2">Deskripsi</h2>
-                <p className="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed">
-                  {product.description}
-                </p>
+              <div className="border-t border-slate-100 pt-6">
+                <h2 className="font-display font-bold text-slate-900 mb-3">Deskripsi</h2>
+                <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5">
+                  <p className="text-slate-600 text-sm whitespace-pre-wrap leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
               </div>
             )}
           </div>

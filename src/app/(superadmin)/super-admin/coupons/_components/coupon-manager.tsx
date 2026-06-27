@@ -52,17 +52,17 @@ export function CouponManager({ initial }: { initial: Coupons }) {
   };
 
   const inputCls =
-    "w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40";
+    "w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all";
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 max-w-5xl mx-auto space-y-6 animate-fade-up">
       <div className="flex items-center gap-3">
-        <div className="w-11 h-11 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center">
+        <div className="w-11 h-11 bg-linear-to-br from-brand-500 to-violet-600 text-white rounded-xl flex items-center justify-center shadow-soft">
           <Ticket size={22} />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Kupon Diskon</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="font-display text-2xl font-bold text-slate-900 tracking-tight">Kupon Diskon</h1>
+          <p className="text-sm text-slate-500">
             Kupon untuk pembayaran langganan merchant.
           </p>
         </div>
@@ -70,10 +70,10 @@ export function CouponManager({ initial }: { initial: Coupons }) {
 
       <form
         onSubmit={submit}
-        className="bg-white rounded-2xl border border-gray-100 p-5 grid sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end"
+        className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 grid sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end"
       >
         <div className="lg:col-span-1">
-          <label className="block text-xs font-bold text-gray-600 mb-1">
+          <label className="block text-xs font-bold text-slate-600 mb-1">
             Kode
           </label>
           <input
@@ -84,7 +84,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-600 mb-1">
+          <label className="block text-xs font-bold text-slate-600 mb-1">
             Jenis
           </label>
           <select
@@ -97,7 +97,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-600 mb-1">
+          <label className="block text-xs font-bold text-slate-600 mb-1">
             Nilai
           </label>
           <input
@@ -109,7 +109,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-600 mb-1">
+          <label className="block text-xs font-bold text-slate-600 mb-1">
             Kuota (opsional)
           </label>
           <input
@@ -121,7 +121,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-600 mb-1">
+          <label className="block text-xs font-bold text-slate-600 mb-1">
             Kedaluwarsa (opsional)
           </label>
           <input
@@ -135,7 +135,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           <button
             type="submit"
             disabled={create.isPending}
-            className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-800 disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {create.isPending ? (
               <Loader2 size={15} className="animate-spin" />
@@ -147,9 +147,9 @@ export function CouponManager({ initial }: { initial: Coupons }) {
         </div>
       </form>
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+          <thead className="bg-slate-50 text-slate-500 text-xs uppercase">
             <tr>
               <th className="text-left px-5 py-3 font-semibold">Kode</th>
               <th className="text-left px-5 py-3 font-semibold">Diskon</th>
@@ -158,36 +158,36 @@ export function CouponManager({ initial }: { initial: Coupons }) {
               <th className="text-right px-5 py-3 font-semibold">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-slate-100">
             {coupons.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-10 text-center text-gray-400">
+                <td colSpan={5} className="px-5 py-10 text-center text-slate-400">
                   Belum ada kupon.
                 </td>
               </tr>
             )}
             {coupons.map((c) => (
-              <tr key={c.id}>
-                <td className="px-5 py-3 font-bold text-gray-900">{c.code}</td>
-                <td className="px-5 py-3 text-gray-600">
+              <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                <td className="px-5 py-3 font-bold text-slate-900">{c.code}</td>
+                <td className="px-5 py-3 text-slate-600">
                   {c.type === "PERCENT"
                     ? `${c.value}%`
                     : formatRupiah(c.value)}
                 </td>
-                <td className="px-5 py-3 text-gray-600">
+                <td className="px-5 py-3 text-slate-600">
                   {c.redeemedCount}
                   {c.maxRedemptions ? ` / ${c.maxRedemptions}` : ""}
                 </td>
-                <td className="px-5 py-3 text-gray-600">
+                <td className="px-5 py-3 text-slate-600">
                   {c.expiresLabel ?? "—"}
                 </td>
                 <td className="px-5 py-3 text-right">
                   <button
                     onClick={() => toggle.mutate({ id: c.id })}
-                    className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    className={`text-xs font-bold px-3 py-1 rounded-full transition-colors ${
                       c.isActive
-                        ? "bg-emerald-50 text-emerald-600"
-                        : "bg-gray-100 text-gray-400"
+                        ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                        : "bg-slate-100 text-slate-400 hover:bg-slate-200"
                     }`}
                   >
                     {c.isActive ? "Aktif" : "Nonaktif"}

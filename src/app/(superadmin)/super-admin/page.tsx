@@ -14,37 +14,37 @@ export default async function AdminDashboard() {
   const s = await api.superadmin.dashboard.stats();
 
   const cards = [
-    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, color: "bg-blue-50 text-blue-600" },
-    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, color: "bg-green-50 text-green-600" },
-    { label: "Trial", value: String(s.trial), icon: Clock, color: "bg-amber-50 text-amber-600" },
-    { label: "Suspended", value: String(s.suspended), icon: Ban, color: "bg-red-50 text-red-600" },
-    { label: "Total Produk", value: String(s.totalProducts), icon: Package, color: "bg-purple-50 text-purple-600" },
-    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, color: "bg-indigo-50 text-indigo-600" },
+    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, tint: "from-brand-500 to-violet-600" },
+    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, tint: "from-emerald-500 to-green-600" },
+    { label: "Trial", value: String(s.trial), icon: Clock, tint: "from-amber-500 to-orange-600" },
+    { label: "Suspended", value: String(s.suspended), icon: Ban, tint: "from-rose-500 to-red-600" },
+    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "from-pink-500 to-rose-600" },
+    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, tint: "from-cyan-500 to-blue-600" },
   ];
 
   const maxPlan = Math.max(1, ...s.planDist.map((p) => p.count));
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-up">
       <div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+        <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">
           Dashboard Platform
         </h2>
         <p className="text-sm text-slate-500">Ringkasan seluruh tenant MayWeb</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {cards.map(({ label, value, icon: Icon, color }) => (
+        {cards.map(({ label, value, icon: Icon, tint }) => (
           <div
             key={label}
-            className="bg-white rounded-2xl border border-slate-100 p-5"
+            className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 hover:shadow-card transition-shadow"
           >
             <div
-              className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center mb-4`}
+              className={`w-11 h-11 rounded-xl bg-linear-to-br ${tint} flex items-center justify-center mb-4 shadow-soft`}
             >
-              <Icon size={18} />
+              <Icon size={18} className="text-white" />
             </div>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">
+            <p className="font-display text-2xl font-extrabold text-slate-900 tracking-tight">
               {value}
             </p>
             <p className="text-sm font-medium text-slate-500 mt-1">{label}</p>
@@ -52,8 +52,8 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 p-5 max-w-lg">
-        <h3 className="font-bold text-slate-900 text-lg mb-5">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 max-w-lg">
+        <h3 className="font-display font-bold text-slate-900 text-lg mb-5">
           Distribusi Paket
         </h3>
         <div className="space-y-4">
@@ -64,11 +64,11 @@ export default async function AdminDashboard() {
               </span>
               <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-600 rounded-full"
+                  className="h-full bg-linear-to-r from-brand-600 to-violet-600 rounded-full"
                   style={{ width: `${(p.count / maxPlan) * 100}%` }}
                 />
               </div>
-              <span className="text-sm font-bold text-slate-900 w-8 text-right">
+              <span className="font-display text-sm font-bold text-slate-900 w-8 text-right">
                 {p.count}
               </span>
             </div>

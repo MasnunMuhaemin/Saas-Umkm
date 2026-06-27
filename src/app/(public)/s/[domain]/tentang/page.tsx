@@ -39,42 +39,51 @@ export default async function AboutPage({ params }: { params: Params }) {
 
   return (
     <div className="bg-white">
-      <div className="border-b border-gray-100 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-gray-500">
-          <a href="/" className="hover:text-primary transition-colors">
+      <div className="border-b border-slate-100 bg-slate-50/60 py-3.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-sm text-slate-500">
+          <a href="/" className="font-medium hover:text-primary transition-colors">
             Beranda
           </a>
-          <span>/</span>
-          <span className="text-gray-900 font-medium">Tentang Kami</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-semibold">Tentang Kami</span>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14 animate-fade-up">
+        <p className="text-primary text-sm font-bold uppercase tracking-widest mb-3">
+          Tentang Kami
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-4 leading-tight">
           {tenant.aboutHeadline || `Tentang ${tenant.name}`}
         </h1>
 
         {tenant.yearsExperience > 0 && (
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-bold mb-7 shadow-soft">
             {tenant.yearsExperience}+ tahun pengalaman
           </div>
         )}
 
-        <p className="text-gray-600 leading-relaxed whitespace-pre-wrap mb-8">
+        <p className="text-slate-600 text-lg leading-relaxed whitespace-pre-wrap mb-10">
           {tenant.aboutBody ||
             tenant.description ||
             `${tenant.name} berkomitmen menghadirkan produk terbaik untuk Anda.`}
         </p>
 
         {checklist.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="font-bold text-gray-900">Mengapa Memilih Kami</h2>
-            {checklist.map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <CheckCircle2 size={18} className="text-primary flex-none" />
-                <span className="text-gray-700 text-sm">{item}</span>
-              </div>
-            ))}
+          <div className="rounded-3xl bg-slate-50 border border-slate-100 p-6 sm:p-8 shadow-soft">
+            <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-900 mb-5">
+              Mengapa Memilih Kami
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
+              {checklist.map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-none">
+                    <CheckCircle2 size={18} />
+                  </span>
+                  <span className="text-slate-700 text-sm font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

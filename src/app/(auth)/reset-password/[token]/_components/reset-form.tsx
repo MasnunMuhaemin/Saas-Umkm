@@ -21,13 +21,16 @@ export function ResetForm({ token }: { token: string }) {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-3xl shadow-xl shadow-blue-100/50 border border-gray-100 p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        <div className="glass-card rounded-3xl p-8 shadow-float">
+          <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-brand-600 to-violet-600 flex items-center justify-center mb-5 shadow-glow">
+            <Lock size={22} className="text-white" />
+          </div>
+          <h1 className="font-display text-2xl font-extrabold text-slate-900 mb-1">
             Atur Password Baru
           </h1>
-          <p className="text-gray-500 text-sm mb-6">
+          <p className="text-slate-500 text-sm mb-6">
             Masukkan password baru untuk akun Anda.
           </p>
 
@@ -43,7 +46,7 @@ export function ResetForm({ token }: { token: string }) {
             <div className="relative">
               <Lock
                 size={16}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
               />
               <input
                 type={showPw ? "text" : "password"}
@@ -51,12 +54,13 @@ export function ResetForm({ token }: { token: string }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password baru (min. 6 karakter)"
-                className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+                className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100 transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPw(!showPw)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label={showPw ? "Sembunyikan password" : "Tampilkan password"}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
                 {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -64,7 +68,7 @@ export function ResetForm({ token }: { token: string }) {
             <button
               type="submit"
               disabled={reset.isPending}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2"
+              className="w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
             >
               {reset.isPending && <Loader2 size={16} className="animate-spin" />}
               {reset.isPending ? "Menyimpan..." : "Simpan Password"}
@@ -73,7 +77,7 @@ export function ResetForm({ token }: { token: string }) {
 
           <Link
             href="/login"
-            className="block text-center text-sm text-gray-500 hover:text-gray-800 mt-5"
+            className="block text-center text-sm text-slate-500 hover:text-slate-800 mt-5"
           >
             Kembali ke Login
           </Link>

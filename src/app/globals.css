@@ -1,49 +1,188 @@
 @import "tailwindcss";
 
-@theme {
-  /* Font (dari next/font di layout) */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* =====================================================================
+   MayWeb — Design System (UI/UX Pro Max)
+   Konsep: Soft-Premium Glassmorphism · brand biru → violet → pink
+   Font: Poppins (display) + Inter (body/UI)
+   ===================================================================== */
 
-  /* Warna brand platform MayWeb (statis) */
+@theme {
+  /* ---------- Typography ---------- */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-display: var(--font-poppins), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* ---------- Brand platform (statis) ---------- */
   --color-primary: #2563eb;
   --color-primary-foreground: #ffffff;
 
-  /* Skala warna brand (biru) — dipakai utility brand (mis. bg-brand-600) dari desain */
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
+  /* Skala brand (biru indigo) — dipakai bg-brand-600, text-brand-600, dll */
+  --color-brand-50: #eff5ff;
+  --color-brand-100: #dbe7fe;
+  --color-brand-200: #bfd3fe;
+  --color-brand-300: #93b4fd;
+  --color-brand-400: #608dfa;
+  --color-brand-500: #3b6af6;
   --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
+  --color-brand-700: #1d4fd8;
   --color-brand-800: #1e40af;
   --color-brand-900: #1e3a8a;
 
-  /* Warna dasar */
-  --color-background: #ffffff;
-  --color-foreground: #0a0a0a;
-  --color-muted-foreground: #6b7280;
+  /* Aksen ungu & pink (gradien brand) */
+  --color-grape-500: #8b5cf6;
+  --color-grape-600: #7c3aed;
+  --color-blush-500: #ec4899;
+  --color-blush-600: #db2777;
 
-  /* Warna semantik status — satu sumber kebenaran (dipakai badge-*) */
+  /* ---------- Surface & teks ---------- */
+  --color-background: #f7f9fc;
+  --color-foreground: #0b1220;
+  --color-muted-foreground: #64748b;
+
+  /* ---------- Semantik status (sumber kebenaran badge-*) ---------- */
   --color-success: #15803d;
   --color-success-soft: #dcfce7;
   --color-warning: #a16207;
   --color-warning-soft: #fef9c3;
   --color-danger: #b91c1c;
   --color-danger-soft: #fee2e2;
-  --color-info: #1d4ed8;
-  --color-info-soft: #dbeafe;
+  --color-info: #1d4fd8;
+  --color-info-soft: #dbe7fe;
   --color-accent: #7e22ce;
   --color-accent-soft: #f3e8ff;
-  --color-muted: #4b5563;
-  --color-muted-soft: #f3f4f6;
+  --color-muted: #475569;
+  --color-muted-soft: #f1f5f9;
+
+  /* ---------- Elevation (soft, ber-layer) ---------- */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 16px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04),
+    0 12px 32px -10px rgba(15, 23, 42, 0.12);
+  --shadow-float: 0 8px 24px -6px rgba(15, 23, 42, 0.12),
+    0 24px 56px -18px rgba(15, 23, 42, 0.22);
+  --shadow-glow: 0 8px 30px -6px rgba(37, 99, 235, 0.5);
+
+  /* ---------- Radius ---------- */
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.5rem;
+
+  /* ---------- Animasi ---------- */
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.5s ease both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
 }
 
-/* Custom class badge — dipakai <StatusBadge> & di mana saja. Jangan hardcode
-   warna status (bg-green-100) berulang; ubah palet cukup dari @theme di atas. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Heading otomatis memakai font display (Poppins) + tracking rapat */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.18);
+  color: #0b1220;
+}
+
+/* Scrollbar halus */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  background-clip: content-box;
+}
+
+/* Focus ring konsisten (a11y) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =====================================================================
+   Components & Utilities
+   ===================================================================== */
 @layer components {
+  /* Badge status — ubah palet cukup dari @theme di atas */
   .badge-success {
     background: var(--color-success-soft);
     color: var(--color-success);
@@ -68,9 +207,54 @@
     background: var(--color-muted-soft);
     color: var(--color-muted);
   }
+
+  /* Glass surfaces */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow-card);
+  }
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 
-body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+@utility text-gradient {
+  background: linear-gradient(115deg, #2563eb 0%, #7c3aed 48%, #ec4899 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-mesh {
+  background-color: #f5f8ff;
+  background-image: radial-gradient(
+      at 18% 12%,
+      rgba(37, 99, 235, 0.16) 0,
+      transparent 48%
+    ),
+    radial-gradient(at 84% 4%, rgba(124, 58, 237, 0.14) 0, transparent 46%),
+    radial-gradient(at 78% 86%, rgba(236, 72, 153, 0.1) 0, transparent 46%),
+    radial-gradient(at 6% 84%, rgba(37, 99, 235, 0.1) 0, transparent 46%);
+}
+
+@utility bg-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(15, 23, 42, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
 }

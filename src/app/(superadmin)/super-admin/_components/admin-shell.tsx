@@ -51,7 +51,7 @@ export function AdminShell({
     <div className="flex h-screen bg-slate-50">
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/60 z-40 md:hidden"
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -59,14 +59,14 @@ export function AdminShell({
       <aside
         className={`w-64 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-slate-900 text-slate-300 h-full flex flex-col transition-transform`}
+        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-linear-to-b from-slate-900 to-slate-950 text-slate-300 h-full flex flex-col transition-transform border-r border-white/5`}
       >
-        <div className="flex items-center gap-3 p-4 border-b border-slate-800">
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center flex-none">
+        <div className="flex items-center gap-3 p-4 border-b border-white/5">
+          <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-xl flex items-center justify-center flex-none shadow-glow">
             <Shield size={17} className="text-white" />
           </div>
           <div className="flex flex-col min-w-0">
-            <p className="font-bold text-white text-sm">MayWeb</p>
+            <p className="font-display font-bold text-white text-sm">MayWeb</p>
             <p className="text-slate-400 text-xs">Platform Admin</p>
           </div>
           {mobileOpen && (
@@ -89,23 +89,26 @@ export function AdminShell({
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-blue-600/20 text-blue-400"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    ? "bg-linear-to-r from-brand-600/30 to-violet-600/30 text-white ring-1 ring-white/10"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                <Icon size={17} />
+                <Icon
+                  size={17}
+                  className={isActive ? "text-brand-300" : ""}
+                />
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-slate-800">
+        <div className="p-3 border-t border-white/5">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="w-full flex items-center gap-2.5 text-sm text-slate-300 hover:text-red-400 transition-colors px-3 py-2 rounded-xl hover:bg-slate-800"
+            className="w-full flex items-center gap-2.5 text-sm text-slate-300 hover:text-red-400 transition-colors px-3 py-2 rounded-xl hover:bg-white/5"
           >
             <LogOut size={16} /> Keluar
           </button>
@@ -113,7 +116,7 @@ export function AdminShell({
       </aside>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-slate-200 bg-white">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3.5 border-b border-slate-200/70 glass sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
@@ -122,21 +125,24 @@ export function AdminShell({
             >
               <Menu size={20} />
             </button>
-            <h1 className="font-bold text-slate-900">{activeLabel}</h1>
+            <h1 className="font-display font-bold text-slate-900 text-lg">
+              {activeLabel}
+            </h1>
           </div>
           <div className="flex items-center gap-3">
             <Link
               href="/super-admin/notifications"
+              aria-label="Notifikasi"
               className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-xl"
             >
               <Bell size={18} />
               {unread > 0 && (
-                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-pink-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
                   {unread}
                 </span>
               )}
             </Link>
-            <div className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 bg-linear-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center ring-1 ring-slate-700">
               <span className="text-white text-xs font-bold">
                 {userName.slice(0, 2).toUpperCase()}
               </span>

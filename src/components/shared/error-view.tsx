@@ -18,12 +18,12 @@ export function ErrorView({
         <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <AlertTriangle size={26} />
         </div>
-        <h2 className="font-bold text-gray-900 text-lg mb-2">{title}</h2>
-        <p className="text-sm text-gray-500 mb-6">{message}</p>
+        <h2 className="font-bold text-slate-900 text-lg mb-2">{title}</h2>
+        <p className="text-sm text-slate-500 mb-6">{message}</p>
         {reset && (
           <button
             onClick={reset}
-            className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
           >
             <RotateCcw size={15} /> Coba Lagi
           </button>
