@@ -2,6 +2,7 @@ import { prisma } from "@/server/db";
 import { createBaseService } from "@/server/services/shared/base.service";
 import { generateUniqueSlug } from "@/lib/helpers/slug";
 import { assertTenantOwns } from "@/lib/helpers/ownership";
+import { assertProductQuota } from "@/lib/helpers/plan-guard";
 import type {
   StoreProductInput,
   ListProductInput,
@@ -70,8 +71,9 @@ export const productService = {
       },
     }),
 
-  /** Buat produk — slug via helper reusable. */
+  /** Buat produk — cek kuota paket dulu, lalu slug via helper reusable. */
   async store(tenantId: string, data: StoreProductInput) {
+    await assertProductQuota(tenantId);
     const slug = await generateUniqueSlug("product", tenantId, data.name);
     return prisma.product.create({ data: { ...data, tenantId, slug } });
   },

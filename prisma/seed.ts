@@ -16,7 +16,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // ─── Plans ─────────────────────────────────────────────────────────────────
-  const basic = await prisma.plan.upsert({
+  await prisma.plan.upsert({
     where: { slug: "basic" },
     update: {},
     create: {
@@ -41,7 +41,7 @@ async function main() {
     },
   });
 
-  await prisma.plan.upsert({
+  const plus = await prisma.plan.upsert({
     where: { slug: "plus" },
     update: {},
     create: {
@@ -93,7 +93,7 @@ async function main() {
     update: {},
     create: {
       userId: merchant.id,
-      planId: basic.id,
+      planId: plus.id, // paket Plus agar fitur POS/Invoice/Pelanggan terbuka
       name: "Toko Demo",
       slug: "toko-demo",
       status: "ACTIVE",
@@ -120,12 +120,33 @@ async function main() {
     update: {},
     create: {
       tenantId: tenant.id,
-      planId: basic.id,
+      planId: plus.id,
       status: "ACTIVE",
       startedAt: new Date(),
       currentEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
   });
+
+  // Pelanggan contoh (idempotent — hanya jika belum ada)
+  if ((await prisma.customer.count({ where: { tenantId: tenant.id } })) === 0) {
+    await prisma.customer.createMany({
+      data: [
+        {
+          tenantId: tenant.id,
+          name: "Ibu Sari Dewi",
+          phone: "081234567890",
+          city: "Bandung",
+          province: "Jawa Barat",
+        },
+        {
+          tenantId: tenant.id,
+          name: "Pak Budi Santoso",
+          phone: "081987654321",
+          city: "Jakarta",
+        },
+      ],
+    });
+  }
 
   // Kategori + produk contoh (biar dashboard ada isinya)
   const kategori = await prisma.category.upsert({

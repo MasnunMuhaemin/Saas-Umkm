@@ -4,6 +4,7 @@ import { productRouter } from "./tenant/product";
 import { categoryRouter } from "./tenant/category";
 import { settingsRouter } from "./tenant/settings";
 import { websiteRouter } from "./tenant/website";
+import { customerRouter } from "./tenant/customer";
 
 /**
  * Root router — gabungan semua feature router.
@@ -19,6 +20,7 @@ export const appRouter = router({
   category: categoryRouter,
   settings: settingsRouter,
   website: websiteRouter,
+  customer: customerRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
 import { auth } from "./auth";
 import { prisma } from "./db";
+import { assertPlanFeature, type PlanFeature } from "@/lib/helpers/plan-guard";
 
 /** Context tiap request: sesi Auth.js + Prisma. auth() membaca cookie via next/headers. */
 export async function createContext() {
@@ -49,3 +50,11 @@ export const superAdminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "SUPERADMIN") throw new TRPCError({ code: "FORBIDDEN" });
   return next();
 });
+
+/** Merchant + gate fitur paket (mis. hasCustomerDb, hasPos). Enforce di server. */
+export function planProcedure(feature: PlanFeature) {
+  return merchantProcedure.use(async ({ ctx, next }) => {
+    await assertPlanFeature(ctx.tenantId, feature);
+    return next();
+  });
+}
