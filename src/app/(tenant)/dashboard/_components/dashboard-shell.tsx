@@ -10,6 +10,7 @@ import {
   Bell,
   ChevronLeft,
   ChevronRight,
+  CreditCard,
   FileText,
   Globe,
   LayoutDashboard,
@@ -47,6 +48,7 @@ const NAV: NavItem[] = [
   { href: "/dashboard/store-builder", label: "Website Builder", icon: Globe },
   { section: "Lainnya" },
   { href: "/dashboard/stats", label: "Statistik", icon: BarChart2 },
+  { href: "/dashboard/billing", label: "Langganan", icon: CreditCard },
   { href: "/dashboard/settings", label: "Profil Bisnis", icon: Store },
 ];
 

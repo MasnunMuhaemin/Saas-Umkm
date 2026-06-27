@@ -6,6 +6,7 @@ import { settingsRouter } from "./tenant/settings";
 import { websiteRouter } from "./tenant/website";
 import { customerRouter } from "./tenant/customer";
 import { orderRouter } from "./tenant/order";
+import { billingRouter } from "./tenant/billing";
 import { superDashboardRouter } from "./superadmin/dashboard";
 import { tenantAdminRouter } from "./superadmin/tenant";
 
@@ -25,6 +26,7 @@ export const appRouter = router({
   website: websiteRouter,
   customer: customerRouter,
   order: orderRouter,
+  billing: billingRouter,
 
   superadmin: router({
     dashboard: superDashboardRouter,
