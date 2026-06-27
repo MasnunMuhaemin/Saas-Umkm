@@ -13,6 +13,7 @@ const tenantListSelect = {
   id: true,
   name: true,
   slug: true,
+  customDomain: true,
   status: true,
   createdAt: true,
   plan: { select: { name: true } },

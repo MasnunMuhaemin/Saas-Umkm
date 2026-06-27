@@ -12,6 +12,7 @@ import { billingRouter } from "./tenant/billing";
 import { superDashboardRouter } from "./superadmin/dashboard";
 import { tenantAdminRouter } from "./superadmin/tenant";
 import { planAdminRouter } from "./superadmin/plan";
+import { notificationAdminRouter } from "./superadmin/notification";
 
 /**
  * Root router — gabungan semua feature router.
@@ -37,6 +38,7 @@ export const appRouter = router({
     dashboard: superDashboardRouter,
     tenant: tenantAdminRouter,
     plan: planAdminRouter,
+    notification: notificationAdminRouter,
   }),
 });
 

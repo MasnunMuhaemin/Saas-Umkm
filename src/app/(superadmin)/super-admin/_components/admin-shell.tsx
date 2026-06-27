@@ -6,20 +6,27 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   BarChart2,
+  Bell,
+  Globe,
   LayoutDashboard,
   LogOut,
   Menu,
   Package,
+  Settings,
   Shield,
   Users,
   X,
 } from "lucide-react";
+import { trpc } from "@/lib/trpc/client";
 
 const NAV = [
   { href: "/super-admin", label: "Dashboard Admin", icon: LayoutDashboard },
   { href: "/super-admin/tenants", label: "Tenant UMKM", icon: Users },
   { href: "/super-admin/plans", label: "Paket Langganan", icon: Package },
   { href: "/super-admin/stats", label: "Statistik Global", icon: BarChart2 },
+  { href: "/super-admin/notifications", label: "Pusat Notifikasi", icon: Bell },
+  { href: "/super-admin/domains", label: "Domain Pool", icon: Globe },
+  { href: "/super-admin/settings", label: "Pengaturan", icon: Settings },
 ] as const;
 
 export function AdminShell({
@@ -33,6 +40,10 @@ export function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const activeLabel =
     NAV.find((i) => i.href === pathname)?.label ?? "Super Admin";
+  const { data: unread = 0 } =
+    trpc.superadmin.notification.unreadCount.useQuery(undefined, {
+      refetchInterval: 60000,
+    });
 
   return (
     <div className="flex h-screen bg-slate-50">
@@ -109,7 +120,18 @@ export function AdminShell({
             </button>
             <h1 className="font-bold text-slate-900">{activeLabel}</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/super-admin/notifications"
+              className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-xl"
+            >
+              <Bell size={18} />
+              {unread > 0 && (
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {unread}
+                </span>
+              )}
+            </Link>
             <div className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center">
               <span className="text-white text-xs font-bold">
                 {userName.slice(0, 2).toUpperCase()}
