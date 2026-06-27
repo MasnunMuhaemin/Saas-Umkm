@@ -13,6 +13,7 @@ export const storeProductSchema = z.object({
   stock: z.number().int().min(0).default(0),
   weight: z.number().int().min(0).nullable().optional(),
   mainImage: z.string().max(500).nullable().optional(),
+  images: z.array(z.string().max(500)).max(8).optional(),
   status: productStatusEnum.default("ACTIVE"),
   metaTitle: z.string().max(255).nullable().optional(),
   metaDescription: z.string().nullable().optional(),

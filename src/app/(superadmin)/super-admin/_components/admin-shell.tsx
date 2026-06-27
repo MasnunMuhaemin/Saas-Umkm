@@ -14,6 +14,7 @@ import {
   Package,
   Settings,
   Shield,
+  Ticket,
   Users,
   X,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const NAV = [
   { href: "/super-admin", label: "Dashboard Admin", icon: LayoutDashboard },
   { href: "/super-admin/tenants", label: "Tenant UMKM", icon: Users },
   { href: "/super-admin/plans", label: "Paket Langganan", icon: Package },
+  { href: "/super-admin/coupons", label: "Kupon Diskon", icon: Ticket },
   { href: "/super-admin/stats", label: "Statistik Global", icon: BarChart2 },
   { href: "/super-admin/notifications", label: "Pusat Notifikasi", icon: Bell },
   { href: "/super-admin/domains", label: "Domain Pool", icon: Globe },
@@ -70,6 +72,7 @@ export function AdminShell({
           {mobileOpen && (
             <button
               onClick={() => setMobileOpen(false)}
+              aria-label="Tutup menu"
               className="md:hidden ml-auto p-2 text-slate-400 hover:text-white rounded-lg"
             >
               <X size={20} />
@@ -114,6 +117,7 @@ export function AdminShell({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
+              aria-label="Buka menu"
               className="md:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-xl"
             >
               <Menu size={20} />

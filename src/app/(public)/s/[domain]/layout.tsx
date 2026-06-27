@@ -4,6 +4,7 @@ import {
   StoreHeader,
   StoreFooter,
 } from "./_components/storefront-chrome";
+import { Tracker } from "./_components/tracker";
 
 export default async function StorefrontLayout({
   children,
@@ -19,6 +20,7 @@ export default async function StorefrontLayout({
   const { tenant } = data;
   return (
     <div style={{ ["--color-primary" as string]: tenant.primaryColor }}>
+      <Tracker domain={domain} />
       <StoreHeader tenant={tenant} />
       <main>{children}</main>
       <StoreFooter tenant={tenant} />

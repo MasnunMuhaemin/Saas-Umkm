@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ChevronRight, ShoppingBag, Star } from "lucide-react";
+import { ChevronRight, Star } from "lucide-react";
 import {
   getStorefront,
   getStorefrontProduct,
@@ -9,6 +8,7 @@ import {
 import { buildTenantMetadata, tenantBaseUrl } from "@/lib/seo/metadata";
 import { JsonLd } from "@/lib/seo/json-ld";
 import { ProductPurchase } from "../../_components/product-purchase";
+import { ProductGallery } from "../../_components/product-gallery";
 
 type Params = Promise<{ domain: string; productSlug: string }>;
 
@@ -92,23 +92,19 @@ export default async function ProductDetailPage({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex flex-col lg:flex-row gap-10">
-          {/* Gambar */}
+          {/* Galeri */}
           <div className="w-full lg:w-[45%] flex-none">
-            <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden border border-gray-100">
-              {product.mainImage ? (
-                <Image
-                  src={product.mainImage}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <ShoppingBag size={80} className="text-gray-300" />
-                </div>
-              )}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
+            <ProductGallery
+              images={
+                product.images.length
+                  ? product.images
+                  : product.mainImage
+                    ? [product.mainImage]
+                    : []
+              }
+              alt={product.name}
+            >
+              <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 {product.isBest && (
                   <span className="bg-primary text-white text-xs px-3 py-1 rounded-lg font-bold shadow-sm">
                     Terlaris
@@ -120,7 +116,7 @@ export default async function ProductDetailPage({
                   </span>
                 )}
               </div>
-            </div>
+            </ProductGallery>
           </div>
 
           {/* Info */}

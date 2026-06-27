@@ -37,6 +37,47 @@ export function paymentSuccessEmail(opts: {
   };
 }
 
+export function subscriptionReminderEmail(opts: {
+  name: string;
+  planName: string;
+  amount: number;
+  currentEnd: Date;
+}) {
+  return {
+    subject: "Pengingat: Langganan akan jatuh tempo",
+    html: layout(
+      `<p>Halo <b>${opts.name}</b>,</p>
+       <p>Langganan <b>${opts.planName}</b> Anda akan jatuh tempo pada <b>${formatDate(
+         opts.currentEnd,
+       )}</b>.</p>
+       <p>Bayar <b>${formatRupiah(opts.amount)}</b> lewat menu <b>Langganan</b> di dashboard agar toko tetap aktif.</p>`,
+    ),
+  };
+}
+
+export function pastDueEmail(opts: { name: string; graceUntil: Date }) {
+  return {
+    subject: "Langganan jatuh tempo — segera bayar",
+    html: layout(
+      `<p>Halo <b>${opts.name}</b>,</p>
+       <p>Langganan Anda telah lewat jatuh tempo. Toko masih aktif dalam masa tenggang hingga <b>${formatDate(
+         opts.graceUntil,
+       )}</b>.</p>
+       <p>Segera bayar agar toko tidak dinonaktifkan.</p>`,
+    ),
+  };
+}
+
+export function suspendedEmail(opts: { name: string }) {
+  return {
+    subject: "Toko Anda dinonaktifkan sementara",
+    html: layout(
+      `<p>Halo <b>${opts.name}</b>,</p>
+       <p>Toko Anda dinonaktifkan karena langganan kedaluwarsa. Lakukan pembayaran di menu <b>Langganan</b> untuk mengaktifkannya kembali.</p>`,
+    ),
+  };
+}
+
 export function passwordResetEmail(opts: { name: string; link: string }) {
   return {
     subject: "Reset Password MayWeb",

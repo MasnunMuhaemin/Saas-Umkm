@@ -118,6 +118,7 @@ export function DashboardShell({
           {mobileOpen && (
             <button
               onClick={() => setMobileOpen(false)}
+              aria-label="Tutup menu"
               className="md:hidden p-2 text-gray-500 hover:text-gray-900 rounded-lg"
             >
               <X size={20} />
@@ -226,6 +227,7 @@ export function DashboardShell({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
+              aria-label="Buka menu"
               className="md:hidden p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
             >
               <Menu size={20} />

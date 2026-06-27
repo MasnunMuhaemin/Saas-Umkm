@@ -8,8 +8,11 @@ import { toast } from "sonner";
 import {
   CheckCircle,
   ChevronRight,
+  ImagePlus,
   Loader2,
   PackageX,
+  Plus,
+  Trash2,
   XCircle,
 } from "lucide-react";
 import type { inferRouterOutputs } from "@trpc/server";
@@ -46,6 +49,10 @@ export function ProductForm({
   // Tab Varian hanya muncul saat edit (varian butuh produk yang sudah tersimpan).
   const visibleTabs = TABS.filter((t) => t.id !== "varian" || isEdit);
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("basic");
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    price?: string;
+  }>({});
 
   const [name, setName] = useState(product?.name ?? "");
   const [categoryId, setCategoryId] = useState(product?.categoryId ?? "");
@@ -59,7 +66,13 @@ export function ProductForm({
   const [weight, setWeight] = useState(
     product?.weight ? String(product.weight) : "",
   );
-  const [mainImage, setMainImage] = useState(product?.mainImage ?? "");
+  const [images, setImages] = useState<string[]>(() => {
+    const arr = product?.images ?? [];
+    if (arr.length) return arr;
+    return product?.mainImage ? [product.mainImage] : [""];
+  });
+  const setImageAt = (i: number, v: string) =>
+    setImages((prev) => prev.map((u, idx) => (idx === i ? v : u)));
   const [status, setStatus] = useState<string>(product?.status ?? "ACTIVE");
   const [metaTitle, setMetaTitle] = useState(product?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(
@@ -80,9 +93,17 @@ export function ProductForm({
   const loading = create.isPending || update.isPending;
 
   const handleSubmit = () => {
-    if (!name || !price) {
-      toast.error("Nama dan harga wajib diisi.");
+    const errs: { name?: string; price?: string } = {};
+    if (!name.trim()) errs.name = "Nama produk wajib diisi";
+    if (!price.trim()) errs.price = "Harga wajib diisi";
+    else if (Number(price) < 0) errs.price = "Harga tidak boleh negatif";
+    setFieldErrors(errs);
+    if (errs.name) {
       setTab("basic");
+      return;
+    }
+    if (errs.price) {
+      setTab("price");
       return;
     }
     const payload = {
@@ -94,7 +115,8 @@ export function ProductForm({
       originalPrice: originalPrice ? Number(originalPrice) : null,
       stock: Number(stock) || 0,
       weight: weight ? Number(weight) : null,
-      mainImage: mainImage || null,
+      images: images.filter((u) => u.trim()),
+      mainImage: images.find((u) => u.trim()) || null,
       status: status as "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK",
       metaTitle: metaTitle || null,
       metaDescription: metaDescription || null,
@@ -152,8 +174,14 @@ export function ProductForm({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Contoh: Kue Nastar Premium"
-                  className={inputCls}
+                  aria-invalid={!!fieldErrors.name}
+                  className={`${inputCls} ${
+                    fieldErrors.name ? "border-red-300 focus:border-red-400" : ""
+                  }`}
                 />
+                {fieldErrors.name && (
+                  <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1.5">
@@ -189,32 +217,62 @@ export function ProductForm({
 
           {tab === "foto" && (
             <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">
-                  URL Foto Produk
-                </label>
-                <input
-                  type="url"
-                  value={mainImage}
-                  onChange={(e) => setMainImage(e.target.value)}
-                  placeholder="https://contoh.com/foto-produk.jpg"
-                  className={inputCls}
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  Tempel URL gambar. Upload file langsung akan tersedia setelah
-                  storage (UploadThing/S3) dikonfigurasi.
-                </p>
+              <p className="text-xs text-gray-400">
+                Foto pertama menjadi <b>foto utama</b>. Tempel URL gambar; upload
+                file langsung tersedia setelah storage dikonfigurasi.
+              </p>
+              <div className="space-y-3">
+                {images.map((url, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    {url ? (
+                      <div className="relative w-16 h-16 rounded-lg border border-gray-200 overflow-hidden bg-gray-50 flex-none">
+                        <Image
+                          src={url}
+                          alt=""
+                          fill
+                          sizes="64px"
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 rounded-lg border border-dashed border-gray-200 bg-gray-50 flex-none flex items-center justify-center text-gray-300">
+                        <ImagePlus size={20} />
+                      </div>
+                    )}
+                    <input
+                      type="url"
+                      value={url}
+                      onChange={(e) => setImageAt(i, e.target.value)}
+                      placeholder="https://contoh.com/foto.jpg"
+                      className={`${inputCls} flex-1`}
+                    />
+                    {i === 0 && (
+                      <span className="text-[10px] font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded flex-none">
+                        UTAMA
+                      </span>
+                    )}
+                    {images.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setImages(images.filter((_, idx) => idx !== i))
+                        }
+                        className="p-2 text-gray-400 hover:text-red-500 flex-none"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
-              {mainImage && (
-                <div className="relative w-40 h-40 rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
-                  <Image
-                    src={mainImage}
-                    alt="Preview"
-                    fill
-                    sizes="160px"
-                    className="object-cover"
-                  />
-                </div>
+              {images.length < 8 && (
+                <button
+                  type="button"
+                  onClick={() => setImages([...images, ""])}
+                  className="text-sm text-brand-600 font-semibold inline-flex items-center gap-1 hover:underline"
+                >
+                  <Plus size={14} /> Tambah Foto
+                </button>
               )}
             </div>
           )}
@@ -226,7 +284,11 @@ export function ProductForm({
                   <label className="block text-sm font-bold text-gray-700 mb-1.5">
                     Harga Normal *
                   </label>
-                  <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden focus-within:border-brand-400">
+                  <div
+                    className={`flex items-center border rounded-xl overflow-hidden focus-within:border-brand-400 ${
+                      fieldErrors.price ? "border-red-300" : "border-gray-200"
+                    }`}
+                  >
                     <span className="px-3 py-3 bg-gray-50 text-gray-500 text-sm border-r border-gray-200">
                       Rp
                     </span>
@@ -235,9 +297,15 @@ export function ProductForm({
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       placeholder="65000"
+                      aria-invalid={!!fieldErrors.price}
                       className="flex-1 px-3 py-3 text-sm focus:outline-none bg-white"
                     />
                   </div>
+                  {fieldErrors.price && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {fieldErrors.price}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1.5">

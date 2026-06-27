@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { billingService } from "@/server/services/shared/billing.service";
+import { captureError } from "@/lib/logger";
 
 const webhookSchema = z.object({
   amount: z.number(),
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (err) {
-    console.error("Pakasir webhook error:", err);
+    captureError(err, { where: "pakasir.webhook" });
     // Balas 200 agar Pakasir tidak retry tanpa henti; error sudah dicatat
     return NextResponse.json({ received: false }, { status: 200 });
   }

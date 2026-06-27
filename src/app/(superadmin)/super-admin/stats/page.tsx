@@ -1,4 +1,4 @@
-import { DollarSign, Package, ShoppingCart, Store } from "lucide-react";
+import { DollarSign, Eye, Package, ShoppingCart, Store } from "lucide-react";
 import { getServerTrpc } from "@/lib/trpc/server";
 import { formatRupiah } from "@/lib/helpers/format";
 
@@ -10,6 +10,7 @@ export default async function GlobalStatsPage() {
     { label: "Total Produk", value: String(s.totalProducts), icon: Package, color: "bg-blue-50 text-blue-600" },
     { label: "Total Transaksi", value: String(s.totalOrders), icon: ShoppingCart, color: "bg-green-50 text-green-600" },
     { label: "Total Omzet Platform", value: formatRupiah(s.totalRevenue), icon: DollarSign, color: "bg-purple-50 text-purple-600" },
+    { label: "Pageviews (7 hari)", value: String(s.pageviews7d), icon: Eye, color: "bg-amber-50 text-amber-600" },
   ];
   const maxProducts = Math.max(1, ...s.topTenants.map((t) => t.products));
 
@@ -22,7 +23,7 @@ export default async function GlobalStatsPage() {
         <p className="text-sm text-slate-500">Agregat seluruh tenant platform</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map(({ label, value, icon: Icon, color }) => (
           <div
             key={label}

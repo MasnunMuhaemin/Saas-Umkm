@@ -1,9 +1,17 @@
+import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db";
 import { pakasir } from "@/lib/pakasir/client";
 import { formatDate } from "@/lib/helpers/format";
 import { GRACE_PERIOD_DAYS } from "@/lib/constants/config";
 import { sendEmail } from "@/lib/email/client";
-import { paymentSuccessEmail } from "@/lib/email/templates";
+import {
+  paymentSuccessEmail,
+  subscriptionReminderEmail,
+  pastDueEmail,
+  suspendedEmail,
+} from "@/lib/email/templates";
+import { captureError } from "@/lib/logger";
+import { couponService } from "@/server/services/shared/coupon.service";
 import type { Prisma } from "@/generated/prisma/client";
 
 function makeOrderId() {
@@ -15,7 +23,7 @@ export const billingService = {
   async getInfo(tenantId: string) {
     const sub = await prisma.subscription.findUniqueOrThrow({
       where: { tenantId },
-      include: { plan: { select: { name: true, price: true } } },
+      include: { plan: { select: { name: true, price: true, slug: true } } },
     });
     const payments = await prisma.payment.findMany({
       where: { subscriptionId: sub.id },
@@ -43,6 +51,7 @@ export const billingService = {
     return {
       status: sub.status,
       planName: sub.plan.name,
+      planSlug: sub.plan.slug,
       planPrice: sub.plan.price,
       currentEndLabel: sub.currentEnd ? formatDate(sub.currentEnd) : null,
       autoRenew: sub.autoRenew,
@@ -65,14 +74,65 @@ export const billingService = {
     };
   },
 
+  /** Daftar paket aktif untuk pilihan ganti paket. */
+  listPlans() {
+    return prisma.plan.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+      select: {
+        slug: true,
+        name: true,
+        price: true,
+        maxProducts: true,
+        hasPos: true,
+        hasInvoice: true,
+        hasCustomerDb: true,
+      },
+    });
+  },
+
+  /** Ganti paket (upgrade/downgrade). Fitur & harga berikutnya langsung berubah. */
+  async changePlan(tenantId: string, planSlug: string) {
+    const plan = await prisma.plan.findUnique({
+      where: { slug: planSlug },
+      select: { id: true },
+    });
+    if (!plan)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Paket tidak ditemukan.",
+      });
+    await prisma.subscription.update({
+      where: { tenantId },
+      data: { planId: plan.id },
+    });
+    return { ok: true };
+  },
+
+  /** Atur perpanjangan otomatis (batal langganan = autoRenew false). */
+  async setAutoRenew(tenantId: string, autoRenew: boolean) {
+    await prisma.subscription.update({
+      where: { tenantId },
+      data: { autoRenew },
+    });
+    return { ok: true };
+  },
+
   /** Buat invoice langganan + transaksi QRIS Pakasir (merchant/super admin). */
-  async createInvoice(tenantId: string) {
+  async createInvoice(tenantId: string, couponCode?: string) {
     const sub = await prisma.subscription.findUniqueOrThrow({
       where: { tenantId },
       include: { plan: true },
     });
 
-    const amount = sub.plan.price;
+    // Kupon opsional → diskon dari harga paket.
+    let amount = sub.plan.price;
+    let couponId: string | null = null;
+    if (couponCode) {
+      const applied = await couponService.apply(couponCode, amount);
+      amount = applied.discounted;
+      couponId = applied.couponId;
+    }
     const orderId = makeOrderId();
 
     const base =
@@ -95,6 +155,13 @@ export const billingService = {
         expiredAt: new Date(result.payment.expired_at),
       },
     });
+
+    if (couponId) {
+      await prisma.coupon.update({
+        where: { id: couponId },
+        data: { redeemedCount: { increment: 1 } },
+      });
+    }
 
     return {
       orderId: payment.orderId,
@@ -174,18 +241,60 @@ export const billingService = {
         });
       }
     } catch (e) {
-      console.error("Gagal kirim email pembayaran:", e);
+      captureError(e, { where: "confirmPayment.email" });
     }
 
     return result;
   },
 
-  /** Lifecycle harian: ACTIVE→PAST_DUE→EXPIRED(+suspend). Dipanggil cron. */
+  /** Lifecycle harian: reminder H-3 + ACTIVE→PAST_DUE→EXPIRED(+suspend) + email. */
   async runLifecycle() {
     const now = new Date();
+    const include = {
+      plan: { select: { name: true, price: true } },
+      tenant: { select: { user: { select: { email: true, name: true } } } },
+    } as const;
+    const mail = async (
+      to: string | undefined,
+      tpl: { subject: string; html: string },
+    ) => {
+      if (!to) return;
+      try {
+        await sendEmail({ to, ...tpl });
+      } catch (e) {
+        captureError(e, { where: "runLifecycle.mail" });
+      }
+    };
 
+    // 1. Reminder H-3 (currentEnd 2–3 hari ke depan → terkirim sekali).
+    const d2 = new Date(now);
+    d2.setDate(d2.getDate() + 2);
+    const d3 = new Date(now);
+    d3.setDate(d3.getDate() + 3);
+    const reminders = await prisma.subscription.findMany({
+      where: {
+        status: "ACTIVE",
+        autoRenew: true,
+        currentEnd: { gte: d2, lt: d3 },
+      },
+      include,
+    });
+    for (const sub of reminders) {
+      await mail(
+        sub.tenant.user.email,
+        subscriptionReminderEmail({
+          name: sub.tenant.user.name,
+          planName: sub.plan.name,
+          amount: sub.plan.price,
+          currentEnd: sub.currentEnd!,
+        }),
+      );
+    }
+
+    // 2. Lewat jatuh tempo → PAST_DUE + grace + email.
     const expiring = await prisma.subscription.findMany({
       where: { status: "ACTIVE", currentEnd: { lt: now } },
+      include,
     });
     for (const sub of expiring) {
       const graceUntil = new Date(now);
@@ -194,10 +303,16 @@ export const billingService = {
         where: { id: sub.id },
         data: { status: "PAST_DUE", graceUntil },
       });
+      await mail(
+        sub.tenant.user.email,
+        pastDueEmail({ name: sub.tenant.user.name, graceUntil }),
+      );
     }
 
+    // 3. Lewat grace → EXPIRED + suspend tenant + email.
     const toSuspend = await prisma.subscription.findMany({
       where: { status: "PAST_DUE", graceUntil: { lt: now } },
+      include,
     });
     for (const sub of toSuspend) {
       await prisma.$transaction([
@@ -210,8 +325,16 @@ export const billingService = {
           data: { status: "SUSPENDED" },
         }),
       ]);
+      await mail(
+        sub.tenant.user.email,
+        suspendedEmail({ name: sub.tenant.user.name }),
+      );
     }
 
-    return { pastDue: expiring.length, suspended: toSuspend.length };
+    return {
+      reminded: reminders.length,
+      pastDue: expiring.length,
+      suspended: toSuspend.length,
+    };
   },
 };

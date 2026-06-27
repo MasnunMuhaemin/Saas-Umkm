@@ -134,6 +134,7 @@ export const getStorefrontProduct = cache(
         originalPrice: true,
         stock: true,
         mainImage: true,
+        images: true,
         isBest: true,
         isNew: true,
         rating: true,
@@ -146,8 +147,12 @@ export const getStorefrontProduct = cache(
       },
     });
     if (!p) return null;
-    // Decimal → number (aman dikirim ke Client Component)
-    return { ...p, rating: Number(p.rating) };
+    // Decimal → number, Json → string[] (aman dikirim ke Client Component)
+    return {
+      ...p,
+      rating: Number(p.rating),
+      images: Array.isArray(p.images) ? p.images.map(String) : [],
+    };
   },
 );
 

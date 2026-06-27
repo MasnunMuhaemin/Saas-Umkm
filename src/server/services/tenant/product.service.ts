@@ -53,8 +53,8 @@ export const productService = {
 
   /** Ambil 1 produk milik tenant (untuk form edit). Lempar jika bukan miliknya.
    *  Select field form saja → payload plain & serializable ke Client Component. */
-  getById: (tenantId: string, id: string) =>
-    prisma.product.findFirstOrThrow({
+  async getById(tenantId: string, id: string) {
+    const p = await prisma.product.findFirstOrThrow({
       where: { id, tenantId },
       select: {
         id: true,
@@ -67,11 +67,18 @@ export const productService = {
         stock: true,
         weight: true,
         mainImage: true,
+        images: true,
         status: true,
         metaTitle: true,
         metaDescription: true,
       },
-    }),
+    });
+    // Json → string[] eksplisit (hindari tipe Json yang dalam di tRPC)
+    return {
+      ...p,
+      images: Array.isArray(p.images) ? p.images.map(String) : [],
+    };
+  },
 
   /** Buat produk — cek kuota paket dulu, lalu slug via helper reusable. */
   async store(tenantId: string, data: StoreProductInput) {

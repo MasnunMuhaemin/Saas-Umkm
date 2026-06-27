@@ -15,6 +15,7 @@ function InputField({
   placeholder,
   icon: Icon,
   rightElement,
+  error,
 }: {
   id: string;
   label: string;
@@ -24,6 +25,7 @@ function InputField({
   placeholder: string;
   icon: React.ElementType;
   rightElement?: React.ReactNode;
+  error?: string;
 }) {
   return (
     <div>
@@ -43,7 +45,13 @@ function InputField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition-all"
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className={`w-full pl-10 pr-10 py-3 bg-gray-50 border rounded-xl text-sm focus:outline-none focus:bg-white transition-all ${
+            error
+              ? "border-red-300 focus:border-red-400"
+              : "border-gray-200 focus:border-blue-400"
+          }`}
         />
         {rightElement && (
           <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
@@ -51,6 +59,11 @@ function InputField({
           </div>
         )}
       </div>
+      {error && (
+        <p id={`${id}-error`} className="text-xs text-red-500 mt-1">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -62,11 +75,25 @@ export function LoginForm() {
   const [showPw, setShowPw] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Validasi field inline sebelum kirim.
+    const errs: { email?: string; password?: string } = {};
+    if (!email.trim()) errs.email = "Email wajib diisi";
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+      errs.email = "Format email tidak valid";
+    if (!password) errs.password = "Password wajib diisi";
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     setLoading(true);
 
     const res = await signIn("credentials", {
@@ -127,6 +154,7 @@ export function LoginForm() {
                 onChange={setEmail}
                 placeholder="nama@email.com"
                 icon={Mail}
+                error={fieldErrors.email}
               />
               <InputField
                 id="login-password"
@@ -136,10 +164,14 @@ export function LoginForm() {
                 onChange={setPassword}
                 placeholder="••••••••"
                 icon={Lock}
+                error={fieldErrors.password}
                 rightElement={
                   <button
                     type="button"
                     onClick={() => setShowPw(!showPw)}
+                    aria-label={
+                      showPw ? "Sembunyikan password" : "Tampilkan password"
+                    }
                     className="text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     {showPw ? <EyeOff size={15} /> : <Eye size={15} />}

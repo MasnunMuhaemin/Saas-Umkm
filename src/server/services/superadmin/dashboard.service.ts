@@ -33,11 +33,13 @@ export const superAdminDashboardService = {
 
   /** Statistik global lintas semua tenant. */
   async getGlobalStats() {
-    const [totalProducts, totalOrders, revenueAgg, topTenants] =
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const [totalProducts, totalOrders, revenueAgg, pageviews7d, topTenants] =
       await Promise.all([
         prisma.product.count(),
         prisma.order.count(),
         prisma.order.aggregate({ _sum: { total: true } }),
+        prisma.visitorEvent.count({ where: { createdAt: { gte: weekAgo } } }),
         prisma.tenant.findMany({
           select: {
             name: true,
@@ -52,6 +54,7 @@ export const superAdminDashboardService = {
       totalProducts,
       totalOrders,
       totalRevenue: revenueAgg._sum.total ?? 0,
+      pageviews7d,
       topTenants: topTenants.map((t) => ({
         name: t.name,
         slug: t.slug,
