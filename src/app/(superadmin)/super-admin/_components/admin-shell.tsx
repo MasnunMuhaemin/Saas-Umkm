@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
+  BarChart2,
   LayoutDashboard,
   LogOut,
   Menu,
+  Package,
   Shield,
   Users,
   X,
@@ -16,6 +18,8 @@ import {
 const NAV = [
   { href: "/super-admin", label: "Dashboard Admin", icon: LayoutDashboard },
   { href: "/super-admin/tenants", label: "Tenant UMKM", icon: Users },
+  { href: "/super-admin/plans", label: "Paket Langganan", icon: Package },
+  { href: "/super-admin/stats", label: "Statistik Global", icon: BarChart2 },
 ] as const;
 
 export function AdminShell({

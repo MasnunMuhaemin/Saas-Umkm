@@ -11,4 +11,7 @@ export const dashboardRouter = router({
   stats: merchantProcedure.query(({ ctx }) =>
     dashboardService.getStats(ctx.tenantId),
   ),
+  setupStatus: merchantProcedure.query(({ ctx }) =>
+    dashboardService.getSetupStatus(ctx.tenantId),
+  ),
 });

@@ -1,6 +1,9 @@
 import Link from "next/link";
 import {
+  ArrowRight,
   BarChart2,
+  CheckCircle2,
+  Circle,
   DollarSign,
   ExternalLink,
   FileText,
@@ -13,7 +16,10 @@ import { RevenueChart } from "./_components/revenue-chart";
 
 export default async function DashboardHome() {
   const api = await getServerTrpc();
-  const data = await api.dashboard.overview();
+  const [data, setup] = await Promise.all([
+    api.dashboard.overview(),
+    api.dashboard.setupStatus(),
+  ]);
   const { stats, salesSeries, topProducts, recentOrders, storeUrl } = data;
 
   const cards = [
@@ -60,6 +66,49 @@ export default async function DashboardHome() {
           + Tambah Produk
         </Link>
       </div>
+
+      {/* Onboarding — kelengkapan setup toko */}
+      {setup.percent < 100 && (
+        <div className="bg-gradient-to-br from-brand-600 to-indigo-700 rounded-2xl p-6 text-white">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-bold text-lg">Lengkapi Toko Anda</h3>
+              <p className="text-white/80 text-sm">
+                Selesaikan langkah berikut agar toko siap tampil maksimal.
+              </p>
+            </div>
+            <span className="text-2xl font-black">{setup.percent}%</span>
+          </div>
+          <div className="h-2 bg-white/20 rounded-full overflow-hidden mb-5">
+            <div
+              className="h-full bg-white rounded-full transition-all"
+              style={{ width: `${setup.percent}%` }}
+            />
+          </div>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {setup.steps.map((s) =>
+              s.done ? (
+                <div
+                  key={s.label}
+                  className="flex items-center gap-2 text-sm text-white/70 bg-white/10 rounded-xl px-3 py-2.5"
+                >
+                  <CheckCircle2 size={16} /> <span className="line-through">{s.label}</span>
+                </div>
+              ) : (
+                <Link
+                  key={s.label}
+                  href={s.href}
+                  className="flex items-center gap-2 text-sm font-semibold bg-white/15 hover:bg-white/25 rounded-xl px-3 py-2.5 transition-colors"
+                >
+                  <Circle size={16} />
+                  <span className="flex-1">{s.label}</span>
+                  <ArrowRight size={15} />
+                </Link>
+              ),
+            )}
+          </div>
+        </div>
+      )}
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

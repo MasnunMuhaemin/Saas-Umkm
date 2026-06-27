@@ -29,6 +29,20 @@ export default auth((req) => {
     return NextResponse.rewrite(new URL(`/s/${subdomain}${path}`, req.url));
   }
 
+  // 1b. Custom domain (mis. tokosaya.com) → rewrite ke /s/<host>.
+  //     getStorefront mencocokkan host ke field customDomain tenant.
+  const isPlatformHost =
+    hostname === ROOT_DOMAIN ||
+    hostname === `www.${ROOT_DOMAIN}` ||
+    hostname.endsWith(`.${ROOT_DOMAIN}`) ||
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname.endsWith(".localhost");
+
+  if (!isPlatformHost && hostname.includes(".")) {
+    return NextResponse.rewrite(new URL(`/s/${hostname}${path}`, req.url));
+  }
+
   // 2. Guard role berbasis sesi (req.auth diisi oleh wrapper auth())
   const role = req.auth?.user?.role;
 

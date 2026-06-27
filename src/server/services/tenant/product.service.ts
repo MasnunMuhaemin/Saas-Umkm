@@ -65,6 +65,7 @@ export const productService = {
         originalPrice: true,
         stock: true,
         weight: true,
+        mainImage: true,
         status: true,
         metaTitle: true,
         metaDescription: true,

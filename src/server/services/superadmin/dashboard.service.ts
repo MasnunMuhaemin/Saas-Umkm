@@ -30,4 +30,34 @@ export const superAdminDashboardService = {
       planDist: Object.entries(dist).map(([name, count]) => ({ name, count })),
     };
   },
+
+  /** Statistik global lintas semua tenant. */
+  async getGlobalStats() {
+    const [totalProducts, totalOrders, revenueAgg, topTenants] =
+      await Promise.all([
+        prisma.product.count(),
+        prisma.order.count(),
+        prisma.order.aggregate({ _sum: { total: true } }),
+        prisma.tenant.findMany({
+          select: {
+            name: true,
+            slug: true,
+            _count: { select: { products: true, orders: true } },
+          },
+          orderBy: { products: { _count: "desc" } },
+          take: 5,
+        }),
+      ]);
+    return {
+      totalProducts,
+      totalOrders,
+      totalRevenue: revenueAgg._sum.total ?? 0,
+      topTenants: topTenants.map((t) => ({
+        name: t.name,
+        slug: t.slug,
+        products: t._count.products,
+        orders: t._count.orders,
+      })),
+    };
+  },
 };

@@ -14,14 +14,17 @@ import {
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc/client";
 import type { AppRouter } from "@/server/routers/_app";
+import { VariantManager } from "./variant-manager";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type ProductData = RouterOutput["product"]["byId"];
 
 const TABS = [
   { id: "basic", label: "Informasi Dasar" },
+  { id: "foto", label: "Foto" },
   { id: "price", label: "Harga & Stok" },
   { id: "seo", label: "SEO" },
+  { id: "varian", label: "Varian" },
 ] as const;
 
 const STATUS_OPTIONS = [
@@ -39,6 +42,8 @@ export function ProductForm({
 }) {
   const router = useRouter();
   const isEdit = Boolean(product);
+  // Tab Varian hanya muncul saat edit (varian butuh produk yang sudah tersimpan).
+  const visibleTabs = TABS.filter((t) => t.id !== "varian" || isEdit);
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("basic");
 
   const [name, setName] = useState(product?.name ?? "");
@@ -53,6 +58,7 @@ export function ProductForm({
   const [weight, setWeight] = useState(
     product?.weight ? String(product.weight) : "",
   );
+  const [mainImage, setMainImage] = useState(product?.mainImage ?? "");
   const [status, setStatus] = useState<string>(product?.status ?? "ACTIVE");
   const [metaTitle, setMetaTitle] = useState(product?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(
@@ -87,6 +93,7 @@ export function ProductForm({
       originalPrice: originalPrice ? Number(originalPrice) : null,
       stock: Number(stock) || 0,
       weight: weight ? Number(weight) : null,
+      mainImage: mainImage || null,
       status: status as "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK",
       metaTitle: metaTitle || null,
       metaDescription: metaDescription || null,
@@ -118,7 +125,7 @@ export function ProductForm({
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1">
           <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-5">
-            {TABS.map((t) => (
+            {visibleTabs.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
@@ -176,6 +183,37 @@ export function ProductForm({
                   className={`${inputCls} resize-none`}
                 />
               </div>
+            </div>
+          )}
+
+          {tab === "foto" && (
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                  URL Foto Produk
+                </label>
+                <input
+                  type="url"
+                  value={mainImage}
+                  onChange={(e) => setMainImage(e.target.value)}
+                  placeholder="https://contoh.com/foto-produk.jpg"
+                  className={inputCls}
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Tempel URL gambar. Upload file langsung akan tersedia setelah
+                  storage (UploadThing/S3) dikonfigurasi.
+                </p>
+              </div>
+              {mainImage && (
+                <div className="w-40 h-40 rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={mainImage}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
             </div>
           )}
 
@@ -291,6 +329,10 @@ export function ProductForm({
                 </p>
               </div>
             </div>
+          )}
+
+          {tab === "varian" && product && (
+            <VariantManager productId={product.id} />
           )}
 
           <div className="flex gap-3 mt-5">

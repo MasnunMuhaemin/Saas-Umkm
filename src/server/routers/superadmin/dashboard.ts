@@ -5,4 +5,7 @@ export const superDashboardRouter = router({
   stats: superAdminProcedure.query(() =>
     superAdminDashboardService.getStats(),
   ),
+  globalStats: superAdminProcedure.query(() =>
+    superAdminDashboardService.getGlobalStats(),
+  ),
 });

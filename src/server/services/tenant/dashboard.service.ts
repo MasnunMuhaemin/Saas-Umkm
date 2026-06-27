@@ -106,6 +106,45 @@ export const dashboardService = {
     };
   },
 
+  /** Status kelengkapan setup toko (onboarding). */
+  async getSetupStatus(tenantId: string) {
+    const [tenant, productCount, categoryCount] = await Promise.all([
+      prisma.tenant.findUniqueOrThrow({
+        where: { id: tenantId },
+        select: { whatsapp: true, logo: true },
+      }),
+      prisma.product.count({ where: { tenantId } }),
+      prisma.category.count({ where: { tenantId } }),
+    ]);
+    const steps = [
+      {
+        label: "Tambahkan nomor WhatsApp",
+        done: Boolean(tenant.whatsapp),
+        href: "/dashboard/settings",
+      },
+      {
+        label: "Unggah logo toko",
+        done: Boolean(tenant.logo),
+        href: "/dashboard/settings",
+      },
+      {
+        label: "Tambah produk pertama",
+        done: productCount > 0,
+        href: "/dashboard/products/new",
+      },
+      {
+        label: "Buat kategori produk",
+        done: categoryCount > 0,
+        href: "/dashboard/categories",
+      },
+    ];
+    const doneCount = steps.filter((s) => s.done).length;
+    return {
+      steps,
+      percent: Math.round((doneCount / steps.length) * 100),
+    };
+  },
+
   /** Statistik penjualan merchant (halaman /dashboard/stats). */
   async getStats(tenantId: string) {
     const now = new Date();

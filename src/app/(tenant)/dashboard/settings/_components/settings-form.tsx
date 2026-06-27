@@ -100,6 +100,9 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
       city: form.city || null,
       province: form.province || null,
       openingHours: form.openingHours || null,
+      customDomain: form.customDomain || null,
+      logo: form.logo || null,
+      favicon: form.favicon || null,
       primaryColor: form.primaryColor,
       showBusinessName: form.showBusinessName,
       showTagline: form.showTagline,
@@ -246,6 +249,63 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
 
       {tab === "tampilan" && (
         <div className="space-y-5">
+          <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
+            <h3 className="font-bold text-gray-900">Domain Custom</h3>
+            <input
+              type="text"
+              value={form.customDomain ?? ""}
+              onChange={(e) => set("customDomain", e.target.value)}
+              placeholder="tokosaya.com"
+              className={inputCls}
+            />
+            <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-xs text-gray-600">
+              <p className="font-semibold text-gray-700 mb-1">
+                Cara menghubungkan:
+              </p>
+              <p>
+                Tambahkan record <b>CNAME</b> di pengaturan DNS domain Anda yang
+                mengarah ke <b>cname.{ROOT_DOMAIN}</b>. Setelah aktif, toko Anda
+                bisa diakses dari domain sendiri.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+            <h3 className="font-bold text-gray-900">Logo & Favicon</h3>
+            <div className="flex items-start gap-4">
+              {form.logo && (
+                <div className="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={form.logo}
+                    alt="Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+              <div className="flex-1 space-y-3">
+                <input
+                  type="url"
+                  value={form.logo ?? ""}
+                  onChange={(e) => set("logo", e.target.value)}
+                  placeholder="URL Logo (https://...)"
+                  className={inputCls}
+                />
+                <input
+                  type="url"
+                  value={form.favicon ?? ""}
+                  onChange={(e) => set("favicon", e.target.value)}
+                  placeholder="URL Favicon (https://...)"
+                  className={inputCls}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-400">
+              Tempel URL gambar. Upload file langsung tersedia setelah storage
+              dikonfigurasi.
+            </p>
+          </div>
+
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <h3 className="font-bold text-gray-900 mb-4">Warna Tema</h3>
             <div className="flex items-center gap-3 mb-4">

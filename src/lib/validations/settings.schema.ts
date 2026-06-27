@@ -13,6 +13,11 @@ export const updateProfileSchema = z.object({
   city: z.string().max(100).nullable().optional(),
   province: z.string().max(100).nullable().optional(),
   openingHours: z.string().max(255).nullable().optional(),
+  // Domain custom (mis. tokosaya.com)
+  customDomain: z.string().max(255).nullable().optional(),
+  // Branding
+  logo: z.string().max(500).nullable().optional(),
+  favicon: z.string().max(500).nullable().optional(),
   // Tampilan
   primaryColor: z
     .string()

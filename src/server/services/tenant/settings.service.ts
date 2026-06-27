@@ -15,6 +15,8 @@ const profileSelect = {
   city: true,
   province: true,
   openingHours: true,
+  logo: true,
+  favicon: true,
   primaryColor: true,
   showBusinessName: true,
   showTagline: true,

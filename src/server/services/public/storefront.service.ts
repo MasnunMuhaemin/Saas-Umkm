@@ -9,7 +9,10 @@ import { prisma } from "@/server/db";
  */
 export const getStorefront = cache(async (slug: string) => {
   const tenant = await prisma.tenant.findFirst({
-    where: { slug, status: { in: ["ACTIVE", "TRIAL"] } },
+    where: {
+      OR: [{ slug }, { customDomain: slug }],
+      status: { in: ["ACTIVE", "TRIAL"] },
+    },
     select: {
       id: true,
       name: true,

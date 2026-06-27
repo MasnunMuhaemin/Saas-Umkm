@@ -2,6 +2,8 @@ import { prisma } from "@/server/db";
 import { pakasir } from "@/lib/pakasir/client";
 import { formatDate } from "@/lib/helpers/format";
 import { GRACE_PERIOD_DAYS } from "@/lib/constants/config";
+import { sendEmail } from "@/lib/email/client";
+import { paymentSuccessEmail } from "@/lib/email/templates";
 import type { Prisma } from "@/generated/prisma/client";
 
 function makeOrderId() {
@@ -122,7 +124,7 @@ export const billingService = {
       throw new Error("Verifikasi pembayaran gagal / tidak cocok");
     }
 
-    return prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const updated = await tx.payment.update({
         where: { id: payment.id },
         data: {
@@ -150,6 +152,32 @@ export const billingService = {
 
       return updated;
     });
+
+    // Email "pembayaran berhasil" — fire-and-forget, jangan gagalkan webhook.
+    try {
+      const t = await prisma.tenant.findUnique({
+        where: { id: payment.subscription.tenantId },
+        select: {
+          user: { select: { email: true, name: true } },
+          plan: { select: { name: true } },
+        },
+      });
+      if (t?.user.email) {
+        await sendEmail({
+          to: t.user.email,
+          ...paymentSuccessEmail({
+            name: t.user.name,
+            planName: t.plan.name,
+            amount: payment.amount,
+            currentEnd: payment.periodEnd,
+          }),
+        });
+      }
+    } catch (e) {
+      console.error("Gagal kirim email pembayaran:", e);
+    }
+
+    return result;
   },
 
   /** Lifecycle harian: ACTIVE→PAST_DUE→EXPIRED(+suspend). Dipanggil cron. */

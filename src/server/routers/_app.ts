@@ -1,6 +1,8 @@
 import { router, protectedProcedure } from "@/server/trpc";
+import { authRouter } from "./auth";
 import { dashboardRouter } from "./tenant/dashboard";
 import { productRouter } from "./tenant/product";
+import { variantRouter } from "./tenant/variant";
 import { categoryRouter } from "./tenant/category";
 import { settingsRouter } from "./tenant/settings";
 import { websiteRouter } from "./tenant/website";
@@ -9,6 +11,7 @@ import { orderRouter } from "./tenant/order";
 import { billingRouter } from "./tenant/billing";
 import { superDashboardRouter } from "./superadmin/dashboard";
 import { tenantAdminRouter } from "./superadmin/tenant";
+import { planAdminRouter } from "./superadmin/plan";
 
 /**
  * Root router — gabungan semua feature router.
@@ -19,8 +22,10 @@ export const appRouter = router({
   /** Echo sesi user saat ini — untuk smoke test client/server tRPC. */
   me: protectedProcedure.query(({ ctx }) => ctx.user),
 
+  auth: authRouter,
   dashboard: dashboardRouter,
   product: productRouter,
+  variant: variantRouter,
   category: categoryRouter,
   settings: settingsRouter,
   website: websiteRouter,
@@ -31,6 +36,7 @@ export const appRouter = router({
   superadmin: router({
     dashboard: superDashboardRouter,
     tenant: tenantAdminRouter,
+    plan: planAdminRouter,
   }),
 });
 
