@@ -4,16 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
-import {
-  ArrowLeft,
-  Check,
-  Eye,
-  EyeOff,
-  Lock,
-  Mail,
-  Sparkles,
-  Store,
-} from "lucide-react";
+import { ArrowLeft, Check, Eye, EyeOff, Lock, Mail, Store } from "lucide-react";
 
 function InputField({
   id,
@@ -129,26 +120,25 @@ export function LoginForm() {
 
   return (
     <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 glass-card rounded-3xl overflow-hidden shadow-float">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 border border-slate-200 rounded-2xl overflow-hidden shadow-card bg-white">
         {/* ---- Brand panel ---- */}
-        <div className="relative hidden lg:flex flex-col justify-between p-10 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 overflow-hidden">
-          <div className="absolute inset-0 bg-grid opacity-20" />
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-2xl" />
+        <div className="relative hidden lg:flex flex-col justify-between p-10 bg-brand-600 overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl" />
           <div className="relative">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+              <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center border border-white/20">
                 <Store size={22} className="text-white" />
               </div>
-              <span className="font-display font-extrabold text-xl text-white">
+              <span className="font-display font-bold text-xl text-white">
                 MayWeb
               </span>
             </Link>
           </div>
 
           <div className="relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 border border-white/20 text-white text-xs font-semibold mb-5">
-              <Sparkles size={13} /> Selamat datang kembali
-            </div>
+            <p className="text-brand-200 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+              Selamat datang kembali
+            </p>
             <h2 className="font-display text-3xl font-extrabold text-white leading-tight mb-6">
               Kelola toko Anda,
               <br /> dari mana saja.
@@ -171,7 +161,7 @@ export function LoginForm() {
         </div>
 
         {/* ---- Form ---- */}
-        <div className="bg-white/80 p-8 sm:p-10">
+        <div className="bg-white p-8 sm:p-10">
           <Link
             href="/"
             className="lg:hidden inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
@@ -261,7 +251,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm"
+              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm"
             >
               {loading ? "Memproses..." : "Masuk ke Dashboard"}
             </button>

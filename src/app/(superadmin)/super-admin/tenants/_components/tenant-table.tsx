@@ -114,7 +114,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
           <button
             onClick={() => create.mutate(form)}
             disabled={create.isPending}
-            className="flex-1 px-4 py-2.5 bg-linear-to-r from-brand-600 to-violet-600 text-white rounded-xl font-bold hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {create.isPending && <Loader2 size={16} className="animate-spin" />}
             {create.isPending ? "Membuat..." : "Buat Tenant"}
@@ -160,7 +160,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
         </div>
         <button
           onClick={() => setCreateOpen(true)}
-          className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow active:scale-[0.98] transition-all"
+          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 active:scale-[0.98] transition-all"
         >
           <Plus size={16} /> Buat Tenant
         </button>

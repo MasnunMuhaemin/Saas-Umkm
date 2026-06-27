@@ -14,12 +14,12 @@ export default async function AdminDashboard() {
   const s = await api.superadmin.dashboard.stats();
 
   const cards = [
-    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, tint: "from-brand-500 to-violet-600" },
-    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, tint: "from-emerald-500 to-green-600" },
-    { label: "Trial", value: String(s.trial), icon: Clock, tint: "from-amber-500 to-orange-600" },
-    { label: "Suspended", value: String(s.suspended), icon: Ban, tint: "from-rose-500 to-red-600" },
-    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "from-pink-500 to-rose-600" },
-    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, tint: "from-cyan-500 to-blue-600" },
+    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, tint: "bg-brand-600" },
+    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, tint: "bg-brand-600" },
+    { label: "Trial", value: String(s.trial), icon: Clock, tint: "bg-brand-600" },
+    { label: "Suspended", value: String(s.suspended), icon: Ban, tint: "bg-brand-600" },
+    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "bg-brand-600" },
+    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, tint: "bg-brand-600" },
   ];
 
   const maxPlan = Math.max(1, ...s.planDist.map((p) => p.count));
@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
             className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 hover:shadow-card transition-shadow"
           >
             <div
-              className={`w-11 h-11 rounded-xl bg-linear-to-br ${tint} flex items-center justify-center mb-4 shadow-soft`}
+              className={`w-11 h-11 rounded-xl ${tint} flex items-center justify-center mb-4 shadow-soft`}
             >
               <Icon size={18} className="text-white" />
             </div>
@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
               </span>
               <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-linear-to-r from-brand-600 to-violet-600 rounded-full"
+                  className="h-full bg-brand-600 rounded-full"
                   style={{ width: `${(p.count / maxPlan) * 100}%` }}
                 />
               </div>

@@ -24,7 +24,7 @@ export function ResetForm({ token }: { token: string }) {
     <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="glass-card rounded-3xl p-8 shadow-float">
-          <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-brand-600 to-violet-600 flex items-center justify-center mb-5 shadow-glow">
+          <div className="w-12 h-12 rounded-2xl bg-brand-600 flex items-center justify-center mb-5 shadow-glow">
             <Lock size={22} className="text-white" />
           </div>
           <h1 className="font-display text-2xl font-extrabold text-slate-900 mb-1">
@@ -68,7 +68,7 @@ export function ResetForm({ token }: { token: string }) {
             <button
               type="submit"
               disabled={reset.isPending}
-              className="w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
+              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
             >
               {reset.isPending && <Loader2 size={16} className="animate-spin" />}
               {reset.isPending ? "Menyimpan..." : "Simpan Password"}

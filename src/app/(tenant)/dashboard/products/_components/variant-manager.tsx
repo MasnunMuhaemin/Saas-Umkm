@@ -134,7 +134,7 @@ export function VariantManager({ productId }: { productId: string }) {
         type="button"
         onClick={submit}
         disabled={add.isPending}
-        className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-[0.98]"
+        className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all active:scale-[0.98]"
       >
         {add.isPending ? (
           <Loader2 size={15} className="animate-spin" />

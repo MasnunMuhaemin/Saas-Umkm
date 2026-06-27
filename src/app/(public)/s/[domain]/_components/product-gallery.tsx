@@ -18,7 +18,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square bg-linear-to-br from-slate-100 to-slate-200 rounded-3xl overflow-hidden border border-slate-100 shadow-card">
+      <div className="relative aspect-square bg-slate-100 rounded-3xl overflow-hidden border border-slate-100 shadow-card">
         {main ? (
           <Image
             src={main}

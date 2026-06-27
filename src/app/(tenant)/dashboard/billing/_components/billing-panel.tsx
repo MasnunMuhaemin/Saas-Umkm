@@ -63,9 +63,7 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
       </div>
 
       {/* Kartu paket */}
-      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-900 to-slate-800 text-white p-6 shadow-float">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="absolute -top-16 -right-16 w-56 h-56 bg-linear-to-tr from-brand-500/30 via-violet-500/20 to-pink-500/20 rounded-full blur-3xl" />
+      <div className="relative overflow-hidden rounded-2xl bg-slate-900 text-white p-6">
         <div className="relative">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
@@ -155,7 +153,7 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
                   key={pl.slug}
                   className={`rounded-2xl border p-4 transition-all ${
                     current
-                      ? "border-brand-300 bg-linear-to-br from-brand-50 to-violet-50 ring-1 ring-brand-100/70"
+                      ? "border-brand-300 bg-brand-50 ring-1 ring-brand-100/70"
                       : "border-slate-200 hover:border-slate-300 hover:shadow-soft"
                   }`}
                 >
@@ -169,7 +167,7 @@ export function BillingPanel({ initial }: { initial: BillingInfo }) {
                     className={`w-full text-sm font-bold py-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-default ${
                       current
                         ? "bg-white border border-slate-200 text-slate-500"
-                        : "bg-linear-to-r from-brand-600 to-violet-600 text-white hover:shadow-glow active:scale-[0.98]"
+                        : "bg-brand-600 text-white hover:bg-brand-700 active:scale-[0.98]"
                     }`}
                   >
                     {current

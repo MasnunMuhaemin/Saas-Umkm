@@ -12,10 +12,10 @@ type Notif =
   inferRouterOutputs<AppRouter>["superadmin"]["notification"]["list"][number];
 
 const TYPE_STYLE: Record<string, string> = {
-  info: "bg-linear-to-br from-brand-500 to-violet-600 text-white",
-  warning: "bg-linear-to-br from-amber-500 to-orange-600 text-white",
-  success: "bg-linear-to-br from-emerald-500 to-green-600 text-white",
-  error: "bg-linear-to-br from-rose-500 to-red-600 text-white",
+  info: "bg-brand-500 text-white",
+  warning: "bg-amber-500 text-white",
+  success: "bg-emerald-500 text-white",
+  error: "bg-rose-500 text-white",
 };
 
 export function NotificationCenter({ initial }: { initial: Notif[] }) {
@@ -105,7 +105,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
             create.mutate({ title, message, type });
           }}
           disabled={create.isPending}
-          className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow active:scale-[0.98] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all"
+          className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all"
         >
           {create.isPending ? (
             <Loader2 size={15} className="animate-spin" />
@@ -147,7 +147,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
                       {n.title}
                     </p>
                     {!n.isRead && (
-                      <span className="w-2 h-2 bg-pink-500 rounded-full" />
+                      <span className="w-2 h-2 bg-red-500 rounded-full" />
                     )}
                   </div>
                   <p className="text-sm text-slate-600">{n.message}</p>

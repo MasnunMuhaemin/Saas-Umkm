@@ -101,7 +101,7 @@ export function DashboardShell({
           } justify-between md:justify-start`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-xl flex items-center justify-center flex-none shadow-glow">
+            <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center flex-none shadow-glow">
               <Store size={17} className="text-white" />
             </div>
             {(!collapsed || mobileOpen) && (
@@ -145,7 +145,7 @@ export function DashboardShell({
             const isLocked = isBasic && item.plus;
             const cls = `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
               isActive
-                ? "bg-linear-to-r from-brand-50 to-violet-50 text-brand-700 font-semibold ring-1 ring-brand-100/70"
+                ? "bg-brand-50 text-brand-700 font-semibold ring-1 ring-brand-100/70"
                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
             } ${collapsed && !mobileOpen ? "justify-center" : ""} ${
               isLocked
@@ -242,9 +242,9 @@ export function DashboardShell({
               className="relative p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <Bell size={18} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-pink-500 rounded-full ring-2 ring-white" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
             </button>
-            <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-full flex items-center justify-center shadow-soft">
+            <div className="w-9 h-9 bg-brand-600 rounded-full flex items-center justify-center shadow-soft">
               <span className="text-white text-xs font-bold">
                 {initials(userName)}
               </span>

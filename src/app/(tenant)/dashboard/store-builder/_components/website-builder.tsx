@@ -85,7 +85,7 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
         <button
           onClick={save}
           disabled={update.isPending}
-          className="bg-linear-to-r from-brand-600 to-violet-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:shadow-glow active:scale-[0.98] disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 flex items-center gap-2"
+          className="bg-brand-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 disabled:hover:shadow-none disabled:active:scale-100 flex items-center gap-2"
         >
           {update.isPending && <Loader2 size={16} className="animate-spin" />}
           {update.isPending ? "Menyimpan..." : "Simpan Perubahan"}

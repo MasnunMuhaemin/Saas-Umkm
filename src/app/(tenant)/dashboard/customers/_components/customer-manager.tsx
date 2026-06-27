@@ -127,7 +127,7 @@ function CustomerModal({
           <button
             onClick={save}
             disabled={saving}
-            className="flex-1 px-4 py-2.5 bg-linear-to-r from-brand-600 to-violet-600 text-white rounded-xl font-bold hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving ? "Menyimpan..." : "Simpan"}
@@ -168,7 +168,7 @@ export function CustomerManager({ initial }: { initial: CustomerRow[] }) {
         </div>
         <button
           onClick={() => setModal({ open: true, editing: null })}
-          className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow active:scale-[0.98] transition-all"
+          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 active:scale-[0.98] transition-all"
         >
           <Plus size={16} /> Tambah Pelanggan
         </button>
@@ -283,7 +283,7 @@ export function CustomerManager({ initial }: { initial: CustomerRow[] }) {
               <button
                 onClick={() => del.mutate({ id: deleteId })}
                 disabled={del.isPending}
-                className="flex-1 px-4 py-2.5 bg-linear-to-r from-rose-500 to-rose-600 text-white rounded-xl font-bold hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2.5 bg-rose-500 text-white rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {del.isPending ? (
                   <Loader2 size={16} className="animate-spin" />

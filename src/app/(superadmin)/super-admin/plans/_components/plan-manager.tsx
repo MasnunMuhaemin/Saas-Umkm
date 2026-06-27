@@ -24,7 +24,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       onClick={onToggle}
       className={cn(
         "relative w-9 h-5 rounded-full transition-colors flex-none",
-        on ? "bg-linear-to-r from-brand-600 to-violet-600" : "bg-slate-300",
+        on ? "bg-brand-600" : "bg-slate-300",
       )}
     >
       <span
@@ -125,7 +125,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <button
         onClick={save}
         disabled={update.isPending}
-        className="w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow active:scale-[0.98] disabled:opacity-50 text-white py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
+        className="w-full bg-brand-600 hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 text-white py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
       >
         {update.isPending && <Loader2 size={16} className="animate-spin" />}
         Simpan Paket

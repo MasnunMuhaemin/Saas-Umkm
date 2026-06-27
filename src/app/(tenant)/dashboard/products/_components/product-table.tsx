@@ -190,7 +190,7 @@ export function ProductTable({
           />
           <Link
             href="/dashboard/products/new"
-            className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-all active:scale-[0.98]"
           >
             <Plus size={16} /> Tambah
           </Link>
@@ -198,7 +198,7 @@ export function ProductTable({
       </div>
 
       {selected.length > 0 && (
-        <div className="flex items-center gap-3 mb-3 bg-linear-to-r from-brand-50 to-violet-50 border border-brand-100 rounded-xl px-4 py-2.5 shadow-soft">
+        <div className="flex items-center gap-3 mb-3 bg-brand-50 border border-brand-100 rounded-xl px-4 py-2.5 shadow-soft">
           <span className="text-sm font-semibold text-brand-700">
             {selected.length} dipilih
           </span>
@@ -326,7 +326,7 @@ export function ProductTable({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-linear-to-br from-brand-100 to-violet-200 flex items-center justify-center flex-none shadow-soft">
+                      <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center flex-none shadow-soft">
                         <Package size={16} className="text-brand-600/80" />
                       </div>
                       <p className="font-semibold text-slate-900 text-sm">
@@ -380,7 +380,7 @@ export function ProductTable({
               {products.length === 0 && (
                 <tr>
                   <td colSpan={8} className="px-4 py-16 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
                       <Package size={28} className="text-slate-400" />
                     </div>
                     <p className="text-slate-500 font-medium mb-3">
@@ -388,7 +388,7 @@ export function ProductTable({
                     </p>
                     <Link
                       href="/dashboard/products/new"
-                      className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
+                      className="inline-flex items-center gap-2 bg-brand-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-700 transition-all active:scale-[0.98]"
                     >
                       <Plus size={16} /> Tambah Produk
                     </Link>
@@ -412,7 +412,7 @@ export function ProductTable({
                   onClick={() => setPage(p)}
                   className={`w-8 h-8 rounded-lg text-sm font-semibold transition-all ${
                     p === page
-                      ? "bg-linear-to-r from-brand-600 to-violet-600 text-white shadow-soft"
+                      ? "bg-brand-600 text-white shadow-soft"
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
@@ -433,7 +433,7 @@ export function ProductTable({
             className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
+            <div className="w-12 h-12 bg-red-500 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <AlertCircle size={24} />
             </div>
             <h3 className="font-display text-lg font-bold text-slate-900 mb-2">
@@ -477,7 +477,7 @@ export function ProductTable({
             className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
+            <div className="w-12 h-12 bg-red-500 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <AlertCircle size={24} />
             </div>
             <h3 className="font-display text-lg font-bold text-slate-900 mb-2">

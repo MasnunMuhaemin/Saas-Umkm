@@ -134,7 +134,7 @@ function CategoryModal({
                   className={cn(
                     "w-10 h-10 rounded-xl flex items-center justify-center transition-all border",
                     icon === iconName
-                      ? "bg-linear-to-br from-brand-500 to-violet-600 border-transparent text-white shadow-soft"
+                      ? "bg-brand-500 border-transparent text-white shadow-soft"
                       : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100",
                   )}
                 >
@@ -166,7 +166,7 @@ function CategoryModal({
           <button
             onClick={save}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-linear-to-r from-brand-600 to-violet-600 text-white hover:shadow-glow rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2 bg-brand-600 text-white hover:bg-brand-700 rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving ? "Menyimpan..." : "Simpan"}
@@ -208,7 +208,7 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
         </div>
         <button
           onClick={() => setModal({ open: true, editing: null })}
-          className="flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98]"
+          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 transition-all active:scale-[0.98]"
         >
           <Plus size={16} /> Tambah Kategori
         </button>
@@ -217,7 +217,7 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
         {categories.length === 0 ? (
           <div className="p-16 text-center flex flex-col items-center">
-            <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
               <Tag size={28} className="text-slate-400" />
             </div>
             <p className="font-medium text-slate-500">Belum ada kategori</p>
@@ -245,7 +245,7 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
                   <tr key={cat.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-linear-to-br from-brand-100 to-violet-200 rounded-xl flex items-center justify-center shrink-0 text-brand-600 shadow-soft">
+                        <div className="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center shrink-0 text-brand-600 shadow-soft">
                           <CategoryIcon name={cat.icon} />
                         </div>
                         <div>
@@ -317,7 +317,7 @@ export function CategoryManager({ initial }: { initial: CategoryRow[] }) {
             className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-float border border-slate-100 animate-fade-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 bg-linear-to-br from-red-500 to-rose-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
+            <div className="w-12 h-12 bg-red-500 text-white rounded-2xl flex items-center justify-center mb-4 shadow-soft">
               <Trash2 size={24} />
             </div>
             <h3 className="font-display text-lg font-bold text-slate-900 mb-2">

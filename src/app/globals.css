@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* =====================================================================
-   MayWeb — Design System (UI/UX Pro Max)
-   Konsep: Soft-Premium Glassmorphism · brand biru → violet → pink
+   MayWeb — Design System (clean, flat, intentional)
+   Brand: biru solid (#2563EB) · neutral slate · border tipis · no gradient/glass
    Font: Poppins (display) + Inter (body/UI)
    ===================================================================== */
 
@@ -14,11 +14,10 @@
     system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
-  /* ---------- Brand platform (statis) ---------- */
+  /* ---------- Brand platform (biru solid) ---------- */
   --color-primary: #2563eb;
   --color-primary-foreground: #ffffff;
 
-  /* Skala brand (biru indigo) — dipakai bg-brand-600, text-brand-600, dll */
   --color-brand-50: #eff5ff;
   --color-brand-100: #dbe7fe;
   --color-brand-200: #bfd3fe;
@@ -30,16 +29,11 @@
   --color-brand-800: #1e40af;
   --color-brand-900: #1e3a8a;
 
-  /* Aksen ungu & pink (gradien brand) */
-  --color-grape-500: #8b5cf6;
-  --color-grape-600: #7c3aed;
-  --color-blush-500: #ec4899;
-  --color-blush-600: #db2777;
-
   /* ---------- Surface & teks ---------- */
-  --color-background: #f7f9fc;
-  --color-foreground: #0b1220;
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
   --color-muted-foreground: #64748b;
+  --color-border: #e7ebf0;
 
   /* ---------- Semantik status (sumber kebenaran badge-*) ---------- */
   --color-success: #15803d;
@@ -50,36 +44,34 @@
   --color-danger-soft: #fee2e2;
   --color-info: #1d4fd8;
   --color-info-soft: #dbe7fe;
-  --color-accent: #7e22ce;
-  --color-accent-soft: #f3e8ff;
+  --color-accent: #1d4fd8;
+  --color-accent-soft: #dbe7fe;
   --color-muted: #475569;
   --color-muted-soft: #f1f5f9;
 
-  /* ---------- Elevation (soft, ber-layer) ---------- */
-  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04),
-    0 4px 16px rgba(15, 23, 42, 0.05);
-  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04),
-    0 12px 32px -10px rgba(15, 23, 42, 0.12);
-  --shadow-float: 0 8px 24px -6px rgba(15, 23, 42, 0.12),
-    0 24px 56px -18px rgba(15, 23, 42, 0.22);
-  --shadow-glow: 0 8px 30px -6px rgba(37, 99, 235, 0.5);
+  /* ---------- Elevation (halus, satu arah) ---------- */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04),
+    0 6px 16px -8px rgba(15, 23, 42, 0.1);
+  --shadow-float: 0 4px 12px -2px rgba(15, 23, 42, 0.08),
+    0 16px 40px -12px rgba(15, 23, 42, 0.16);
+  /* "glow" dipakai banyak komponen → buat netral (bukan glow biru) */
+  --shadow-glow: 0 2px 8px -2px rgba(15, 23, 42, 0.12);
 
   /* ---------- Radius ---------- */
-  --radius-xl: 0.875rem;
-  --radius-2xl: 1.125rem;
-  --radius-3xl: 1.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.25rem;
 
-  /* ---------- Animasi ---------- */
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-fade-in: fade-in 0.5s ease both;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-shimmer: shimmer 2s linear infinite;
+  /* ---------- Animasi (halus saja) ---------- */
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.4s ease both;
 }
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -94,23 +86,6 @@
     opacity: 1;
   }
 }
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
 
 /* =====================================================================
    Base
@@ -121,10 +96,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* Heading otomatis memakai font display (Poppins) + tracking rapat */
 h1,
 h2,
 h3,
@@ -136,11 +109,10 @@ h6 {
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.18);
-  color: #0b1220;
+  background: #cfe0ff;
+  color: #0f172a;
 }
 
-/* Scrollbar halus */
 * {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
@@ -160,11 +132,10 @@ h6 {
   background-clip: content-box;
 }
 
-/* Focus ring konsisten (a11y) */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -179,10 +150,9 @@ h6 {
 }
 
 /* =====================================================================
-   Components & Utilities
+   Components & Utilities — flat, solid, no glass/gradient
    ===================================================================== */
 @layer components {
-  /* Badge status — ubah palet cukup dari @theme di atas */
   .badge-success {
     background: var(--color-success-soft);
     color: var(--color-success);
@@ -208,53 +178,33 @@ h6 {
     color: var(--color-muted);
   }
 
-  /* Glass surfaces */
+  /* "glass" sekarang = permukaan solid bersih (tanpa blur) */
   .glass {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: #ffffff;
+    border-color: var(--color-border);
   }
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: #ffffff;
+    border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
   }
   .glass-dark {
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 
+/* text-gradient sekarang = warna brand solid (tanpa gradient) */
 @utility text-gradient {
-  background: linear-gradient(115deg, #2563eb 0%, #7c3aed 48%, #ec4899 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-brand-700);
 }
 
+/* bg-mesh sekarang = latar bersih netral (tanpa mesh dekoratif) */
 @utility bg-mesh {
-  background-color: #f5f8ff;
-  background-image: radial-gradient(
-      at 18% 12%,
-      rgba(37, 99, 235, 0.16) 0,
-      transparent 48%
-    ),
-    radial-gradient(at 84% 4%, rgba(124, 58, 237, 0.14) 0, transparent 46%),
-    radial-gradient(at 78% 86%, rgba(236, 72, 153, 0.1) 0, transparent 46%),
-    radial-gradient(at 6% 84%, rgba(37, 99, 235, 0.1) 0, transparent 46%);
+  background-color: #f8fafc;
 }
 
+/* bg-grid dimatikan (no-op) agar tak ada tekstur grid "AI" */
 @utility bg-grid {
-  background-image: linear-gradient(
-      to right,
-      rgba(15, 23, 42, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-  background-size: 56px 56px;
+  background-image: none;
 }

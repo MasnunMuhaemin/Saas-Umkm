@@ -111,7 +111,7 @@ export default async function ProductDetailPage({
                   </span>
                 )}
                 {tenant.showDiscount && discount > 0 && (
-                  <span className="bg-linear-to-r from-rose-500 to-red-600 text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow-float">
+                  <span className="bg-rose-500 text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow-float">
                     Diskon {discount}%
                   </span>
                 )}

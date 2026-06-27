@@ -57,7 +57,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6 animate-fade-up">
       <div className="flex items-center gap-3">
-        <div className="w-11 h-11 bg-linear-to-br from-brand-500 to-violet-600 text-white rounded-xl flex items-center justify-center shadow-soft">
+        <div className="w-11 h-11 bg-brand-500 text-white rounded-xl flex items-center justify-center shadow-soft">
           <Ticket size={22} />
         </div>
         <div>
@@ -135,7 +135,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           <button
             type="submit"
             disabled={create.isPending}
-            className="inline-flex items-center gap-2 bg-linear-to-r from-brand-600 to-violet-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-glow active:scale-[0.98] transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {create.isPending ? (
               <Loader2 size={15} className="animate-spin" />

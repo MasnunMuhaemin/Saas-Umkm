@@ -409,7 +409,7 @@ export function ProductForm({
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex-1 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-50 text-white py-3 rounded-xl font-bold transition-all active:scale-[0.98] flex justify-center items-center gap-2"
+              className="flex-1 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold transition-all active:scale-[0.98] flex justify-center items-center gap-2"
             >
               {loading && <Loader2 size={18} className="animate-spin" />}
               {loading ? "Menyimpan..." : "Simpan Produk"}

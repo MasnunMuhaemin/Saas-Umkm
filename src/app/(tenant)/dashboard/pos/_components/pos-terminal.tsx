@@ -192,7 +192,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
       <div className="w-full lg:w-96 flex-none">
         <div className="glass-card rounded-2xl flex flex-col max-h-[calc(100vh-8rem)] sticky top-6 shadow-float">
           <div className="p-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-brand-600 to-violet-600 flex items-center justify-center shadow-soft">
+            <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center shadow-soft">
               <ShoppingCart size={17} className="text-white" />
             </div>
             <h3 className="font-display font-bold text-slate-900 tracking-tight">
@@ -279,7 +279,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
                   onClick={() => setPaymentMethod(pm.id)}
                   className={`py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.97] ${
                     paymentMethod === pm.id
-                      ? "bg-linear-to-r from-brand-600 to-violet-600 text-white shadow-glow"
+                      ? "bg-brand-600 text-white shadow-glow"
                       : "bg-slate-50 text-slate-600 hover:bg-slate-100"
                   }`}
                 >
@@ -314,7 +314,7 @@ export function PosTerminal({ initial }: { initial: PosData }) {
             <button
               onClick={submit}
               disabled={checkout.isPending || cart.length === 0}
-              className="w-full bg-linear-to-r from-brand-600 to-violet-600 text-white py-3.5 rounded-xl font-bold hover:shadow-glow active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 disabled:hover:shadow-none transition-all flex items-center justify-center gap-2"
+              className="w-full bg-brand-600 text-white py-3.5 rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 disabled:hover:shadow-none transition-all flex items-center justify-center gap-2"
             >
               {checkout.isPending && (
                 <Loader2 size={18} className="animate-spin" />

@@ -28,28 +28,28 @@ export default async function DashboardHome() {
       value: String(stats.activeProducts),
       sub: "Aktif saat ini",
       icon: Package,
-      tint: "from-brand-500 to-indigo-600",
+      tint: "bg-brand-600",
     },
     {
       label: "Pesanan (Bulan Ini)",
       value: String(stats.ordersThisMonth),
       sub: stats.ordersThisMonth > 0 ? "Bulan berjalan" : "Belum ada pesanan",
       icon: ShoppingCart,
-      tint: "from-emerald-500 to-green-600",
+      tint: "bg-brand-600",
     },
     {
       label: "Pendapatan Bulan Ini",
       value: formatRupiah(stats.revenueThisMonth),
       sub: "Bulan berjalan",
       icon: DollarSign,
-      tint: "from-amber-500 to-orange-600",
+      tint: "bg-brand-600",
     },
     {
       label: "Rata-rata Transaksi",
       value: formatRupiah(stats.avgTransaction),
       sub: "Bulan ini",
       icon: BarChart2,
-      tint: "from-violet-500 to-purple-600",
+      tint: "bg-brand-600",
     },
   ];
 
@@ -61,7 +61,7 @@ export default async function DashboardHome() {
         </h2>
         <Link
           href="/dashboard/products"
-          className="px-5 py-2.5 bg-linear-to-r from-brand-600 to-violet-600 text-white rounded-xl text-sm font-bold hover:shadow-glow transition-all active:scale-[0.98] flex items-center gap-1.5"
+          className="px-5 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-bold hover:bg-brand-700 transition-all active:scale-[0.98] flex items-center gap-1.5"
         >
           <Package size={15} /> Tambah Produk
         </Link>
@@ -69,7 +69,7 @@ export default async function DashboardHome() {
 
       {/* Onboarding — kelengkapan setup toko */}
       {setup.percent < 100 && (
-        <div className="relative overflow-hidden bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-2xl p-6 text-white shadow-float">
+        <div className="relative overflow-hidden bg-brand-600 rounded-2xl p-6 text-white shadow-float">
           <div className="absolute inset-0 bg-grid opacity-20" />
           <div className="relative flex items-center justify-between mb-4">
             <div>
@@ -120,7 +120,7 @@ export default async function DashboardHome() {
           >
             <div className="flex items-center justify-between mb-4">
               <div
-                className={`w-11 h-11 rounded-xl bg-linear-to-br ${tint} flex items-center justify-center shadow-soft`}
+                className={`w-11 h-11 rounded-xl ${tint} flex items-center justify-center shadow-soft`}
               >
                 <Icon size={18} className="text-white" />
               </div>
@@ -151,7 +151,7 @@ export default async function DashboardHome() {
             Toko Online Anda
           </h3>
           <p className="text-sm text-slate-500 mb-4">Sistem berjalan dengan baik</p>
-          <div className="bg-linear-to-br from-brand-50 to-violet-50 border border-brand-100 rounded-xl p-4 flex-1 flex flex-col justify-center">
+          <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 flex-1 flex flex-col justify-center">
             <div className="flex items-center justify-between mb-2">
               <p
                 className="text-sm font-bold text-brand-900 truncate pr-2"
@@ -170,7 +170,7 @@ export default async function DashboardHome() {
               href={`https://${storeUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-white text-sm text-brand-600 border border-brand-200 py-2.5 rounded-xl font-bold hover:bg-linear-to-r hover:from-brand-600 hover:to-violet-600 hover:text-white hover:border-transparent transition-all shadow-soft flex items-center justify-center gap-2"
+              className="w-full bg-white text-sm text-brand-600 border border-brand-300 py-2.5 rounded-xl font-semibold hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-colors flex items-center justify-center gap-2"
             >
               <ExternalLink size={16} /> Buka Halaman Web Toko
             </a>
@@ -187,7 +187,7 @@ export default async function DashboardHome() {
           <div className="space-y-4">
             {topProducts.map((p, i) => (
               <div key={p.name} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-linear-to-br from-brand-500 to-violet-600 text-white flex items-center justify-center font-display font-bold text-sm shadow-soft">
+                <div className="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center font-display font-bold text-sm shadow-soft">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">

@@ -95,7 +95,7 @@ export function StoreHeader({ tenant }: { tenant: StoreTenant }) {
 export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
   return (
     <footer className="relative bg-slate-950 text-slate-300 py-14 overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary to-transparent opacity-60" />
+      <div className="absolute inset-x-0 top-0 h-px bg-primary/40" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">

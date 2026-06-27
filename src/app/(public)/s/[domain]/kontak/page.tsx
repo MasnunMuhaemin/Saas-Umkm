@@ -99,7 +99,7 @@ export default async function ContactPage({ params }: { params: Params }) {
         </div>
 
         {tenant.showWhatsappButton && (
-          <div className="rounded-3xl bg-linear-to-br from-slate-900 to-slate-800 p-6 sm:p-8 text-center shadow-float">
+          <div className="rounded-3xl bg-slate-900 p-6 sm:p-8 text-center shadow-float">
             <h2 className="font-display text-xl font-extrabold tracking-tight text-white mb-2">
               Siap membantu Anda
             </h2>

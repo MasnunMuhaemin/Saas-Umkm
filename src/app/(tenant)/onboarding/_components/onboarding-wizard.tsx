@@ -93,7 +93,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
               key={i}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
                 i <= step
-                  ? "bg-linear-to-r from-brand-600 to-violet-600"
+                  ? "bg-brand-600"
                   : "bg-slate-200"
               }`}
             />
@@ -103,7 +103,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
         <div className="glass-card rounded-3xl p-7 shadow-float">
           {step === 0 && (
             <div>
-              <div className="w-12 h-12 bg-linear-to-br from-brand-600 to-violet-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
+              <div className="w-12 h-12 bg-brand-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
                 <Store size={24} />
               </div>
               <h1 className="font-display text-xl font-extrabold text-slate-900 mb-1">
@@ -182,7 +182,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
 
               <button
                 onClick={next}
-                className="mt-6 w-full bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="mt-6 w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
               >
                 Lanjut <ArrowRight size={16} />
               </button>
@@ -191,7 +191,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
 
           {step === 1 && (
             <div>
-              <div className="w-12 h-12 bg-linear-to-br from-brand-600 to-violet-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
+              <div className="w-12 h-12 bg-brand-600 text-white rounded-2xl flex items-center justify-center mb-4 shadow-glow">
                 <Package size={24} />
               </div>
               <h1 className="font-display text-xl font-extrabold text-slate-900 mb-1">
@@ -252,7 +252,7 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
                 <button
                   onClick={finish}
                   disabled={complete.isPending}
-                  className="flex-1 bg-linear-to-r from-brand-600 to-violet-600 hover:shadow-glow disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                  className="flex-1 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
                 >
                   {complete.isPending ? (
                     <Loader2 size={16} className="animate-spin" />

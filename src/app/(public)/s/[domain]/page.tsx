@@ -81,7 +81,7 @@ function PromoBanner({ tenant }: { tenant: Tenant }) {
   return (
     <section className="py-8 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="relative rounded-3xl overflow-hidden bg-linear-to-br from-amber-500 via-orange-500 to-rose-600 text-white flex flex-col md:flex-row items-center justify-between gap-6 p-8 shadow-float">
+        <div className="relative rounded-3xl overflow-hidden bg-amber-500 text-white flex flex-col md:flex-row items-center justify-between gap-6 p-8 shadow-float">
           <div className="absolute inset-0 bg-grid opacity-15" />
           <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/15 rounded-full blur-2xl" />
           <div className="relative">
@@ -168,7 +168,7 @@ function ProductCard({
   return (
     <div className="group bg-white rounded-2xl border border-slate-100 shadow-soft hover:shadow-float hover:-translate-y-1.5 transition-all duration-300 overflow-hidden">
       <a href={`/produk/${product.slug}`} className="block">
-        <div className="relative h-52 bg-linear-to-br from-slate-100 to-slate-200 overflow-hidden">
+        <div className="relative h-52 bg-slate-100 overflow-hidden">
           {product.mainImage ? (
             <Image
               src={product.mainImage}
@@ -190,12 +190,12 @@ function ProductCard({
               </span>
             )}
             {product.isNew && (
-              <span className="bg-linear-to-r from-emerald-500 to-green-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold shadow-soft">
+              <span className="bg-emerald-500 text-white text-xs px-2.5 py-1 rounded-lg font-bold shadow-soft">
                 Baru
               </span>
             )}
             {tenant.showDiscount && discount > 0 && (
-              <span className="bg-linear-to-r from-rose-500 to-red-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold shadow-soft">
+              <span className="bg-rose-500 text-white text-xs px-2.5 py-1 rounded-lg font-bold shadow-soft">
                 -{discount}%
               </span>
             )}

@@ -59,10 +59,10 @@ export function AdminShell({
       <aside
         className={`w-64 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-linear-to-b from-slate-900 to-slate-950 text-slate-300 h-full flex flex-col transition-transform border-r border-white/5`}
+        } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-slate-900 text-slate-300 h-full flex flex-col transition-transform border-r border-white/5`}
       >
         <div className="flex items-center gap-3 p-4 border-b border-white/5">
-          <div className="w-9 h-9 bg-linear-to-br from-brand-600 via-violet-600 to-pink-500 rounded-xl flex items-center justify-center flex-none shadow-glow">
+          <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center flex-none shadow-glow">
             <Shield size={17} className="text-white" />
           </div>
           <div className="flex flex-col min-w-0">
@@ -91,7 +91,7 @@ export function AdminShell({
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-linear-to-r from-brand-600/30 to-violet-600/30 text-white ring-1 ring-white/10"
+                    ? "bg-brand-600 text-white"
                     : "text-slate-300 hover:bg-white/5 hover:text-white"
                 }`}
               >
@@ -137,12 +137,12 @@ export function AdminShell({
             >
               <Bell size={18} />
               {unread > 0 && (
-                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-pink-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
                   {unread}
                 </span>
               )}
             </Link>
-            <div className="w-9 h-9 bg-linear-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center ring-1 ring-slate-700">
+            <div className="w-9 h-9 bg-slate-800 rounded-full flex items-center justify-center ring-1 ring-slate-700">
               <span className="text-white text-xs font-bold">
                 {userName.slice(0, 2).toUpperCase()}
               </span>

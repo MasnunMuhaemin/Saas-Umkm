@@ -25,25 +25,25 @@ export default async function StatsPage() {
       label: "Total Pendapatan",
       value: formatRupiah(s.revenue),
       icon: DollarSign,
-      color: "from-emerald-500 to-green-600",
+      color: "bg-brand-600",
     },
     {
       label: "Total Transaksi",
       value: String(s.txCount),
       icon: ShoppingCart,
-      color: "from-brand-500 to-indigo-600",
+      color: "bg-brand-600",
     },
     {
       label: "Produk Terjual",
       value: String(s.itemsSold),
       icon: Package,
-      color: "from-amber-500 to-orange-600",
+      color: "bg-brand-600",
     },
     {
       label: "Rata-rata / Transaksi",
       value: formatRupiah(s.avg),
       icon: BarChart2,
-      color: "from-violet-500 to-purple-600",
+      color: "bg-brand-600",
     },
   ];
 
@@ -68,7 +68,7 @@ export default async function StatsPage() {
             className="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 transition-all hover:-translate-y-0.5 hover:shadow-card"
           >
             <div
-              className={`w-11 h-11 rounded-xl bg-linear-to-br ${color} flex items-center justify-center mb-4 shadow-soft`}
+              className={`w-11 h-11 rounded-xl ${color} flex items-center justify-center mb-4 shadow-soft`}
             >
               <Icon size={18} className="text-white" />
             </div>
@@ -102,7 +102,7 @@ export default async function StatsPage() {
             <div className="space-y-4">
               {s.topProducts.map((p, i) => (
                 <div key={p.name} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-linear-to-br from-brand-500 to-violet-600 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
+                  <div className="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
                     #{i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ export default async function StatsPage() {
                     </p>
                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-linear-to-r from-brand-500 to-violet-500 rounded-full"
+                        className="h-full bg-brand-500 rounded-full"
                         style={{ width: `${(p.sold / maxSold) * 100}%` }}
                       />
                     </div>
@@ -152,7 +152,7 @@ export default async function StatsPage() {
                     </div>
                     <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-linear-to-r from-emerald-500 to-green-500 rounded-full"
+                        className="h-full bg-emerald-500 rounded-full"
                         style={{ width: `${(p.total / totalPay) * 100}%` }}
                       />
                     </div>
