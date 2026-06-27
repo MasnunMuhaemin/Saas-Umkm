@@ -184,6 +184,44 @@ async function main() {
     });
   }
 
+  // Order contoh (idempotent) → riwayat invoice ada isinya
+  if ((await prisma.order.count({ where: { tenantId: tenant.id } })) === 0) {
+    const nastar = await prisma.product.findFirst({
+      where: { tenantId: tenant.id, slug: "nastar-premium" },
+    });
+    const cust = await prisma.customer.findFirst({
+      where: { tenantId: tenant.id },
+    });
+    if (nastar) {
+      const qty = 2;
+      await prisma.order.create({
+        data: {
+          tenantId: tenant.id,
+          customerId: cust?.id ?? null,
+          orderNumber: "INV-DEMO0001",
+          subtotal: nastar.price * qty,
+          discount: 0,
+          total: nastar.price * qty,
+          status: "COMPLETED",
+          paymentMethod: "cash",
+          paymentStatus: "PAID",
+          paidAt: new Date(),
+          items: {
+            create: [
+              {
+                productId: nastar.id,
+                productName: nastar.name,
+                price: nastar.price,
+                quantity: qty,
+                subtotal: nastar.price * qty,
+              },
+            ],
+          },
+        },
+      });
+    }
+  }
+
   console.log("✅ Seed selesai:");
   console.log("   Super Admin : admin@tokopintar.id / superadmin123");
   console.log("   Merchant    : owner@tokodemo.id   / merchant123  (Toko Demo)");

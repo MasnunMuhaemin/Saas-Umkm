@@ -1,6 +1,22 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db";
 import type { PosOrderInput } from "@/lib/validations/order.schema";
+import type { Prisma } from "@/generated/prisma/client";
+
+const invoiceListSelect = {
+  id: true,
+  orderNumber: true,
+  total: true,
+  paymentMethod: true,
+  paymentStatus: true,
+  createdAt: true,
+  customer: { select: { name: true } },
+  _count: { select: { items: true } },
+} satisfies Prisma.OrderSelect;
+
+export type InvoiceRow = Prisma.OrderGetPayload<{
+  select: typeof invoiceListSelect;
+}>;
 
 function genOrderNumber() {
   // INV-<base36 waktu>-<2 digit acak> → unik & terurut waktu
@@ -116,4 +132,38 @@ export const orderService = {
       return order;
     });
   },
+
+  /** Daftar invoice (riwayat transaksi POS). */
+  getInvoices: (tenantId: string): Promise<InvoiceRow[]> =>
+    prisma.order.findMany({
+      where: { tenantId },
+      select: invoiceListSelect,
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
+
+  /** Detail invoice (struk) milik tenant. Lempar jika bukan miliknya. */
+  getInvoiceById: (tenantId: string, id: string) =>
+    prisma.order.findFirstOrThrow({
+      where: { id, tenantId },
+      select: {
+        id: true,
+        orderNumber: true,
+        subtotal: true,
+        discount: true,
+        total: true,
+        paymentMethod: true,
+        paymentStatus: true,
+        createdAt: true,
+        customer: { select: { name: true, phone: true, address: true } },
+        items: {
+          select: {
+            productName: true,
+            price: true,
+            quantity: true,
+            subtotal: true,
+          },
+        },
+      },
+    }),
 };
