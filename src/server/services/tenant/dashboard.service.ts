@@ -2,6 +2,27 @@ import { prisma } from "@/server/db";
 import { formatDate } from "@/lib/helpers/format";
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
+const IS_DEV = process.env.NODE_ENV !== "production";
+const DEV_PORT = (() => {
+  try {
+    return new URL(process.env.AUTH_URL ?? "http://localhost:3000").port || "3000";
+  } catch {
+    return "3000";
+  }
+})();
+
+/** Host toko untuk DISPLAY (tanpa protokol). Dev → slug.localhost:3000. */
+function storeHost(slug: string, customDomain: string | null) {
+  if (customDomain) return customDomain;
+  return IS_DEV ? `${slug}.localhost:${DEV_PORT}` : `${slug}.${ROOT_DOMAIN}`;
+}
+/** URL toko LENGKAP untuk link (protokol sesuai lingkungan). */
+function storeLink(slug: string, customDomain: string | null) {
+  if (customDomain) return `https://${customDomain}`;
+  return IS_DEV
+    ? `http://${slug}.localhost:${DEV_PORT}`
+    : `https://${slug}.${ROOT_DOMAIN}`;
+}
 
 export const dashboardService = {
   /** Data untuk shell dashboard (header sidebar): nama toko, paket, slug, url. */
@@ -19,8 +40,7 @@ export const dashboardService = {
       businessName: tenant.name,
       planName: tenant.plan.name,
       slug: tenant.slug,
-      storeUrl:
-        tenant.customDomain ?? `${tenant.slug}.${ROOT_DOMAIN}`,
+      storeUrl: storeHost(tenant.slug, tenant.customDomain),
     };
   },
 
@@ -91,7 +111,8 @@ export const dashboardService = {
     });
 
     return {
-      storeUrl: tenant.customDomain ?? `${tenant.slug}.${ROOT_DOMAIN}`,
+      storeUrl: storeHost(tenant.slug, tenant.customDomain),
+      storeHref: storeLink(tenant.slug, tenant.customDomain),
       stats: { activeProducts, ordersThisMonth, revenueThisMonth, avgTransaction },
       salesSeries,
       topProducts: topProducts.map((p) => ({ name: p.name, sold: p.soldCount })),

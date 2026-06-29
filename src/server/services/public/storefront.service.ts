@@ -1,36 +1,28 @@
 import { cache } from "react";
-import { unstable_cache } from "next/cache";
-import { revalidateTag } from "next/cache";
 import { prisma } from "@/server/db";
 import { tenantBaseUrl } from "@/lib/seo/metadata";
+import {
+  coerceAdvantages,
+  coerceFaqs,
+  coerceHeroStats,
+  coerceSocialLinks,
+  coerceTestimonials,
+} from "@/types/storefront-content";
 
 /**
  * Ambil data toko publik berdasarkan slug/customDomain.
  * - Hanya tenant LIVE (ACTIVE/TRIAL). Hanya field publik.
- * - Lapisan cache: `cache` (dedup per request) + `unstable_cache`
- *   (Data Cache persisten, revalidate 1 jam, tag per domain untuk
- *   invalidasi on-demand saat merchant edit → revalidateStorefront()).
+ * - `cache` = dedup per request (layout + page berbagi 1 query). Dibaca
+ *   langsung dari DB tiap request → edit merchant (warna/template/produk)
+ *   langsung tampil tanpa lag cache. (Catatan: `revalidateTag` Next 16
+ *   hanya boleh dari Server Action, bukan mutation tRPC.)
  */
-export const getStorefront = cache((slug: string) =>
-  unstable_cache(() => fetchStorefront(slug), ["storefront", slug], {
-    tags: [`storefront-${slug}`],
-    revalidate: 300, // fallback: tersegarkan ≤5 menit walau on-demand gagal
-  })(),
-);
+export const getStorefront = cache((slug: string) => fetchStorefront(slug));
 
-/** Invalidasi cache storefront tenant (panggil setelah edit yang memengaruhi toko). */
-export async function revalidateStorefront(tenantId: string) {
-  try {
-    const t = await prisma.tenant.findUnique({
-      where: { id: tenantId },
-      select: { slug: true, customDomain: true },
-    });
-    if (!t) return;
-    revalidateTag(`storefront-${t.slug}`, "max");
-    if (t.customDomain) revalidateTag(`storefront-${t.customDomain}`, "max");
-  } catch {
-    // on-demand gagal → andalkan revalidate time-based (300s) di atas
-  }
+/** Tidak diperlukan lagi (storefront dibaca per-request). Disimpan agar
+ *  pemanggil lama tetap kompatibel. */
+export async function revalidateStorefront(_tenantId: string) {
+  // no-op
 }
 
 async function fetchStorefront(slug: string) {
@@ -48,6 +40,11 @@ async function fetchStorefront(slug: string) {
       description: true,
       logo: true,
       primaryColor: true,
+      heroStyle: true,
+      productStyle: true,
+      advantagesStyle: true,
+      testimonialStyle: true,
+      faqStyle: true,
       whatsapp: true,
       phone: true,
       email: true,
@@ -60,16 +57,23 @@ async function fetchStorefront(slug: string) {
       bannerSubtitle: true,
       bannerImage: true,
       heroCtaText: true,
+      heroStats: true,
       // Tentang
       aboutHeadline: true,
       aboutBody: true,
+      aboutImage: true,
       aboutChecklist: true,
       yearsExperience: true,
+      advantages: true,
+      testimonials: true,
+      faqs: true,
       // Promo
       promoEnabled: true,
       promoTitle: true,
       promoSubtitle: true,
       promoCode: true,
+      promoImage: true,
+      socialLinks: true,
       // Visibilitas elemen
       showBusinessName: true,
       showTagline: true,
@@ -113,7 +117,21 @@ async function fetchStorefront(slug: string) {
     }),
   ]);
 
-  return { tenant, categories, products };
+  return {
+    tenant: {
+      ...tenant,
+      aboutChecklist: Array.isArray(tenant.aboutChecklist)
+        ? tenant.aboutChecklist.map(String)
+        : [],
+      heroStats: coerceHeroStats(tenant.heroStats),
+      advantages: coerceAdvantages(tenant.advantages),
+      testimonials: coerceTestimonials(tenant.testimonials),
+      faqs: coerceFaqs(tenant.faqs),
+      socialLinks: coerceSocialLinks(tenant.socialLinks),
+    },
+    categories,
+    products,
+  };
 }
 
 export type StorefrontData = NonNullable<

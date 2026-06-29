@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Globe, Mail, MapPin, Music2, Phone } from "lucide-react";
 import { getStorefront } from "@/server/services/public/storefront.service";
 import { buildTenantMetadata } from "@/lib/seo/metadata";
 import { WaButton } from "../_components/storefront-chrome";
@@ -47,6 +47,25 @@ export default async function ContactPage({ params }: { params: Params }) {
       value: tenant.openingHours,
     },
   ].filter(Boolean) as { icon: React.ElementType; label: string; value: string }[];
+
+  const social = tenant.socialLinks;
+  const socialRows = [
+    social.facebook && { icon: Globe, label: "Facebook", url: social.facebook },
+    social.instagram && {
+      icon: Globe,
+      label: "Instagram",
+      url: social.instagram,
+    },
+    social.youtube && { icon: Globe, label: "YouTube", url: social.youtube },
+    social.tiktok && { icon: Music2, label: "TikTok", url: social.tiktok },
+  ].filter(Boolean) as {
+    icon: React.ElementType;
+    label: string;
+    url: string;
+  }[];
+
+  const mapsUrl = tenant.googleMapsUrl;
+  const isMapsUrl = !!mapsUrl && /(google\.[^/]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i.test(mapsUrl);
 
   return (
     <div className="bg-white">
@@ -97,6 +116,44 @@ export default async function ContactPage({ params }: { params: Params }) {
             </p>
           )}
         </div>
+
+        {isMapsUrl && (
+          <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-soft aspect-video mb-9">
+            <iframe
+              src={mapsUrl}
+              title={`Lokasi ${tenant.name}`}
+              className="w-full h-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </div>
+        )}
+
+        {socialRows.length > 0 && (
+          <div className="mb-9">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">
+              Ikuti Kami
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {socialRows.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <a
+                    key={s.label}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                  >
+                    <Icon size={18} />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {tenant.showWhatsappButton && (
           <div className="rounded-3xl bg-slate-900 p-6 sm:p-8 text-center shadow-float">

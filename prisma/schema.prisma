@@ -135,6 +135,11 @@ model Tenant {
   favicon      String?
   primaryColor String  @default("#2563EB")
   theme        String  @default("modern-store")
+  heroStyle        String @default("centered") // hero: centered | split | minimal
+  productStyle     String @default("grid") // produk: grid | list
+  advantagesStyle  String @default("cards") // keunggulan: cards | list
+  testimonialStyle String @default("grid") // testimoni: grid | highlight
+  faqStyle         String @default("accordion") // faq: accordion | open
 
   // Visibilitas elemen
   showBusinessName   Boolean @default(true)

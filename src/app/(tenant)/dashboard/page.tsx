@@ -20,7 +20,8 @@ export default async function DashboardHome() {
     api.dashboard.overview(),
     api.dashboard.setupStatus(),
   ]);
-  const { stats, salesSeries, topProducts, recentOrders, storeUrl } = data;
+  const { stats, salesSeries, topProducts, recentOrders, storeUrl, storeHref } =
+    data;
 
   const cards = [
     {
@@ -167,7 +168,7 @@ export default async function DashboardHome() {
               Pelanggan bisa belanja dari link ini 24/7
             </p>
             <a
-              href={`https://${storeUrl}`}
+              href={storeHref}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-white text-sm text-brand-600 border border-brand-300 py-2.5 rounded-xl font-semibold hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-colors flex items-center justify-center gap-2"
