@@ -12,6 +12,7 @@ import {
   Store,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
+import { ImageUpload } from "@/components/shared/image-upload";
 
 type Initial = {
   name: string;
@@ -169,13 +170,12 @@ export function OnboardingWizard({ initial }: { initial: Initial }) {
 
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                    URL Logo (opsional)
+                    Logo Toko (opsional)
                   </label>
-                  <input
-                    value={logo}
-                    onChange={(e) => setLogo(e.target.value)}
-                    placeholder="https://…/logo.png"
-                    className={inputCls}
+                  <ImageUpload
+                    value={logo || null}
+                    onChange={(url) => setLogo(url ?? "")}
+                    size="sm"
                   />
                 </div>
               </div>

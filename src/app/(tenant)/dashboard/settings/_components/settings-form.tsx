@@ -8,6 +8,7 @@ import { ExternalLink, Loader2 } from "lucide-react";
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc/client";
 import { cn } from "@/lib/utils";
+import { ImageUpload } from "@/components/shared/image-upload";
 import type { AppRouter } from "@/server/routers/_app";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
@@ -275,39 +276,28 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
 
           <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-4">
             <h3 className="font-display font-bold text-slate-900">Logo & Favicon</h3>
-            <div className="flex items-start gap-4">
-              {form.logo && (
-                <div className="relative w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 flex-none">
-                  <Image
-                    src={form.logo}
-                    alt="Logo"
-                    fill
-                    sizes="64px"
-                    className="object-contain"
-                  />
-                </div>
-              )}
-              <div className="flex-1 space-y-3">
-                <input
-                  type="url"
-                  value={form.logo ?? ""}
-                  onChange={(e) => set("logo", e.target.value)}
-                  placeholder="URL Logo (https://...)"
-                  className={inputCls}
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <p className="text-sm font-semibold text-slate-700 mb-1.5">
+                  Logo
+                </p>
+                <ImageUpload
+                  value={form.logo}
+                  onChange={(url) => set("logo", url)}
+                  size="sm"
                 />
-                <input
-                  type="url"
-                  value={form.favicon ?? ""}
-                  onChange={(e) => set("favicon", e.target.value)}
-                  placeholder="URL Favicon (https://...)"
-                  className={inputCls}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-700 mb-1.5">
+                  Favicon
+                </p>
+                <ImageUpload
+                  value={form.favicon}
+                  onChange={(url) => set("favicon", url)}
+                  size="sm"
                 />
               </div>
             </div>
-            <p className="text-xs text-slate-400">
-              Tempel URL gambar. Upload file langsung tersedia setelah storage
-              dikonfigurasi.
-            </p>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">

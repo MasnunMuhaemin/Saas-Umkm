@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { cn } from "@/lib/utils";
+import { ImageUpload } from "@/components/shared/image-upload";
 import type { WebsiteData } from "@/server/services/tenant/website.service";
 
 const TABS = [
@@ -477,26 +478,13 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              URL Logo
+              Logo Toko
             </label>
-            <div className="flex items-center gap-3">
-              {form.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={form.logo}
-                  alt="Logo"
-                  className="w-12 h-12 rounded-lg object-contain border border-slate-200 bg-slate-50 flex-none"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-slate-200 bg-slate-50 flex-none" />
-              )}
-              <input
-                value={form.logo ?? ""}
-                onChange={(e) => set("logo", e.target.value)}
-                placeholder="https://…/logo.png"
-                className={inputCls}
-              />
-            </div>
+            <ImageUpload
+              value={form.logo}
+              onChange={(url) => set("logo", url)}
+              size="sm"
+            />
           </div>
         </div>
       )}
@@ -543,24 +531,11 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Gambar Latar Hero
             </label>
-            <div className="flex items-center gap-3">
-              {form.bannerImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={form.bannerImage}
-                  alt="Hero"
-                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 bg-slate-50 flex-none"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-slate-200 bg-slate-50 flex-none" />
-              )}
-              <input
-                value={form.bannerImage ?? ""}
-                onChange={(e) => set("bannerImage", e.target.value)}
-                placeholder="https://…/hero.jpg"
-                className={inputCls}
-              />
-            </div>
+            <ImageUpload
+              value={form.bannerImage}
+              onChange={(url) => set("bannerImage", url)}
+              size="wide"
+            />
             <p className="text-xs text-slate-400 mt-1">
               Tempel URL gambar untuk latar belakang hero.
             </p>
@@ -660,24 +635,11 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Gambar Tentang Kami
             </label>
-            <div className="flex items-center gap-3">
-              {form.aboutImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={form.aboutImage}
-                  alt="Tentang"
-                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 bg-slate-50 flex-none"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-slate-200 bg-slate-50 flex-none" />
-              )}
-              <input
-                value={form.aboutImage ?? ""}
-                onChange={(e) => set("aboutImage", e.target.value)}
-                placeholder="https://…/tentang.jpg"
-                className={inputCls}
-              />
-            </div>
+            <ImageUpload
+              value={form.aboutImage}
+              onChange={(url) => set("aboutImage", url)}
+              size="wide"
+            />
           </div>
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -784,24 +746,11 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
             <label className="block text-sm font-bold text-slate-700 mb-1.5">
               Gambar Promo
             </label>
-            <div className="flex items-center gap-3">
-              {form.promoImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={form.promoImage}
-                  alt="Promo"
-                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 bg-slate-50 flex-none"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg border border-dashed border-slate-200 bg-slate-50 flex-none" />
-              )}
-              <input
-                value={form.promoImage ?? ""}
-                onChange={(e) => set("promoImage", e.target.value)}
-                placeholder="https://…/promo.jpg"
-                className={inputCls}
-              />
-            </div>
+            <ImageUpload
+              value={form.promoImage}
+              onChange={(url) => set("promoImage", url)}
+              size="wide"
+            />
           </div>
         </div>
       )}

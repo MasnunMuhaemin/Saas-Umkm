@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,13 +11,13 @@ import {
   ImagePlus,
   Loader2,
   PackageX,
-  Plus,
-  Trash2,
+  X,
   XCircle,
 } from "lucide-react";
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc/client";
 import type { AppRouter } from "@/server/routers/_app";
+import { uploadImage } from "@/components/shared/image-upload";
 import { VariantManager } from "./variant-manager";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
@@ -69,10 +69,21 @@ export function ProductForm({
   const [images, setImages] = useState<string[]>(() => {
     const arr = product?.images ?? [];
     if (arr.length) return arr;
-    return product?.mainImage ? [product.mainImage] : [""];
+    return product?.mainImage ? [product.mainImage] : [];
   });
-  const setImageAt = (i: number, v: string) =>
-    setImages((prev) => prev.map((u, idx) => (idx === i ? v : u)));
+  const fotoRef = useRef<HTMLInputElement>(null);
+  const [uploadingFoto, setUploadingFoto] = useState(false);
+  const onPickFoto = async (file: File) => {
+    setUploadingFoto(true);
+    try {
+      const url = await uploadImage(file);
+      setImages((prev) => [...prev, url]);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Gagal mengunggah.");
+    } finally {
+      setUploadingFoto(false);
+    }
+  };
   const [status, setStatus] = useState<string>(product?.status ?? "ACTIVE");
   const [metaTitle, setMetaTitle] = useState(product?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(
@@ -218,62 +229,68 @@ export function ProductForm({
           {tab === "foto" && (
             <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-4">
               <p className="text-xs text-slate-400">
-                Foto pertama menjadi <b>foto utama</b>. Tempel URL gambar; upload
-                file langsung tersedia setelah storage dikonfigurasi.
+                Upload foto produk dari galeri / HP Anda. Foto pertama menjadi{" "}
+                <b>foto utama</b>. Maksimal 8 foto (JPG/PNG/WebP).
               </p>
-              <div className="space-y-3">
+              <div className="flex flex-wrap gap-3">
                 {images.map((url, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    {url ? (
-                      <div className="relative w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 flex-none shadow-soft">
-                        <Image
-                          src={url}
-                          alt=""
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-16 h-16 rounded-xl border border-dashed border-slate-300 bg-slate-50 flex-none flex items-center justify-center text-slate-300">
-                        <ImagePlus size={20} />
-                      </div>
-                    )}
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={(e) => setImageAt(i, e.target.value)}
-                      placeholder="https://contoh.com/foto.jpg"
-                      className={`${inputCls} flex-1`}
+                  <div
+                    key={i}
+                    className="relative w-24 h-24 rounded-xl overflow-hidden border border-slate-200 bg-slate-50"
+                  >
+                    <Image
+                      src={url}
+                      alt=""
+                      fill
+                      sizes="96px"
+                      className="object-cover"
                     />
                     {i === 0 && (
-                      <span className="text-[10px] font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-md flex-none">
+                      <span className="absolute top-1 left-1 text-[9px] font-bold text-white bg-brand-600 px-1.5 py-0.5 rounded">
                         UTAMA
                       </span>
                     )}
-                    {images.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setImages(images.filter((_, idx) => idx !== i))
-                        }
-                        className="p-2 text-slate-400 hover:text-red-500 flex-none"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setImages(images.filter((_, idx) => idx !== i))
+                      }
+                      aria-label="Hapus foto"
+                      className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow hover:bg-red-600"
+                    >
+                      <X size={13} />
+                    </button>
                   </div>
                 ))}
+                {images.length < 8 && (
+                  <button
+                    type="button"
+                    onClick={() => fotoRef.current?.click()}
+                    disabled={uploadingFoto}
+                    className="w-24 h-24 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-brand-400 flex flex-col items-center justify-center gap-1 text-slate-500 transition-colors disabled:opacity-60"
+                  >
+                    {uploadingFoto ? (
+                      <Loader2 className="animate-spin" size={20} />
+                    ) : (
+                      <ImagePlus size={22} />
+                    )}
+                    <span className="text-[11px] font-medium">
+                      {uploadingFoto ? "Upload…" : "Tambah Foto"}
+                    </span>
+                  </button>
+                )}
               </div>
-              {images.length < 8 && (
-                <button
-                  type="button"
-                  onClick={() => setImages([...images, ""])}
-                  className="text-sm text-brand-600 font-semibold inline-flex items-center gap-1 hover:underline"
-                >
-                  <Plus size={14} /> Tambah Foto
-                </button>
-              )}
+              <input
+                ref={fotoRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  e.target.value = "";
+                  if (f) onPickFoto(f);
+                }}
+              />
             </div>
           )}
 
