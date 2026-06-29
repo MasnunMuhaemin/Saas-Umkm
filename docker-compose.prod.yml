@@ -33,7 +33,7 @@ services:
   migrate:
     build:
       context: .
-      target: builder
+      target: migrator
     command: npx prisma migrate deploy
     environment:
       DATABASE_URL: mysql://root:${DB_PASSWORD:?isi DB_PASSWORD}@db:3306/tokopintar

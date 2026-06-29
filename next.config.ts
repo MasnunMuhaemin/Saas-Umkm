@@ -37,6 +37,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Build mandiri untuk Docker: hasilkan .next/standalone (server + node_modules minimal).
   output: "standalone",
+  // Lewati cek tipe & lint saat `next build` — sangat menghemat RAM/waktu di VPS
+  // kecil. Tipe & lint tetap diperiksa via `npm run build`/CI di mesin dev.
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

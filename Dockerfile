@@ -39,6 +39,13 @@ ENV NEXT_PUBLIC_ROOT_DOMAIN=${NEXT_PUBLIC_ROOT_DOMAIN}
 RUN npx prisma generate
 RUN npm run build
 
+# ---- 3b) Migrator: khusus `prisma migrate deploy` — TANPA `next build` ----
+# migrate hanya butuh Prisma CLI + schema + migrations, tidak perlu app ter-build.
+# Memisahkan ini mencegah `next build` jalan 2x (hemat RAM besar di VPS kecil).
+FROM base AS migrator
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
 # ---- 4) Runner: hanya server standalone + aset statis (image kecil) ----
 FROM base AS runner
 ENV NODE_ENV=production
