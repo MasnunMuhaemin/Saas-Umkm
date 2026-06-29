@@ -446,3 +446,14 @@ model VisitorEvent {
 
   @@index([tenantId, createdAt])
 }
+
+// ─── Aset gambar (disimpan di DB, disajikan via /api/uploads/<id>) ───────────
+model Asset {
+  id        String   @id @default(cuid())
+  mime      String
+  data      Bytes    @db.LongBlob
+  tenantId  String?
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+}

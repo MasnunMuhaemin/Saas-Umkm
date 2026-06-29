@@ -16,51 +16,11 @@ type ProfileData = RouterOutput["settings"]["get"];
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
 
-const COLOR_PRESETS = [
-  "#2563EB",
-  "#059669",
-  "#D97706",
-  "#DC2626",
-  "#7C3AED",
-  "#0891B2",
-  "#DB2777",
-  "#475569",
-];
-
 const TABS = [
   { id: "identitas", label: "Identitas" },
   { id: "kontak", label: "Kontak" },
-  { id: "tampilan", label: "Tampilan" },
+  { id: "tampilan", label: "Logo & Domain" },
 ] as const;
-
-const VISIBILITY: { key: keyof ProfileData; label: string }[] = [
-  { key: "showPrice", label: "Tampilkan Harga" },
-  { key: "showStock", label: "Tampilkan Stok" },
-  { key: "showRating", label: "Tampilkan Rating" },
-  { key: "showWhatsappButton", label: "Tampilkan Tombol WhatsApp" },
-  { key: "showCategory", label: "Tampilkan Kategori" },
-  { key: "showDiscount", label: "Tampilkan Diskon" },
-];
-
-function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className={cn(
-        "relative w-10 h-6 rounded-full transition-colors flex-none",
-        on ? "bg-primary" : "bg-slate-300",
-      )}
-    >
-      <span
-        className={cn(
-          "absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform",
-          on && "translate-x-4",
-        )}
-      />
-    </button>
-  );
-}
 
 export function SettingsForm({ profile }: { profile: ProfileData }) {
   const router = useRouter();
@@ -105,15 +65,6 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
       customDomain: form.customDomain || null,
       logo: form.logo || null,
       favicon: form.favicon || null,
-      primaryColor: form.primaryColor,
-      showBusinessName: form.showBusinessName,
-      showTagline: form.showTagline,
-      showPrice: form.showPrice,
-      showStock: form.showStock,
-      showRating: form.showRating,
-      showWhatsappButton: form.showWhatsappButton,
-      showCategory: form.showCategory,
-      showDiscount: form.showDiscount,
     });
   };
 
@@ -163,15 +114,9 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
       {tab === "identitas" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-bold text-slate-700">
-                Nama Toko *
-              </label>
-              <Toggle
-                on={form.showBusinessName}
-                onToggle={() => set("showBusinessName", !form.showBusinessName)}
-              />
-            </div>
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
+              Nama Toko *
+            </label>
             <input
               type="text"
               value={form.name}
@@ -181,13 +126,9 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             />
           </div>
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-bold text-slate-700">Tagline</label>
-              <Toggle
-                on={form.showTagline}
-                onToggle={() => set("showTagline", !form.showTagline)}
-              />
-            </div>
+            <label className="block text-sm font-bold text-slate-700 mb-1.5">
+              Tagline
+            </label>
             <input
               type="text"
               value={form.tagline ?? ""}
@@ -300,54 +241,9 @@ export function SettingsForm({ profile }: { profile: ProfileData }) {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
-            <h3 className="font-display font-bold text-slate-900 mb-4">Warna Tema</h3>
-            <div className="flex items-center gap-3 mb-4">
-              <input
-                type="color"
-                value={form.primaryColor}
-                onChange={(e) => set("primaryColor", e.target.value)}
-                className="w-12 h-12 rounded-xl border border-slate-200 cursor-pointer"
-              />
-              <input
-                type="text"
-                value={form.primaryColor}
-                onChange={(e) => set("primaryColor", e.target.value)}
-                className="w-32 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono uppercase focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-colors"
-              />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {COLOR_PRESETS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => set("primaryColor", c)}
-                  style={{ backgroundColor: c }}
-                  className={cn(
-                    "w-8 h-8 rounded-lg border-2 transition-transform hover:scale-110",
-                    form.primaryColor.toUpperCase() === c
-                      ? "border-slate-900"
-                      : "border-transparent",
-                  )}
-                  aria-label={c}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6">
-            <h3 className="font-display font-bold text-slate-900 mb-4">Visibilitas Elemen</h3>
-            <div className="space-y-3">
-              {VISIBILITY.map((v) => (
-                <div key={v.key} className="flex items-center justify-between">
-                  <span className="text-sm text-slate-700">{v.label}</span>
-                  <Toggle
-                    on={form[v.key] as boolean}
-                    onToggle={() => set(v.key, !form[v.key] as never)}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 text-sm text-brand-800">
+            Warna tema & tampilan elemen toko diatur di menu{" "}
+            <b>Website Builder → Tema</b>.
           </div>
         </div>
       )}

@@ -1,18 +1,10 @@
-import { randomUUID } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
+import { prisma } from "@/server/db";
 import { ALLOWED_IMAGE_TYPES, MAX_UPLOAD_MB } from "@/lib/constants/config";
 import { captureError } from "@/lib/logger";
 
-const EXT: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
-
-/** Upload 1 gambar → simpan ke public/uploads, balas { url }. (Login wajib.) */
+/** Upload 1 gambar → simpan binary ke tabel Asset (DB), balas { url }. */
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -37,14 +29,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const ext = EXT[file.type] ?? "jpg";
-    const filename = `${randomUUID()}.${ext}`;
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), buffer);
+    const asset = await prisma.asset.create({
+      data: {
+        mime: file.type,
+        data: buffer,
+        tenantId: session.user.tenantId ?? null,
+      },
+      select: { id: true },
+    });
 
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    return NextResponse.json({ url: `/api/uploads/${asset.id}` });
   } catch (e) {
     captureError(e, { where: "upload" });
     return NextResponse.json({ error: "Gagal mengunggah." }, { status: 500 });

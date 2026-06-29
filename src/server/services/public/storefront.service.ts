@@ -138,6 +138,36 @@ export type StorefrontData = NonNullable<
   Awaited<ReturnType<typeof getStorefront>>
 >;
 
+/** Semua produk aktif tenant (untuk halaman daftar produk). Select sama dengan
+ *  produk di home agar tipe kompatibel dengan <ProductCard>. */
+export const getStorefrontProducts = cache(async (slug: string) => {
+  const tenant = await prisma.tenant.findFirst({
+    where: {
+      OR: [{ slug }, { customDomain: slug }],
+      status: { in: ["ACTIVE", "TRIAL"] },
+    },
+    select: { id: true },
+  });
+  if (!tenant) return [];
+  return prisma.product.findMany({
+    where: { tenantId: tenant.id, status: "ACTIVE" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      originalPrice: true,
+      stock: true,
+      mainImage: true,
+      isBest: true,
+      isNew: true,
+      category: { select: { name: true } },
+    },
+    orderBy: [{ isBest: "desc" }, { createdAt: "desc" }],
+    take: 200,
+  });
+});
+
 /** Detail 1 produk publik milik tenant (by slug). Null jika tak ada/nonaktif. */
 export const getStorefrontProduct = cache(
   async (tenantId: string, productSlug: string) => {

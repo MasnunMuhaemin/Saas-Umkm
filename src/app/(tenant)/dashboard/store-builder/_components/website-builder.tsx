@@ -10,7 +10,6 @@ import { ImageUpload } from "@/components/shared/image-upload";
 import type { WebsiteData } from "@/server/services/tenant/website.service";
 
 const TABS = [
-  { id: "info", label: "Info Toko" },
   { id: "tema", label: "Tema" },
   { id: "hero", label: "Hero" },
   { id: "tentang", label: "Tentang" },
@@ -274,7 +273,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 export function WebsiteBuilder({ website }: { website: WebsiteData }) {
   const router = useRouter();
   const utils = trpc.useUtils();
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("info");
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("tema");
   const [form, setForm] = useState<WebsiteData>(website);
 
   function set<K extends keyof WebsiteData>(key: K, value: WebsiteData[K]) {
@@ -352,10 +351,6 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
 
   const save = () =>
     update.mutate({
-      name: form.name.trim() || form.name,
-      tagline: form.tagline || null,
-      description: form.description || null,
-      logo: form.logo || null,
       bannerTitle: form.bannerTitle || null,
       bannerSubtitle: form.bannerSubtitle || null,
       heroCtaText: form.heroCtaText || null,
@@ -375,7 +370,6 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
       promoCode: form.promoCode || null,
       promoImage: form.promoImage || null,
       googleMapsUrl: form.googleMapsUrl || null,
-      openingHours: form.openingHours || null,
       socialLinks: form.socialLinks,
       primaryColor: form.primaryColor,
       heroStyle: form.heroStyle as "centered" | "split" | "minimal",
@@ -433,61 +427,6 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
           </button>
         ))}
       </div>
-
-      {tab === "info" && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              Nama Toko
-            </label>
-            <input
-              value={form.name}
-              onChange={(e) => set("name", e.target.value)}
-              placeholder="Nama toko Anda"
-              className={inputCls}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              Tagline / Slogan
-            </label>
-            <input
-              value={form.tagline ?? ""}
-              onChange={(e) => set("tagline", e.target.value)}
-              placeholder="Mis. Kue & jajanan rumahan enak"
-              className={inputCls}
-            />
-            <p className="text-xs text-slate-400 mt-1">
-              Tampil di badge hero &amp; header toko.
-            </p>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              Deskripsi Toko
-            </label>
-            <textarea
-              value={form.description ?? ""}
-              onChange={(e) => set("description", e.target.value)}
-              rows={3}
-              placeholder="Ceritakan tentang toko Anda…"
-              className={inputCls}
-            />
-            <p className="text-xs text-slate-400 mt-1">
-              Dipakai sebagai subjudul hero &amp; info toko.
-            </p>
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              Logo Toko
-            </label>
-            <ImageUpload
-              value={form.logo}
-              onChange={(url) => set("logo", url)}
-              size="sm"
-            />
-          </div>
-        </div>
-      )}
 
       {tab === "hero" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
@@ -950,17 +889,9 @@ export function WebsiteBuilder({ website }: { website: WebsiteData }) {
 
       {tab === "kontak" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-soft p-6 space-y-5">
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5">
-              Jam Operasional
-            </label>
-            <input
-              type="text"
-              value={form.openingHours ?? ""}
-              onChange={(e) => set("openingHours", e.target.value)}
-              placeholder="Senin–Sabtu 08.00–17.00"
-              className={inputCls}
-            />
+          <div className="bg-brand-50 border border-brand-100 rounded-xl p-3 text-xs text-brand-800">
+            Nomor WhatsApp, alamat &amp; jam buka diatur di menu{" "}
+            <b>Profil Bisnis</b>.
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1.5">
