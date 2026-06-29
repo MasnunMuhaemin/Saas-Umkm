@@ -1,0 +1,92 @@
+# ============================================================================
+# MayWeb — stack PRODUKSI untuk VPS (dioptimalkan untuk RAM 1 GB)
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Beda dari docker-compose.yml (dev):
+#   - ada Caddy (HTTPS otomatis, port 80/443)
+#   - MariaDB dibatasi memorinya (innodb-buffer-pool-size=128M)
+#   - app TIDAK expose port ke host (hanya Caddy yang boleh akses)
+# Variabel rahasia diambil dari file .env (lihat .env.production.example).
+# ============================================================================
+
+services:
+  # --- Database MariaDB (hemat memori untuk VPS kecil) ---
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    command: >
+      --innodb-buffer-pool-size=128M
+      --max-connections=50
+      --performance-schema=OFF
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:?isi DB_PASSWORD di .env}
+      MARIADB_DATABASE: tokopintar
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  # --- Migrasi schema: jalan sekali tiap deploy, lalu berhenti ---
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:${DB_PASSWORD:?isi DB_PASSWORD}@db:3306/tokopintar
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # --- Aplikasi Next.js (standalone, tanpa port ke host) ---
+  app:
+    build:
+      context: .
+      target: runner
+      args:
+        NEXT_PUBLIC_ROOT_DOMAIN: ${NEXT_PUBLIC_ROOT_DOMAIN:?isi NEXT_PUBLIC_ROOT_DOMAIN}
+    restart: unless-stopped
+    expose:
+      - "3000" # hanya antar-container; tidak dibuka ke internet langsung
+    environment:
+      DATABASE_URL: mysql://root:${DB_PASSWORD:?isi DB_PASSWORD}@db:3306/tokopintar
+      AUTH_SECRET: ${AUTH_SECRET:?isi AUTH_SECRET di .env - buat dengan npx auth secret}
+      AUTH_URL: https://${NEXT_PUBLIC_ROOT_DOMAIN:?isi NEXT_PUBLIC_ROOT_DOMAIN}
+      AUTH_TRUST_HOST: "true"
+      NEXT_PUBLIC_ROOT_DOMAIN: ${NEXT_PUBLIC_ROOT_DOMAIN}
+      # Opsional (mock bila kosong):
+      PAKASIR_BASE_URL: ${PAKASIR_BASE_URL:-https://app.pakasir.com}
+      PAKASIR_PROJECT: ${PAKASIR_PROJECT:-}
+      PAKASIR_API_KEY: ${PAKASIR_API_KEY:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # --- Caddy: reverse proxy + HTTPS otomatis (Let's Encrypt) ---
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL:?isi ACME_EMAIL di .env (email untuk sertifikat)}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data # simpan sertifikat (jangan hilang saat restart)
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:

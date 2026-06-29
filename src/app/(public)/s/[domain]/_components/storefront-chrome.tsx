@@ -120,9 +120,9 @@ export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
     <footer className="relative bg-slate-950 text-slate-300 pt-14 pb-8 overflow-hidden">
       <div className="absolute inset-x-0 top-0 h-px bg-primary/40" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
           {/* Brand + sosial */}
-          <div>
+          <div className="max-w-sm">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg flex-none">
                 <ShoppingBag size={18} className="text-white" />
@@ -158,13 +158,15 @@ export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
             )}
           </div>
 
-          {/* Navigasi */}
-          <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-              Navigasi
-            </p>
-            <ul className="space-y-2">
-              {NAV.map(([href, label]) => (
+          {/* Navigasi + Kontak — dikelompokkan di sisi kanan */}
+          <div className="flex flex-col sm:flex-row gap-10 sm:gap-16 lg:gap-20">
+            {/* Navigasi */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                Navigasi
+              </p>
+              <ul className="space-y-2">
+                {NAV.map(([href, label]) => (
                 <li key={href}>
                   <a
                     href={href}
@@ -177,11 +179,11 @@ export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
             </ul>
           </div>
 
-          {/* Kontak */}
-          <div className="lg:col-span-2">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-              Kontak
-            </p>
+            {/* Kontak */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                Kontak
+              </p>
             <ul className="space-y-2.5 text-sm text-slate-400">
               {address && (
                 <li className="flex items-start gap-2.5">
@@ -207,7 +209,8 @@ export function StoreFooter({ tenant }: { tenant: StoreTenant }) {
                   <span>{tenant.openingHours}</span>
                 </li>
               )}
-            </ul>
+              </ul>
+            </div>
           </div>
         </div>
 

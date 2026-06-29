@@ -1,0 +1,34 @@
+# Dependency & hasil build (di-install/generate ulang di dalam image)
+node_modules
+.next
+out
+build
+
+# Prisma client hasil generate (di-generate ulang via `prisma generate`)
+src/generated
+
+# Env & rahasia — JANGAN ikut ke image
+.env
+.env.*
+!.env.example
+
+# Git & meta
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Editor & OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Log & cache
+npm-debug.log*
+*.log
+coverage
+.eslintcache

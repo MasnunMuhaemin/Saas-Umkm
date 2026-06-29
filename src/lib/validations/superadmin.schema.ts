@@ -14,6 +14,19 @@ export const createTenantSchema = z.object({
 });
 export type CreateTenantInput = z.infer<typeof createTenantSchema>;
 
+export const updateTenantSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Nama toko wajib diisi").max(255),
+  slug: z
+    .string()
+    .min(2, "Subdomain minimal 2 karakter")
+    .max(63)
+    .regex(/^[a-z0-9-]+$/, "Subdomain hanya huruf kecil, angka, dan strip"),
+  planSlug: z.enum(["basic", "plus"]),
+  status: z.enum(["ACTIVE", "TRIAL", "SUSPENDED", "EXPIRED"]),
+});
+export type UpdateTenantInput = z.infer<typeof updateTenantSchema>;
+
 export const planUpdateSchema = z.object({
   price: z.number().int().min(0),
   maxProducts: z.number().int().min(0).nullable(),

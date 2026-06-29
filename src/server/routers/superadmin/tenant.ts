@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { router, superAdminProcedure } from "@/server/trpc";
 import { superAdminTenantService } from "@/server/services/superadmin/tenant.service";
-import { createTenantSchema } from "@/lib/validations/superadmin.schema";
+import {
+  createTenantSchema,
+  updateTenantSchema,
+} from "@/lib/validations/superadmin.schema";
 
 export const tenantAdminRouter = router({
   list: superAdminProcedure.query(() => superAdminTenantService.list()),
@@ -10,6 +13,18 @@ export const tenantAdminRouter = router({
     .input(createTenantSchema)
     .mutation(({ ctx, input }) =>
       superAdminTenantService.createTenant(input, ctx.user.id),
+    ),
+
+  update: superAdminProcedure
+    .input(updateTenantSchema)
+    .mutation(({ ctx, input }) =>
+      superAdminTenantService.updateTenant(input, ctx.user.id),
+    ),
+
+  delete: superAdminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) =>
+      superAdminTenantService.deleteTenant(input.id, ctx.user.id),
     ),
 
   setStatus: superAdminProcedure

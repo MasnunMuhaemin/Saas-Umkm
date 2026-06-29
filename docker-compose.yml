@@ -1,0 +1,69 @@
+# ============================================================================
+# TokoPintar / MayWeb — stack lengkap: database + migrasi + aplikasi
+#   docker compose up -d --build
+# Variabel rahasia diambil dari file .env (lihat catatan di bawah service app).
+# ============================================================================
+
+services:
+  # --- Database MariaDB (driver app memakai adapter mariadb) ---
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-tokopintar}
+      MARIADB_DATABASE: tokopintar
+    ports:
+      - "3307:3306" # host 3307 agar tak bentrok MariaDB/MySQL lokal di 3306
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # --- Migrasi schema: jalan sekali tiap `up`, lalu berhenti (exit 0) ---
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:${DB_PASSWORD:-tokopintar}@db:3306/tokopintar
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # --- Aplikasi Next.js (image standalone ramping) ---
+  app:
+    build:
+      context: .
+      target: runner
+      args:
+        # NEXT_PUBLIC_* dibekukan saat build:
+        NEXT_PUBLIC_ROOT_DOMAIN: ${NEXT_PUBLIC_ROOT_DOMAIN:-tokopintar.id}
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://root:${DB_PASSWORD:-tokopintar}@db:3306/tokopintar
+      # WAJIB diisi di .env — buat dengan `npx auth secret`
+      AUTH_SECRET: "${AUTH_SECRET:?isi AUTH_SECRET di .env dulu - buat dengan npx auth secret}"
+      AUTH_URL: ${AUTH_URL:-http://localhost:3000}
+      AUTH_TRUST_HOST: "true"
+      NEXT_PUBLIC_ROOT_DOMAIN: ${NEXT_PUBLIC_ROOT_DOMAIN:-tokopintar.id}
+      # Opsional (mock bila kosong):
+      PAKASIR_BASE_URL: ${PAKASIR_BASE_URL:-https://app.pakasir.com}
+      PAKASIR_PROJECT: ${PAKASIR_PROJECT:-}
+      PAKASIR_API_KEY: ${PAKASIR_API_KEY:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  db-data:

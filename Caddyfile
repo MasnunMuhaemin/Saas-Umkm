@@ -1,0 +1,28 @@
+# ============================================================================
+# Caddy — reverse proxy + HTTPS otomatis (Let's Encrypt) untuk MayWeb
+# Menangani: domain utama, subdomain toko (*.domain), & custom domain merchant.
+# Sertifikat dibuat ON-DEMAND saat host pertama diakses, divalidasi ke app.
+# ============================================================================
+
+{
+	# Email notifikasi sertifikat (diisi dari .env via ACME_EMAIL).
+	email {$ACME_EMAIL}
+
+	# Sebelum terbit sertifikat, tanya app: host ini sah atau tidak.
+	on_demand_tls {
+		ask http://app:3000/api/check-domain
+	}
+}
+
+# Semua host masuk ke sini → diteruskan ke app. TLS dibuat on-demand.
+:443 {
+	tls {
+		on_demand
+	}
+	reverse_proxy app:3000
+}
+
+# HTTP (80) → arahkan ke HTTPS. (Tantangan ACME tetap dilayani Caddy otomatis.)
+:80 {
+	redir https://{host}{uri}
+}

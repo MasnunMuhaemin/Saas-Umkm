@@ -4,7 +4,10 @@ import { prisma } from "@/server/db";
 import { logAudit } from "@/lib/helpers/audit";
 import { sendEmail } from "@/lib/email/client";
 import { welcomeEmail } from "@/lib/email/templates";
-import type { CreateTenantInput } from "@/lib/validations/superadmin.schema";
+import type {
+  CreateTenantInput,
+  UpdateTenantInput,
+} from "@/lib/validations/superadmin.schema";
 import type { Prisma } from "@/generated/prisma/client";
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
@@ -115,6 +118,77 @@ export const superAdminTenantService = {
       action: status === "SUSPENDED" ? "tenant.suspend" : "tenant.activate",
       metadata: { status },
     });
+    return { ok: true };
+  },
+
+  /** Edit tenant: nama, subdomain, paket, status. Sinkron ke subscription + audit. */
+  async updateTenant(input: UpdateTenantInput, adminUserId: string) {
+    const plan = await prisma.plan.findUnique({
+      where: { slug: input.planSlug },
+      select: { id: true },
+    });
+    if (!plan)
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Paket tidak ditemukan.",
+      });
+
+    const slugUsed = await prisma.tenant.findFirst({
+      where: { slug: input.slug, NOT: { id: input.id } },
+      select: { id: true },
+    });
+    if (slugUsed)
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "Subdomain sudah terpakai.",
+      });
+
+    await prisma.tenant.update({
+      where: { id: input.id },
+      data: {
+        name: input.name,
+        slug: input.slug,
+        planId: plan.id,
+        status: input.status,
+      },
+    });
+    // Sinkronkan paket di subscription juga.
+    await prisma.subscription.updateMany({
+      where: { tenantId: input.id },
+      data: { planId: plan.id },
+    });
+
+    await logAudit({
+      userId: adminUserId,
+      tenantId: input.id,
+      action: "tenant.update",
+      metadata: { slug: input.slug, plan: input.planSlug, status: input.status },
+    });
+    return { ok: true };
+  },
+
+  /** Hapus tenant + seluruh datanya (cascade) + akun pemilik. Dicatat audit. */
+  async deleteTenant(tenantId: string, adminUserId: string) {
+    const t = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { userId: true, slug: true, name: true },
+    });
+    if (!t)
+      throw new TRPCError({ code: "NOT_FOUND", message: "Tenant tidak ada." });
+
+    // Catat audit dulu (tanpa tenantId — tenant akan dihapus). AuditLog tak ber-FK.
+    await logAudit({
+      userId: adminUserId,
+      action: "tenant.delete",
+      metadata: { tenantId, slug: t.slug, name: t.name },
+    });
+
+    // Hapus tenant (cascade: produk, order, kategori, pelanggan, langganan, dll)
+    // + akun pemilik.
+    await prisma.$transaction([
+      prisma.tenant.delete({ where: { id: tenantId } }),
+      prisma.user.delete({ where: { id: t.userId } }),
+    ]);
     return { ok: true };
   },
 };
