@@ -9,6 +9,9 @@ services:
   db:
     image: mariadb:11
     restart: unless-stopped
+    # Nama tabel tidak peka huruf besar/kecil (migrasi dibuat di Windows yang
+    # case-insensitive; Linux peka case → tanpa ini, 'Tenant' ≠ 'tenant').
+    command: --lower-case-table-names=1
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-tokopintar}
       MARIADB_DATABASE: tokopintar

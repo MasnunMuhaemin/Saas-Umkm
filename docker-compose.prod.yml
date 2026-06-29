@@ -18,6 +18,7 @@ services:
       --innodb-buffer-pool-size=128M
       --max-connections=50
       --performance-schema=OFF
+      --lower-case-table-names=1
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:?isi DB_PASSWORD di .env}
       MARIADB_DATABASE: tokopintar
