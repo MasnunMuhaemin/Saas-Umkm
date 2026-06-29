@@ -13,6 +13,9 @@ export default auth((req) => {
   const hostname = host.split(":")[0]; // buang port
   const url = req.nextUrl;
   const path = url.pathname;
+  // Path "/" → "" agar rewrite tidak menghasilkan "/s/<slug>/" (trailing slash
+  // memicu redirect 308 di production → storefront jadi 404).
+  const rest = path === "/" ? "" : path;
 
   // 1. Subdomain tenant → rewrite ke route publik /s/[domain]
   //    Dukung domain produksi (slug.tokopintar.id) & dev (slug.localhost).
@@ -26,7 +29,7 @@ export default auth((req) => {
   if (subdomain && !RESERVED_SUBDOMAINS.includes(subdomain)) {
     // Rewrite ke route publik /s/[domain]. (Hindari prefix "_" — folder
     // berawalan underscore bersifat private di Next App Router.)
-    return NextResponse.rewrite(new URL(`/s/${subdomain}${path}`, req.url));
+    return NextResponse.rewrite(new URL(`/s/${subdomain}${rest}`, req.url));
   }
 
   // 1b. Custom domain (mis. tokosaya.com) → rewrite ke /s/<host>.
@@ -40,7 +43,7 @@ export default auth((req) => {
     hostname.endsWith(".localhost");
 
   if (!isPlatformHost && hostname.includes(".")) {
-    return NextResponse.rewrite(new URL(`/s/${hostname}${path}`, req.url));
+    return NextResponse.rewrite(new URL(`/s/${hostname}${rest}`, req.url));
   }
 
   // 2. Guard role berbasis sesi (req.auth diisi oleh wrapper auth())
