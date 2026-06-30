@@ -71,6 +71,14 @@
   /* Token baru — TIDAK menimpa token app lain (dashboard/storefront aman). */
   --color-azure: #009ef5;
   --color-azure-dark: #008be5;
+  --color-azure-50: #ebf8ff;
+  --color-azure-100: #d4f0fe;
+  --color-azure-200: #aae2fd;
+  --color-azure-300: #72cffb;
+  --color-azure-400: #34b8f8;
+  --color-azure-500: #0aa6f6;
+  --color-azure-600: #009ef5;
+  --color-azure-700: #008be5;
   --shadow-ds-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-ds-md: 0 4px 16px rgba(0, 0, 0, 0.06);
   --shadow-ds-lg: 0 8px 32px rgba(0, 0, 0, 0.08);

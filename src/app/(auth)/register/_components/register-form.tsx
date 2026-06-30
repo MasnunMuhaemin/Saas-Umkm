@@ -120,7 +120,7 @@ export function RegisterForm({
   };
 
   const inputCls =
-    "w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all";
+    "w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all";
   const field = (k: string) =>
     `${inputCls} ${errs[k] ? "border-red-300 focus:ring-red-100" : ""}`;
   const err = (k: string) =>
@@ -173,7 +173,7 @@ export function RegisterForm({
               router.push("/dashboard");
               router.refresh();
             }}
-            className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+            className="w-full bg-azure-600 hover:bg-azure-700 text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
           >
             Masuk ke Dashboard <ArrowRight size={16} />
           </button>
@@ -189,7 +189,7 @@ export function RegisterForm({
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* ---- Brand panel ---- */}
-      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-brand-600 overflow-hidden">
+      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-azure-600 overflow-hidden">
         <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl" />
         <Link href="/" className="relative flex items-center gap-2.5">
           <div className="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center border border-white/20">
@@ -200,7 +200,7 @@ export function RegisterForm({
           </span>
         </Link>
         <div className="relative">
-          <p className="text-brand-200 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+          <p className="text-azure-200 text-xs font-bold uppercase tracking-[0.2em] mb-4">
             Daftar sekarang
           </p>
           <h2 className="font-display text-3xl font-extrabold text-white leading-tight mb-6">
@@ -232,7 +232,7 @@ export function RegisterForm({
         <div className="w-full max-w-xl">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 mb-6 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-azure-600 mb-6 transition-colors"
           >
             <ArrowLeft size={16} /> Kembali ke Beranda
           </Link>
@@ -244,7 +244,7 @@ export function RegisterForm({
               Sudah punya akun?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-brand-600 hover:text-brand-700"
+                className="font-semibold text-azure-600 hover:text-azure-700"
               >
                 Masuk
               </Link>
@@ -340,12 +340,12 @@ export function RegisterForm({
                       onClick={() => setPlanSlug(p.slug)}
                       className={`relative text-left rounded-xl border p-4 transition-all ${
                         active
-                          ? "border-brand-600 ring-2 ring-brand-100"
+                          ? "border-azure-600 ring-2 ring-azure-100"
                           : "border-slate-200 hover:border-slate-300"
                       }`}
                     >
                       {p.popular && (
-                        <span className="absolute top-3 right-3 text-[10px] font-bold bg-brand-600 text-white px-2 py-0.5 rounded-full">
+                        <span className="absolute top-3 right-3 text-[10px] font-bold bg-azure-600 text-white px-2 py-0.5 rounded-full">
                           Populer
                         </span>
                       )}
@@ -353,7 +353,7 @@ export function RegisterForm({
                         <span
                           className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                             active
-                              ? "border-brand-600 bg-brand-600"
+                              ? "border-azure-600 bg-azure-600"
                               : "border-slate-300"
                           }`}
                         >
@@ -384,7 +384,7 @@ export function RegisterForm({
                           >
                             <Check
                               size={13}
-                              className="text-brand-600 flex-none"
+                              className="text-azure-600 flex-none"
                             />
                             {f}
                           </li>
@@ -399,7 +399,7 @@ export function RegisterForm({
             <button
               type="submit"
               disabled={register.isPending}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-azure-600 hover:bg-azure-700 disabled:opacity-60 text-white py-3 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {register.isPending ? (
                 <Loader2 size={16} className="animate-spin" />

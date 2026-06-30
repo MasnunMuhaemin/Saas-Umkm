@@ -24,7 +24,7 @@ export function ForgotForm() {
         </Link>
 
         <div className="glass-card rounded-3xl p-8 shadow-float">
-          <div className="w-12 h-12 rounded-2xl bg-brand-600 flex items-center justify-center mb-5 shadow-glow">
+          <div className="w-12 h-12 rounded-2xl bg-azure-600 flex items-center justify-center mb-5 shadow-glow">
             <Mail size={22} className="text-white" />
           </div>
           <h1 className="font-display text-2xl font-extrabold text-slate-900 mb-1">
@@ -58,13 +58,13 @@ export function ForgotForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="nama@email.com"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-azure-400 focus:bg-white focus:ring-4 focus:ring-azure-100 transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={forgot.isPending}
-                className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
+                className="w-full bg-azure-600 hover:bg-azure-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
               >
                 {forgot.isPending && <Loader2 size={16} className="animate-spin" />}
                 {forgot.isPending ? "Mengirim..." : "Kirim Link Reset"}

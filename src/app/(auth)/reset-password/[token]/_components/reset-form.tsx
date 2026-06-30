@@ -24,7 +24,7 @@ export function ResetForm({ token }: { token: string }) {
     <div className="min-h-screen bg-mesh flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="glass-card rounded-3xl p-8 shadow-float">
-          <div className="w-12 h-12 rounded-2xl bg-brand-600 flex items-center justify-center mb-5 shadow-glow">
+          <div className="w-12 h-12 rounded-2xl bg-azure-600 flex items-center justify-center mb-5 shadow-glow">
             <Lock size={22} className="text-white" />
           </div>
           <h1 className="font-display text-2xl font-extrabold text-slate-900 mb-1">
@@ -54,7 +54,7 @@ export function ResetForm({ token }: { token: string }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password baru (min. 6 karakter)"
-                className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100 transition-all"
+                className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-azure-400 focus:bg-white focus:ring-4 focus:ring-azure-100 transition-all"
               />
               <button
                 type="button"
@@ -68,7 +68,7 @@ export function ResetForm({ token }: { token: string }) {
             <button
               type="submit"
               disabled={reset.isPending}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
+              className="w-full bg-azure-600 hover:bg-azure-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2"
             >
               {reset.isPending && <Loader2 size={16} className="animate-spin" />}
               {reset.isPending ? "Menyimpan..." : "Simpan Password"}

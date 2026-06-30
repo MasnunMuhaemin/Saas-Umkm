@@ -50,7 +50,7 @@ function InputField({
           className={`w-full pl-10 pr-10 py-3 bg-slate-50 border rounded-xl text-sm transition-all focus:outline-none focus:bg-white focus:ring-4 ${
             error
               ? "border-red-300 focus:ring-red-100"
-              : "border-slate-200 focus:border-brand-400 focus:ring-brand-100"
+              : "border-slate-200 focus:border-azure-400 focus:ring-azure-100"
           }`}
         />
         {rightElement && (
@@ -121,7 +121,7 @@ export function LoginForm() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* ---- Brand panel ---- */}
-      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-brand-600 overflow-hidden">
+      <div className="relative hidden lg:flex flex-col justify-between p-12 bg-azure-600 overflow-hidden">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-2xl" />
           <div className="relative">
             <Link href="/" className="flex items-center gap-2.5">
@@ -135,7 +135,7 @@ export function LoginForm() {
           </div>
 
           <div className="relative">
-            <p className="text-brand-200 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+            <p className="text-azure-200 text-xs font-bold uppercase tracking-[0.2em] mb-4">
               Selamat datang kembali
             </p>
             <h2 className="font-display text-3xl font-extrabold text-white leading-tight mb-6">
@@ -164,7 +164,7 @@ export function LoginForm() {
         <div className="w-full max-w-md">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-brand-600 mb-7 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-azure-600 mb-7 transition-colors"
           >
             <ArrowLeft size={16} /> Kembali ke Beranda
           </Link>
@@ -177,7 +177,7 @@ export function LoginForm() {
               Belum punya toko?{" "}
               <Link
                 href="/register"
-                className="font-semibold text-brand-600 hover:text-brand-700"
+                className="font-semibold text-azure-600 hover:text-azure-700"
               >
                 Daftar sekarang
               </Link>
@@ -225,7 +225,7 @@ export function LoginForm() {
                   id="login-remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
+                  className="w-4 h-4 text-azure-600 rounded border-slate-300 focus:ring-azure-500"
                 />
                 <label
                   htmlFor="login-remember"
@@ -236,7 +236,7 @@ export function LoginForm() {
               </div>
               <Link
                 href="/forgot-password"
-                className="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors"
+                className="text-sm font-semibold text-azure-600 hover:text-azure-700 transition-colors"
               >
                 Lupa password?
               </Link>
@@ -251,7 +251,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm"
+              className="w-full bg-azure-600 hover:bg-azure-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold transition-all active:scale-[0.98] text-sm"
             >
               {loading ? "Memproses..." : "Masuk ke Dashboard"}
             </button>
