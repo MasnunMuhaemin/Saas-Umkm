@@ -7,10 +7,10 @@ export default async function GlobalStatsPage() {
   const s = await api.superadmin.dashboard.globalStats();
 
   const cards = [
-    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "bg-brand-600" },
-    { label: "Total Transaksi", value: String(s.totalOrders), icon: ShoppingCart, tint: "bg-brand-600" },
-    { label: "Total Omzet Platform", value: formatRupiah(s.totalRevenue), icon: DollarSign, tint: "bg-brand-600" },
-    { label: "Pageviews (7 hari)", value: String(s.pageviews7d), icon: Eye, tint: "bg-brand-600" },
+    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "bg-azure-600" },
+    { label: "Total Transaksi", value: String(s.totalOrders), icon: ShoppingCart, tint: "bg-azure-600" },
+    { label: "Total Omzet Platform", value: formatRupiah(s.totalRevenue), icon: DollarSign, tint: "bg-azure-600" },
+    { label: "Pageviews (7 hari)", value: String(s.pageviews7d), icon: Eye, tint: "bg-azure-600" },
   ];
   const maxProducts = Math.max(1, ...s.topTenants.map((t) => t.products));
 
@@ -52,7 +52,7 @@ export default async function GlobalStatsPage() {
           <div className="space-y-4">
             {s.topTenants.map((t, i) => (
               <div key={t.slug} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
+                <div className="w-7 h-7 rounded-lg bg-azure-500 text-white flex items-center justify-center font-bold text-xs flex-none shadow-soft">
                   #{i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -64,7 +64,7 @@ export default async function GlobalStatsPage() {
                   </div>
                   <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-brand-500 rounded-full"
+                      className="h-full bg-azure-500 rounded-full"
                       style={{ width: `${(t.products / maxProducts) * 100}%` }}
                     />
                   </div>

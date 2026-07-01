@@ -81,7 +81,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
                 value={form[f.k]}
                 onChange={(e) => set(f.k, e.target.value)}
                 placeholder={f.ph}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
               />
             </div>
           ))}
@@ -95,7 +95,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
                 value={form.password}
                 onChange={(e) => set("password", e.target.value)}
                 placeholder="min. 6 karakter"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
               />
             </div>
             <div>
@@ -105,7 +105,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
               <select
                 value={form.planSlug}
                 onChange={(e) => set("planSlug", e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
               >
                 <option value="basic">Basic</option>
                 <option value="plus">Plus</option>
@@ -117,14 +117,14 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
           <button
             onClick={onClose}
             disabled={create.isPending}
-            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
           <button
             onClick={() => create.mutate(form)}
             disabled={create.isPending}
-            className="flex-1 px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="btn-admin btn-admin-primary flex-1"
           >
             {create.isPending && <Loader2 size={16} className="animate-spin" />}
             {create.isPending ? "Membuat..." : "Buat Tenant"}
@@ -136,7 +136,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
 }
 
 const modalInputCls =
-  "w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all";
+  "w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all";
 
 function EditTenantModal({
   tenant,
@@ -257,14 +257,14 @@ function EditTenantModal({
           <button
             onClick={onClose}
             disabled={update.isPending}
-            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
           <button
             onClick={() => update.mutate({ id: tenant.id, ...form })}
             disabled={update.isPending}
-            className="flex-1 px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="btn-admin btn-admin-primary flex-1"
           >
             {update.isPending && <Loader2 size={16} className="animate-spin" />}
             {update.isPending ? "Menyimpan..." : "Simpan"}
@@ -316,14 +316,14 @@ function DeleteTenantDialog({
           <button
             onClick={onClose}
             disabled={del.isPending}
-            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-colors disabled:opacity-50"
+            className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
           <button
             onClick={() => del.mutate({ id: tenant.id })}
             disabled={del.isPending}
-            className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="btn-admin btn-admin-danger flex-1"
           >
             {del.isPending && <Loader2 size={16} className="animate-spin" />}
             {del.isPending ? "Menghapus..." : "Hapus"}
@@ -383,7 +383,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
         </div>
         <button
           onClick={() => setCreateOpen(true)}
-          className="flex items-center gap-2 bg-brand-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-brand-700 active:scale-[0.98] transition-all"
+          className="btn-admin btn-admin-primary"
         >
           <Plus size={16} /> Buat Tenant
         </button>
@@ -420,7 +420,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
                         href={`https://${t.slug}.${ROOT_DOMAIN}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-brand-600 hover:underline inline-flex items-center gap-1"
+                        className="text-xs text-azure-600 hover:underline inline-flex items-center gap-1"
                       >
                         {t.slug}.{ROOT_DOMAIN} <ExternalLink size={11} />
                       </a>
@@ -461,7 +461,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
                         <button
                           onClick={() => setEditTarget(t)}
                           aria-label="Edit tenant"
-                          className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-azure-600 hover:bg-azure-50 rounded-lg transition-colors"
                         >
                           <Pencil size={15} />
                         </button>

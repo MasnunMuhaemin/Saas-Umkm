@@ -62,7 +62,7 @@ export function AdminShell({
         } fixed inset-y-0 left-0 z-50 md:relative flex-none bg-slate-900 text-slate-300 h-full flex flex-col transition-transform border-r border-white/5`}
       >
         <div className="flex items-center gap-3 p-4 border-b border-white/5">
-          <div className="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center flex-none shadow-glow">
+          <div className="w-9 h-9 bg-azure-600 rounded-xl flex items-center justify-center flex-none shadow-glow">
             <Shield size={17} className="text-white" />
           </div>
           <div className="flex flex-col min-w-0">
@@ -91,13 +91,13 @@ export function AdminShell({
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-brand-600 text-white"
+                    ? "bg-azure-600 text-white"
                     : "text-slate-300 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 <Icon
                   size={17}
-                  className={isActive ? "text-brand-300" : ""}
+                  className={isActive ? "text-azure-300" : ""}
                 />
                 {item.label}
               </Link>

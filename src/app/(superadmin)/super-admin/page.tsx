@@ -14,12 +14,12 @@ export default async function AdminDashboard() {
   const s = await api.superadmin.dashboard.stats();
 
   const cards = [
-    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, tint: "bg-brand-600" },
-    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, tint: "bg-brand-600" },
-    { label: "Trial", value: String(s.trial), icon: Clock, tint: "bg-brand-600" },
-    { label: "Suspended", value: String(s.suspended), icon: Ban, tint: "bg-brand-600" },
-    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "bg-brand-600" },
-    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, tint: "bg-brand-600" },
+    { label: "Total Tenant", value: String(s.totalTenants), icon: Users, tint: "bg-azure-600" },
+    { label: "Tenant Aktif", value: String(s.active), icon: CheckCircle, tint: "bg-azure-600" },
+    { label: "Trial", value: String(s.trial), icon: Clock, tint: "bg-azure-600" },
+    { label: "Suspended", value: String(s.suspended), icon: Ban, tint: "bg-azure-600" },
+    { label: "Total Produk", value: String(s.totalProducts), icon: Package, tint: "bg-azure-600" },
+    { label: "Est. MRR", value: formatRupiah(s.mrr), icon: CreditCard, tint: "bg-azure-600" },
   ];
 
   const maxPlan = Math.max(1, ...s.planDist.map((p) => p.count));
@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
               </span>
               <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-brand-600 rounded-full"
+                  className="h-full bg-azure-600 rounded-full"
                   style={{ width: `${(p.count / maxPlan) * 100}%` }}
                 />
               </div>

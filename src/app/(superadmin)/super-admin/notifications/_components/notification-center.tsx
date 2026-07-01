@@ -12,7 +12,7 @@ type Notif =
   inferRouterOutputs<AppRouter>["superadmin"]["notification"]["list"][number];
 
 const TYPE_STYLE: Record<string, string> = {
-  info: "bg-brand-500 text-white",
+  info: "bg-azure-500 text-white",
   warning: "bg-amber-500 text-white",
   success: "bg-emerald-500 text-white",
   error: "bg-rose-500 text-white",
@@ -64,7 +64,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
         <button
           onClick={() => markAll.mutate()}
           disabled={markAll.isPending}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-azure-600 hover:underline disabled:opacity-50"
         >
           <CheckCheck size={15} /> Tandai semua dibaca
         </button>
@@ -78,12 +78,12 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Judul"
-            className="sm:col-span-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+            className="sm:col-span-2 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
           />
           <select
             value={type}
             onChange={(e) => setType(e.target.value as typeof type)}
-            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
           >
             <option value="info">Info</option>
             <option value="warning">Peringatan</option>
@@ -96,7 +96,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
           onChange={(e) => setMessage(e.target.value)}
           rows={2}
           placeholder="Pesan..."
-          className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all resize-none"
+          className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all resize-none"
         />
         <button
           onClick={() => {
@@ -105,7 +105,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
             create.mutate({ title, message, type });
           }}
           disabled={create.isPending}
-          className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all"
+          className="btn-admin btn-admin-primary"
         >
           {create.isPending ? (
             <Loader2 size={15} className="animate-spin" />
@@ -130,7 +130,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
                 key={n.id}
                 className={cn(
                   "flex items-start gap-3 p-4 transition-colors",
-                  !n.isRead && "bg-brand-50/40",
+                  !n.isRead && "bg-azure-50/40",
                 )}
               >
                 <div
@@ -156,7 +156,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
                 {!n.isRead && (
                   <button
                     onClick={() => markRead.mutate({ id: n.id })}
-                    className="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors flex-none"
+                    className="p-1.5 text-slate-400 hover:text-azure-600 hover:bg-azure-50 rounded-lg transition-colors flex-none"
                     title="Tandai dibaca"
                   >
                     <Check size={16} />

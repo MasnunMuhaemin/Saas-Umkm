@@ -196,6 +196,51 @@ h6 {
     color: var(--color-muted);
   }
 
+  /* Tombol premium (pill) — dipakai di seluruh dashboard super admin/merchant
+     agar konsisten dengan bahasa desain landing (azure, hover-lift halus). */
+  .btn-admin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-admin:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn-admin-primary {
+    background: var(--color-azure);
+    color: #fff;
+  }
+  .btn-admin-primary:hover {
+    background: var(--color-azure-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(0, 158, 245, 0.45);
+  }
+  .btn-admin-outline {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    color: var(--color-foreground);
+  }
+  .btn-admin-outline:hover {
+    background: var(--color-gray-50, #fafafa);
+    border-color: #cbd5e1;
+  }
+  .btn-admin-danger {
+    background: #dc2626;
+    color: #fff;
+  }
+  .btn-admin-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(220, 38, 38, 0.4);
+  }
+
   /* "glass" sekarang = permukaan solid bersih (tanpa blur) */
   .glass {
     background: #ffffff;

@@ -24,7 +24,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
       onClick={onToggle}
       className={cn(
         "relative w-9 h-5 rounded-full transition-colors flex-none",
-        on ? "bg-brand-600" : "bg-slate-300",
+        on ? "bg-azure-600" : "bg-slate-300",
       )}
     >
       <span
@@ -91,7 +91,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
           />
         </div>
         <div>
@@ -103,7 +103,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             value={maxProducts}
             onChange={(e) => setMaxProducts(e.target.value)}
             placeholder="unlimited"
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-100 transition-all"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
           />
         </div>
       </div>
@@ -125,7 +125,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <button
         onClick={save}
         disabled={update.isPending}
-        className="w-full bg-brand-600 hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50 text-white py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
+        className="btn-admin btn-admin-primary w-full"
       >
         {update.isPending && <Loader2 size={16} className="animate-spin" />}
         Simpan Paket

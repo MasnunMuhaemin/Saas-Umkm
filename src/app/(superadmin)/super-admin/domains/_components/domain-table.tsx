@@ -69,7 +69,7 @@ function EditDomainModal({
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="tokosaya.com"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-brand-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-azure-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-azure-100"
             />
             <p className="mt-1 text-xs text-slate-400">
               Kosongkan untuk kembali ke subdomain bawaan ({tenant.slug}.
@@ -81,7 +81,7 @@ function EditDomainModal({
           <button
             onClick={onClose}
             disabled={setDomain.isPending}
-            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
+            className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
@@ -93,7 +93,7 @@ function EditDomainModal({
               })
             }
             disabled={setDomain.isPending}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 font-bold text-white transition-all hover:bg-brand-700 active:scale-[0.98] disabled:opacity-50"
+            className="btn-admin btn-admin-primary flex-1"
           >
             {setDomain.isPending && (
               <Loader2 size={16} className="animate-spin" />
@@ -147,7 +147,7 @@ function RemoveDomainDialog({
           <button
             onClick={onClose}
             disabled={setDomain.isPending}
-            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
+            className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
@@ -156,7 +156,7 @@ function RemoveDomainDialog({
               setDomain.mutate({ id: tenant.id, customDomain: null })
             }
             disabled={setDomain.isPending}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 font-bold text-white transition-all hover:bg-red-700 active:scale-[0.98] disabled:opacity-50"
+            className="btn-admin btn-admin-danger flex-1"
           >
             {setDomain.isPending && (
               <Loader2 size={16} className="animate-spin" />
@@ -231,7 +231,7 @@ export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
                         href={`https://${t.customDomain}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-mono text-brand-600 hover:underline"
+                        className="inline-flex items-center gap-1 font-mono text-azure-600 hover:underline"
                       >
                         {t.customDomain} <ExternalLink size={12} />
                       </a>
@@ -247,7 +247,7 @@ export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
                       <button
                         onClick={() => setEditTarget(t)}
                         aria-label="Edit domain"
-                        className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-brand-50 hover:text-brand-600"
+                        className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-azure-50 hover:text-azure-600"
                       >
                         <Pencil size={15} />
                       </button>
