@@ -90,7 +90,7 @@ export function CouponManager({ initial }: { initial: Coupons }) {
           <select
             value={type}
             onChange={(e) => setType(e.target.value as "PERCENT" | "FIXED")}
-            className={inputCls}
+            className="admin-select"
           >
             <option value="PERCENT">Persen (%)</option>
             <option value="FIXED">Nominal (Rp)</option>

@@ -84,7 +84,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
             <select
               value={form.planSlug}
               onChange={(e) => set("planSlug", e.target.value)}
-              className="admin-input"
+              className="admin-select"
             >
               <option value="basic">Basic</option>
               <option value="plus">Plus</option>
@@ -171,7 +171,7 @@ function EditTenantModal({
               onChange={(e) =>
                 set("planSlug", e.target.value as "basic" | "plus")
               }
-              className="admin-input"
+              className="admin-select"
             >
               <option value="basic">Basic</option>
               <option value="plus">Plus</option>
@@ -187,7 +187,7 @@ function EditTenantModal({
                   e.target.value as "ACTIVE" | "TRIAL" | "SUSPENDED" | "EXPIRED",
                 )
               }
-              className="admin-input"
+              className="admin-select"
             >
               <option value="ACTIVE">Aktif</option>
               <option value="TRIAL">Trial</option>

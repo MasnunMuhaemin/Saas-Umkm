@@ -377,3 +377,26 @@ h6 {
   border-color: var(--color-azure);
   box-shadow: 0 0 0 4px rgba(0, 158, 245, 0.15);
 }
+
+/* Dropdown bersih — hilangkan panah default OS, ganti chevron kustom */
+.admin-select {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+  padding: 0.625rem 2.25rem 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #171717;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  transition: all 0.15s ease;
+}
+.admin-select:focus {
+  outline: none;
+  border-color: var(--color-azure);
+  box-shadow: 0 0 0 4px rgba(0, 158, 245, 0.15);
+}

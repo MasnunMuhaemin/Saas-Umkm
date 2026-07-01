@@ -83,7 +83,7 @@ export function NotificationCenter({ initial }: { initial: Notif[] }) {
           <select
             value={type}
             onChange={(e) => setType(e.target.value as typeof type)}
-            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
+            className="admin-select"
           >
             <option value="info">Info</option>
             <option value="warning">Peringatan</option>
