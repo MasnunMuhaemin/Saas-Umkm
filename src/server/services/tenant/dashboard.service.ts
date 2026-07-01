@@ -50,7 +50,7 @@ export const dashboardService = {
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
 
-    const [tenant, activeProducts, ordersThisMonth, revenueAgg, recentOrders, topProducts, weekOrders] =
+    const [tenant, activeProducts, ordersThisMonth, revenueAgg, recentOrders, topProducts, weekOrders, lowStock] =
       await Promise.all([
         prisma.tenant.findUniqueOrThrow({
           where: { id: tenantId },
@@ -84,6 +84,13 @@ export const dashboardService = {
         prisma.order.findMany({
           where: { tenantId, createdAt: { gte: weekAgo } },
           select: { total: true, createdAt: true },
+        }),
+        // Produk aktif dengan stok menipis (<= 5) untuk alert dashboard.
+        prisma.product.findMany({
+          where: { tenantId, status: "ACTIVE", stock: { lte: 5 } },
+          orderBy: { stock: "asc" },
+          take: 6,
+          select: { id: true, name: true, stock: true },
         }),
       ]);
 
@@ -124,6 +131,7 @@ export const dashboardService = {
         date: formatDate(o.createdAt),
         customerName: o.customer?.name ?? "Walk-in",
       })),
+      lowStock,
     };
   },
 

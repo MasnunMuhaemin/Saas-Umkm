@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  AlertTriangle,
   ArrowRight,
   BarChart2,
   CheckCircle2,
@@ -20,8 +21,15 @@ export default async function DashboardHome() {
     api.dashboard.overview(),
     api.dashboard.setupStatus(),
   ]);
-  const { stats, salesSeries, topProducts, recentOrders, storeUrl, storeHref } =
-    data;
+  const {
+    stats,
+    salesSeries,
+    topProducts,
+    recentOrders,
+    storeUrl,
+    storeHref,
+    lowStock,
+  } = data;
 
   const cards = [
     {
@@ -67,6 +75,35 @@ export default async function DashboardHome() {
           <Package size={15} /> Tambah Produk
         </Link>
       </div>
+
+      {/* Alert stok menipis */}
+      {lowStock.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <div className="mb-3 flex items-center gap-2">
+            <AlertTriangle size={18} className="text-amber-600" />
+            <h3 className="font-bold text-amber-900">
+              Stok Menipis ({lowStock.length})
+            </h3>
+            <span className="text-sm text-amber-700/80">
+              — segera isi ulang biar tidak kehabisan
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {lowStock.map((p) => (
+              <Link
+                key={p.id}
+                href={`/dashboard/products/${p.id}/edit`}
+                className="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-white px-3 py-1.5 text-sm transition-colors hover:border-amber-400"
+              >
+                <span className="font-medium text-slate-800">{p.name}</span>
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
+                  sisa {p.stock}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Onboarding — kelengkapan setup toko */}
       {setup.percent < 100 && (
