@@ -3,6 +3,7 @@ import { router, superAdminProcedure } from "@/server/trpc";
 import { superAdminTenantService } from "@/server/services/superadmin/tenant.service";
 import {
   createTenantSchema,
+  setCustomDomainSchema,
   updateTenantSchema,
 } from "@/lib/validations/superadmin.schema";
 
@@ -31,5 +32,11 @@ export const tenantAdminRouter = router({
     .input(z.object({ id: z.string(), status: z.enum(["ACTIVE", "SUSPENDED"]) }))
     .mutation(({ ctx, input }) =>
       superAdminTenantService.setStatus(input.id, input.status, ctx.user.id),
+    ),
+
+  setCustomDomain: superAdminProcedure
+    .input(setCustomDomainSchema)
+    .mutation(({ ctx, input }) =>
+      superAdminTenantService.setCustomDomain(input, ctx.user.id),
     ),
 });

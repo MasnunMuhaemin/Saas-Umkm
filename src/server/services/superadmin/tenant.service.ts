@@ -6,6 +6,7 @@ import { sendEmail } from "@/lib/email/client";
 import { welcomeEmail } from "@/lib/email/templates";
 import type {
   CreateTenantInput,
+  SetCustomDomainInput,
   UpdateTenantInput,
 } from "@/lib/validations/superadmin.schema";
 import type { Prisma } from "@/generated/prisma/client";
@@ -163,6 +164,33 @@ export const superAdminTenantService = {
       tenantId: input.id,
       action: "tenant.update",
       metadata: { slug: input.slug, plan: input.planSlug, status: input.status },
+    });
+    return { ok: true };
+  },
+
+  /** Set atau hapus (customDomain: null) domain custom tenant. Dicatat audit. */
+  async setCustomDomain(input: SetCustomDomainInput, adminUserId: string) {
+    if (input.customDomain) {
+      const used = await prisma.tenant.findFirst({
+        where: { customDomain: input.customDomain, NOT: { id: input.id } },
+        select: { id: true },
+      });
+      if (used)
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Domain sudah dipakai tenant lain.",
+        });
+    }
+
+    await prisma.tenant.update({
+      where: { id: input.id },
+      data: { customDomain: input.customDomain },
+    });
+    await logAudit({
+      userId: adminUserId,
+      tenantId: input.id,
+      action: input.customDomain ? "tenant.domain.set" : "tenant.domain.clear",
+      metadata: { customDomain: input.customDomain },
     });
     return { ok: true };
   },

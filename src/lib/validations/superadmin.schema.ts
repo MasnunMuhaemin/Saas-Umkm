@@ -27,6 +27,21 @@ export const updateTenantSchema = z.object({
 });
 export type UpdateTenantInput = z.infer<typeof updateTenantSchema>;
 
+export const setCustomDomainSchema = z.object({
+  id: z.string(),
+  customDomain: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(255)
+    .regex(
+      /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/,
+      "Domain tidak valid (mis. tokosaya.com)",
+    )
+    .nullable(),
+});
+export type SetCustomDomainInput = z.infer<typeof setCustomDomainSchema>;
+
 export const planUpdateSchema = z.object({
   price: z.number().int().min(0),
   maxProducts: z.number().int().min(0).nullable(),
