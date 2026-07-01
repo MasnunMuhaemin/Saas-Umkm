@@ -21,7 +21,11 @@ export default async function DashboardLayout({
   const shell = await api.dashboard.shell();
 
   return (
-    <DashboardShell shell={shell} userName={session.user.name ?? "Pengguna"}>
+    <DashboardShell
+      shell={shell}
+      userName={session.user.name ?? "Pengguna"}
+      isOwner={session.user.tenantRole === "OWNER"}
+    >
       {children}
     </DashboardShell>
   );

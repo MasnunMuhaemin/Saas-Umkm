@@ -25,7 +25,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const user = await prisma.user.findUnique({
           where: { email: parsed.data.email },
-          include: { tenant: { select: { id: true } } },
+          include: {
+            tenant: { select: { id: true } },
+            tenantUsers: {
+              select: { tenantId: true, role: true },
+              take: 1,
+            },
+          },
         });
         if (!user) return null;
 
@@ -34,12 +40,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         clearRateLimit(rlKey); // sukses → reset counter
 
+        // tenantId: pemilik (user.tenant) atau anggota staff (tenantUsers).
+        const staff = user.tenantUsers[0];
+        const tenantId = user.tenant?.id ?? staff?.tenantId ?? null;
+        const tenantRole = user.tenant?.id
+          ? ("OWNER" as const)
+          : staff
+            ? (staff.role as "OWNER" | "STAFF")
+            : null;
+
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           role: user.role,
-          tenantId: user.tenant?.id ?? null,
+          tenantId,
+          tenantRole,
         };
       },
     }),

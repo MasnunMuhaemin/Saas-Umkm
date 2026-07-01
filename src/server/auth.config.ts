@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
 type AppRole = "SUPERADMIN" | "MERCHANT";
+type AppTenantRole = "OWNER" | "STAFF" | null;
 
 /**
  * Config Auth.js EDGE-SAFE (tanpa Prisma/bcrypt) — dipakai di middleware untuk
@@ -15,6 +16,7 @@ export const authConfig = {
       if (user) {
         token.role = user.role;
         token.tenantId = user.tenantId;
+        token.tenantRole = user.tenantRole ?? null;
       }
       return token;
     },
@@ -25,6 +27,7 @@ export const authConfig = {
         session.user.id = (token.sub ?? "") as string;
         session.user.role = token.role as AppRole;
         session.user.tenantId = (token.tenantId ?? null) as string | null;
+        session.user.tenantRole = (token.tenantRole ?? null) as AppTenantRole;
       }
       return session;
     },

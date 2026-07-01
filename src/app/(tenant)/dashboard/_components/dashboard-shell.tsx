@@ -22,6 +22,7 @@ import {
   Package,
   Store,
   Tag,
+  UserCog,
   Users,
   X,
 } from "lucide-react";
@@ -35,7 +36,13 @@ type ShellData = {
 
 type NavItem =
   | { section: string }
-  | { href: string; label: string; icon: React.ElementType; plus?: boolean };
+  | {
+      href: string;
+      label: string;
+      icon: React.ElementType;
+      plus?: boolean;
+      owner?: boolean;
+    };
 
 const NAV: NavItem[] = [
   { section: "Utama" },
@@ -50,6 +57,7 @@ const NAV: NavItem[] = [
   { section: "Lainnya" },
   { href: "/dashboard/notifications", label: "Notifikasi", icon: Bell },
   { href: "/dashboard/stats", label: "Statistik", icon: BarChart2 },
+  { href: "/dashboard/staff", label: "Kelola Staff", icon: UserCog, owner: true },
   { href: "/dashboard/billing", label: "Langganan", icon: CreditCard },
   { href: "/dashboard/settings", label: "Profil Bisnis", icon: Store },
 ];
@@ -66,10 +74,12 @@ function initials(name: string) {
 export function DashboardShell({
   shell,
   userName,
+  isOwner,
   children,
 }: {
   shell: ShellData;
   userName: string;
+  isOwner: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -146,6 +156,7 @@ export function DashboardShell({
                 </p>
               );
             }
+            if (item.owner && !isOwner) return null;
             const Icon = item.icon;
             const isActive = pathname === item.href;
             const isLocked = isBasic && item.plus;

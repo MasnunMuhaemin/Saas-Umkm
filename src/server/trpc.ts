@@ -45,6 +45,17 @@ export const merchantProcedure = protectedProcedure.use(({ ctx, next }) => {
   return next({ ctx: { tenantId: ctx.user.tenantId } });
 });
 
+/** Area merchant khusus PEMILIK (billing, kelola staff). Staff ditolak. */
+export const ownerProcedure = merchantProcedure.use(({ ctx, next }) => {
+  if (ctx.user.tenantRole !== "OWNER") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Hanya pemilik toko yang bisa melakukan ini.",
+    });
+  }
+  return next();
+});
+
 /** Area super admin. */
 export const superAdminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "SUPERADMIN") throw new TRPCError({ code: "FORBIDDEN" });
