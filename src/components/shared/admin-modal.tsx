@@ -1,12 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
  * Modal shell premium untuk dashboard super admin/merchant.
- * Backdrop halus + kartu putih rounded-2xl + judul Inter. Tutup via klik luar
- * atau tombol X. `title` opsional (dialog konfirmasi tak memakainya).
+ * Di-render via PORTAL ke <body> agar `fixed inset-0` selalu relatif ke
+ * viewport (full layar) — tidak terjebak containing-block dari ancestor
+ * ber-transform (mis. div `animate-fade-up`).
  */
 export function AdminModal({
   onClose,
@@ -19,7 +22,21 @@ export function AdminModal({
   size?: "sm" | "md";
   children: React.ReactNode;
 }) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    // Kunci scroll body selama modal terbuka.
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className="admin fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/50 p-4 backdrop-blur-[3px] animate-fade-in"
       onClick={onClose}
@@ -48,6 +65,7 @@ export function AdminModal({
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
