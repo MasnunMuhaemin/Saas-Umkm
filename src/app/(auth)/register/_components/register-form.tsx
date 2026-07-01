@@ -11,6 +11,8 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
+  Eye,
+  EyeOff,
   Loader2,
   Store,
 } from "lucide-react";
@@ -73,6 +75,9 @@ export function RegisterForm({
   const [ownerName, setOwnerName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [planSlug, setPlanSlug] = useState<"basic" | "plus">(defaultPlan);
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [invoice, setInvoice] = useState<Invoice | null>(null);
@@ -106,6 +111,8 @@ export function RegisterForm({
     if (!ownerName.trim()) next.ownerName = "Nama pemilik wajib diisi";
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) next.email = "Email tidak valid";
     if (password.length < 6) next.password = "Password minimal 6 karakter";
+    if (!confirm) next.confirm = "Ulangi password";
+    else if (confirm !== password) next.confirm = "Password tidak cocok";
     setErrs(next);
     if (Object.keys(next).length) return;
 
@@ -310,18 +317,53 @@ export function RegisterForm({
                 />
                 {err("email")}
               </div>
-              <div className="sm:col-span-2">
+              <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Minimal 6 karakter"
-                  className={field("password")}
-                />
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Minimal 6 karakter"
+                    className={`${field("password")} pr-11`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((v) => !v)}
+                    aria-label={showPw ? "Sembunyikan password" : "Lihat password"}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {err("password")}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Konfirmasi Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirm ? "text" : "password"}
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    placeholder="Ulangi password"
+                    className={`${field("confirm")} pr-11`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm((v) => !v)}
+                    aria-label={
+                      showConfirm ? "Sembunyikan password" : "Lihat password"
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {err("confirm")}
               </div>
             </div>
 
