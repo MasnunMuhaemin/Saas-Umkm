@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc/client";
 import {
   BarChart2,
   Bell,
@@ -47,6 +48,7 @@ const NAV: NavItem[] = [
   { section: "Website" },
   { href: "/dashboard/store-builder", label: "Website Builder", icon: Globe },
   { section: "Lainnya" },
+  { href: "/dashboard/notifications", label: "Notifikasi", icon: Bell },
   { href: "/dashboard/stats", label: "Statistik", icon: BarChart2 },
   { href: "/dashboard/billing", label: "Langganan", icon: CreditCard },
   { href: "/dashboard/settings", label: "Profil Bisnis", icon: Store },
@@ -73,6 +75,10 @@ export function DashboardShell({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: unread = 0 } = trpc.notification.unreadCount.useQuery(
+    undefined,
+    { refetchInterval: 60000 },
+  );
   const isBasic = shell.planName.toLowerCase() === "basic";
 
   const activeItem = NAV.find((i) => "href" in i && i.href === pathname);
@@ -237,13 +243,18 @@ export function DashboardShell({
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <button
+            <Link
+              href="/dashboard/notifications"
               aria-label="Notifikasi"
               className="relative p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <Bell size={18} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
-            </button>
+              {unread > 0 && (
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                  {unread}
+                </span>
+              )}
+            </Link>
             <div className="w-9 h-9 bg-brand-600 rounded-full flex items-center justify-center shadow-soft">
               <span className="text-white text-xs font-bold">
                 {initials(userName)}
