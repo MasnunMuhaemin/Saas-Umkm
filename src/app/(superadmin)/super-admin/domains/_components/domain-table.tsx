@@ -49,8 +49,8 @@ function EditDomainModal({
           className="admin-input"
         />
         <p className="mt-1.5 text-xs text-neutral-400">
-          Kosongkan untuk kembali ke subdomain bawaan ({tenant.slug}.
-          {ROOT_DOMAIN}).
+          Kosongkan untuk melepas domain custom (kembali ke subdomain bawaan{" "}
+          {tenant.slug}.{ROOT_DOMAIN}).
         </p>
       </div>
       <div className="mt-6 flex justify-end gap-2.5">
@@ -79,7 +79,7 @@ function EditDomainModal({
   );
 }
 
-function RemoveDomainDialog({
+function DeleteTenantDialog({
   tenant,
   onClose,
 }: {
@@ -87,9 +87,9 @@ function RemoveDomainDialog({
   onClose: () => void;
 }) {
   const router = useRouter();
-  const setDomain = trpc.superadmin.tenant.setCustomDomain.useMutation({
+  const del = trpc.superadmin.tenant.delete.useMutation({
     onSuccess: () => {
-      toast.success("Domain custom dihapus");
+      toast.success("Tenant dihapus");
       router.refresh();
       onClose();
     },
@@ -103,32 +103,29 @@ function RemoveDomainDialog({
           <AlertTriangle size={22} />
         </div>
         <h3 className="mb-1.5 text-lg font-semibold tracking-tight text-neutral-900">
-          Hapus Domain Custom?
+          Hapus Tenant?
         </h3>
         <p className="mb-6 text-sm leading-relaxed text-neutral-500">
-          <b className="font-mono text-neutral-700">{tenant.customDomain}</b>{" "}
-          akan dilepas dari <b>{tenant.name}</b>. Toko kembali diakses lewat
-          subdomain bawaan ({tenant.slug}.{ROOT_DOMAIN}).
+          <b className="text-neutral-700">{tenant.name}</b> beserta SEMUA
+          datanya (produk, pesanan, pelanggan, langganan), domain, dan akun
+          pemiliknya akan dihapus <b>permanen</b>. Tindakan ini tidak bisa
+          dibatalkan.
         </p>
         <div className="flex gap-2.5">
           <button
             onClick={onClose}
-            disabled={setDomain.isPending}
+            disabled={del.isPending}
             className="btn-admin btn-admin-outline flex-1"
           >
             Batal
           </button>
           <button
-            onClick={() =>
-              setDomain.mutate({ id: tenant.id, customDomain: null })
-            }
-            disabled={setDomain.isPending}
+            onClick={() => del.mutate({ id: tenant.id })}
+            disabled={del.isPending}
             className="btn-admin btn-admin-danger flex-1"
           >
-            {setDomain.isPending && (
-              <Loader2 size={16} className="animate-spin" />
-            )}
-            Hapus
+            {del.isPending && <Loader2 size={16} className="animate-spin" />}
+            {del.isPending ? "Menghapus..." : "Hapus"}
           </button>
         </div>
       </div>
@@ -138,7 +135,7 @@ function RemoveDomainDialog({
 
 export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
   const [editTarget, setEditTarget] = useState<AdminTenantRow | null>(null);
-  const [removeTarget, setRemoveTarget] = useState<AdminTenantRow | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AdminTenantRow | null>(null);
 
   return (
     <div className="animate-fade-up p-6">
@@ -148,10 +145,10 @@ export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
           onClose={() => setEditTarget(null)}
         />
       )}
-      {removeTarget && (
-        <RemoveDomainDialog
-          tenant={removeTarget}
-          onClose={() => setRemoveTarget(null)}
+      {deleteTarget && (
+        <DeleteTenantDialog
+          tenant={deleteTarget}
+          onClose={() => setDeleteTarget(null)}
         />
       )}
 
@@ -211,20 +208,20 @@ export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => setEditTarget(t)}
-                        aria-label="Edit domain"
+                        aria-label="Kelola domain"
+                        title="Kelola domain custom"
                         className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-azure-50 hover:text-azure-600"
                       >
                         <Pencil size={15} />
                       </button>
-                      {t.customDomain && (
-                        <button
-                          onClick={() => setRemoveTarget(t)}
-                          aria-label="Hapus domain custom"
-                          className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setDeleteTarget(t)}
+                        aria-label="Hapus tenant"
+                        title="Hapus tenant"
+                        className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </td>
                 </tr>
