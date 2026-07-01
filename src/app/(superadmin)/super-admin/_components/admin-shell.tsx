@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   Package,
+  ScrollText,
   Settings,
   Shield,
   Ticket,
@@ -28,6 +29,7 @@ const NAV = [
   { href: "/super-admin/stats", label: "Statistik Global", icon: BarChart2 },
   { href: "/super-admin/notifications", label: "Pusat Notifikasi", icon: Bell },
   { href: "/super-admin/domains", label: "Domain Pool", icon: Globe },
+  { href: "/super-admin/audit", label: "Audit Log", icon: ScrollText },
   { href: "/super-admin/settings", label: "Pengaturan", icon: Settings },
 ] as const;
 
