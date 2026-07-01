@@ -12,16 +12,18 @@ import {
   Pencil,
   Plus,
   Trash2,
-  X,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { formatDate } from "@/lib/helpers/format";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { AdminModal } from "@/components/shared/admin-modal";
 import type { AdminTenantRow } from "@/server/services/superadmin/tenant.service";
 
 type TenantRow = AdminTenantRow;
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
+
+const labelCls = "mb-1.5 block text-sm font-medium text-neutral-700";
 
 function CreateTenantModal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
@@ -46,97 +48,70 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
   });
 
   const fields = [
-    { k: "name", label: "Nama Toko *", ph: "Toko Berkah" },
-    { k: "slug", label: "Subdomain *", ph: "toko-berkah" },
-    { k: "ownerName", label: "Nama Pemilik *", ph: "Andi" },
-    { k: "ownerEmail", label: "Email Login *", ph: "andi@email.com" },
+    { k: "name", label: "Nama Toko", ph: "Toko Berkah" },
+    { k: "slug", label: "Subdomain", ph: "toko-berkah" },
+    { k: "ownerName", label: "Nama Pemilik", ph: "Andi" },
+    { k: "ownerEmail", label: "Email Login", ph: "andi@email.com" },
   ] as const;
 
   return (
-    <div
-      className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl w-full max-w-md shadow-float animate-fade-up"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h3 className="font-display text-lg font-bold text-slate-900">Buat Tenant Baru</h3>
-          <button
-            onClick={onClose}
-            aria-label="Tutup"
-            className="p-1.5 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        <div className="p-6 space-y-3">
-          {fields.map((f) => (
-            <div key={f.k}>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                {f.label}
-              </label>
-              <input
-                value={form[f.k]}
-                onChange={(e) => set(f.k, e.target.value)}
-                placeholder={f.ph}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
-              />
-            </div>
-          ))}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Password *
-              </label>
-              <input
-                type="text"
-                value={form.password}
-                onChange={(e) => set("password", e.target.value)}
-                placeholder="min. 6 karakter"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Paket
-              </label>
-              <select
-                value={form.planSlug}
-                onChange={(e) => set("planSlug", e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all"
-              >
-                <option value="basic">Basic</option>
-                <option value="plus">Plus</option>
-              </select>
-            </div>
+    <AdminModal onClose={onClose} title="Buat Tenant Baru">
+      <div className="space-y-3.5">
+        {fields.map((f) => (
+          <div key={f.k}>
+            <label className={labelCls}>{f.label}</label>
+            <input
+              value={form[f.k]}
+              onChange={(e) => set(f.k, e.target.value)}
+              placeholder={f.ph}
+              className="admin-input"
+            />
+          </div>
+        ))}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelCls}>Password</label>
+            <input
+              type="text"
+              value={form.password}
+              onChange={(e) => set("password", e.target.value)}
+              placeholder="min. 6 karakter"
+              className="admin-input"
+            />
+          </div>
+          <div>
+            <label className={labelCls}>Paket</label>
+            <select
+              value={form.planSlug}
+              onChange={(e) => set("planSlug", e.target.value)}
+              className="admin-input"
+            >
+              <option value="basic">Basic</option>
+              <option value="plus">Plus</option>
+            </select>
           </div>
         </div>
-        <div className="p-6 border-t border-slate-100 flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={create.isPending}
-            className="btn-admin btn-admin-outline flex-1"
-          >
-            Batal
-          </button>
-          <button
-            onClick={() => create.mutate(form)}
-            disabled={create.isPending}
-            className="btn-admin btn-admin-primary flex-1"
-          >
-            {create.isPending && <Loader2 size={16} className="animate-spin" />}
-            {create.isPending ? "Membuat..." : "Buat Tenant"}
-          </button>
-        </div>
       </div>
-    </div>
+      <div className="mt-6 flex justify-end gap-2.5">
+        <button
+          onClick={onClose}
+          disabled={create.isPending}
+          className="btn-admin btn-admin-outline"
+        >
+          Batal
+        </button>
+        <button
+          onClick={() => create.mutate(form)}
+          disabled={create.isPending}
+          className="btn-admin btn-admin-primary"
+        >
+          {create.isPending && <Loader2 size={16} className="animate-spin" />}
+          {create.isPending ? "Membuat..." : "Buat Tenant"}
+        </button>
+      </div>
+    </AdminModal>
   );
 }
-
-const modalInputCls =
-  "w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:border-azure-400 focus:ring-4 focus:ring-azure-100 transition-all";
 
 function EditTenantModal({
   tenant,
@@ -167,111 +142,79 @@ function EditTenantModal({
   });
 
   return (
-    <div
-      className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl w-full max-w-md shadow-float animate-fade-up"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h3 className="font-display text-lg font-bold text-slate-900">
-            Edit Tenant
-          </h3>
-          <button
-            onClick={onClose}
-            aria-label="Tutup"
-            className="p-1.5 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors"
-          >
-            <X size={18} />
-          </button>
+    <AdminModal onClose={onClose} title="Edit Tenant">
+      <div className="space-y-3.5">
+        <div>
+          <label className={labelCls}>Nama Toko</label>
+          <input
+            value={form.name}
+            onChange={(e) => set("name", e.target.value)}
+            className="admin-input"
+          />
         </div>
-        <div className="p-6 space-y-3">
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">
-              Nama Toko
-            </label>
-            <input
-              value={form.name}
-              onChange={(e) => set("name", e.target.value)}
-              className={modalInputCls}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">
-              Subdomain
-            </label>
-            <input
-              value={form.slug}
-              onChange={(e) => set("slug", e.target.value)}
-              className={modalInputCls}
-            />
-            <p className="text-xs text-slate-400 mt-1 font-mono">
-              {form.slug || "toko"}.{ROOT_DOMAIN}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Paket
-              </label>
-              <select
-                value={form.planSlug}
-                onChange={(e) =>
-                  set("planSlug", e.target.value as "basic" | "plus")
-                }
-                className={modalInputCls}
-              >
-                <option value="basic">Basic</option>
-                <option value="plus">Plus</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">
-                Status
-              </label>
-              <select
-                value={form.status}
-                onChange={(e) =>
-                  set(
-                    "status",
-                    e.target.value as
-                      | "ACTIVE"
-                      | "TRIAL"
-                      | "SUSPENDED"
-                      | "EXPIRED",
-                  )
-                }
-                className={modalInputCls}
-              >
-                <option value="ACTIVE">Aktif</option>
-                <option value="TRIAL">Trial</option>
-                <option value="SUSPENDED">Suspend</option>
-                <option value="EXPIRED">Kedaluwarsa</option>
-              </select>
-            </div>
-          </div>
+        <div>
+          <label className={labelCls}>Subdomain</label>
+          <input
+            value={form.slug}
+            onChange={(e) => set("slug", e.target.value)}
+            className="admin-input"
+          />
+          <p className="mt-1.5 font-mono text-xs text-neutral-400">
+            {form.slug || "toko"}.{ROOT_DOMAIN}
+          </p>
         </div>
-        <div className="p-6 border-t border-slate-100 flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={update.isPending}
-            className="btn-admin btn-admin-outline flex-1"
-          >
-            Batal
-          </button>
-          <button
-            onClick={() => update.mutate({ id: tenant.id, ...form })}
-            disabled={update.isPending}
-            className="btn-admin btn-admin-primary flex-1"
-          >
-            {update.isPending && <Loader2 size={16} className="animate-spin" />}
-            {update.isPending ? "Menyimpan..." : "Simpan"}
-          </button>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelCls}>Paket</label>
+            <select
+              value={form.planSlug}
+              onChange={(e) =>
+                set("planSlug", e.target.value as "basic" | "plus")
+              }
+              className="admin-input"
+            >
+              <option value="basic">Basic</option>
+              <option value="plus">Plus</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Status</label>
+            <select
+              value={form.status}
+              onChange={(e) =>
+                set(
+                  "status",
+                  e.target.value as "ACTIVE" | "TRIAL" | "SUSPENDED" | "EXPIRED",
+                )
+              }
+              className="admin-input"
+            >
+              <option value="ACTIVE">Aktif</option>
+              <option value="TRIAL">Trial</option>
+              <option value="SUSPENDED">Suspend</option>
+              <option value="EXPIRED">Kedaluwarsa</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="mt-6 flex justify-end gap-2.5">
+        <button
+          onClick={onClose}
+          disabled={update.isPending}
+          className="btn-admin btn-admin-outline"
+        >
+          Batal
+        </button>
+        <button
+          onClick={() => update.mutate({ id: tenant.id, ...form })}
+          disabled={update.isPending}
+          className="btn-admin btn-admin-primary"
+        >
+          {update.isPending && <Loader2 size={16} className="animate-spin" />}
+          {update.isPending ? "Menyimpan..." : "Simpan"}
+        </button>
+      </div>
+    </AdminModal>
   );
 }
 
@@ -293,26 +236,20 @@ function DeleteTenantDialog({
   });
 
   return (
-    <div
-      className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl w-full max-w-sm shadow-float animate-fade-up p-6 text-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
-          <AlertTriangle size={24} />
+    <AdminModal onClose={onClose} size="sm">
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-red-50 text-red-500">
+          <AlertTriangle size={22} />
         </div>
-        <h3 className="font-display text-lg font-bold text-slate-900 mb-1">
+        <h3 className="mb-1.5 text-lg font-semibold tracking-tight text-neutral-900">
           Hapus Tenant?
         </h3>
-        <p className="text-sm text-slate-500 mb-6">
-          <b>{tenant.name}</b> beserta SEMUA datanya (produk, pesanan, pelanggan,
-          langganan) dan akun pemiliknya akan dihapus <b>permanen</b>. Tindakan
-          ini tidak bisa dibatalkan.
+        <p className="mb-6 text-sm leading-relaxed text-neutral-500">
+          <b className="text-neutral-700">{tenant.name}</b> beserta SEMUA
+          datanya (produk, pesanan, pelanggan, langganan) dan akun pemiliknya
+          akan dihapus <b>permanen</b>. Tindakan ini tidak bisa dibatalkan.
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={onClose}
             disabled={del.isPending}
@@ -330,7 +267,7 @@ function DeleteTenantDialog({
           </button>
         </div>
       </div>
-    </div>
+    </AdminModal>
   );
 }
 
@@ -360,7 +297,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
   };
 
   return (
-    <div className="p-6 animate-fade-up">
+    <div className="animate-fade-up p-6">
       {createOpen && <CreateTenantModal onClose={() => setCreateOpen(false)} />}
       {editTarget && (
         <EditTenantModal
@@ -374,9 +311,11 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
           onClose={() => setDeleteTarget(null)}
         />
       )}
-      <div className="flex items-center justify-between mb-5">
+      <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="font-display text-2xl font-bold text-slate-900 tracking-tight">Manajemen Tenant</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+            Manajemen Tenant
+          </h2>
           <p className="text-sm text-slate-500">
             {tenants.length} tenant terdaftar
           </p>
@@ -389,16 +328,16 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-soft overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left bg-slate-50 border-b border-slate-100">
+              <tr className="border-b border-slate-100 bg-slate-50 text-left">
                 {["Tenant", "Pemilik", "Paket", "Status", "Dibuat", "Aksi"].map(
                   (h) => (
                     <th
                       key={h}
-                      className="px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap"
+                      className="whitespace-nowrap px-4 py-3.5 text-xs font-semibold uppercase tracking-wide text-slate-500"
                     >
                       {h}
                     </th>
@@ -411,39 +350,44 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
                 const isSuspended = t.status === "SUSPENDED";
                 const busy = pendingId === t.id && setStatus.isPending;
                 return (
-                  <tr key={t.id} className="hover:bg-slate-50/60 transition-colors">
+                  <tr
+                    key={t.id}
+                    className="transition-colors hover:bg-slate-50/60"
+                  >
                     <td className="px-4 py-4">
-                      <div className="font-bold text-slate-900 text-sm">
+                      <div className="text-sm font-bold text-slate-900">
                         {t.name}
                       </div>
                       <a
                         href={`https://${t.slug}.${ROOT_DOMAIN}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-azure-600 hover:underline inline-flex items-center gap-1"
+                        className="inline-flex items-center gap-1 text-xs text-azure-600 hover:underline"
                       >
                         {t.slug}.{ROOT_DOMAIN} <ExternalLink size={11} />
                       </a>
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-600">
                       <div>{t.user.name}</div>
-                      <div className="text-xs text-slate-400">{t.user.email}</div>
+                      <div className="text-xs text-slate-400">
+                        {t.user.email}
+                      </div>
                     </td>
-                    <td className="px-4 py-4 text-sm font-medium text-slate-700 whitespace-nowrap">
+                    <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-slate-700">
                       {t.plan.name}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="whitespace-nowrap px-4 py-4">
                       <StatusBadge status={t.status} variant="tenant" />
                     </td>
-                    <td className="px-4 py-4 text-sm text-slate-500 whitespace-nowrap">
+                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-500">
                       {formatDate(t.createdAt)}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap">
+                    <td className="whitespace-nowrap px-4 py-4">
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => toggle(t)}
                           disabled={busy}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 ${
+                          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-50 ${
                             isSuspended
                               ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
                               : "bg-rose-50 text-rose-600 hover:bg-rose-100"
@@ -461,14 +405,14 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
                         <button
                           onClick={() => setEditTarget(t)}
                           aria-label="Edit tenant"
-                          className="p-1.5 text-slate-400 hover:text-azure-600 hover:bg-azure-50 rounded-lg transition-colors"
+                          className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-azure-50 hover:text-azure-600"
                         >
                           <Pencil size={15} />
                         </button>
                         <button
                           onClick={() => setDeleteTarget(t)}
                           aria-label="Hapus tenant"
-                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                         >
                           <Trash2 size={15} />
                         </button>
@@ -481,7 +425,7 @@ export function TenantTable({ tenants }: { tenants: TenantRow[] }) {
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-16 text-center text-slate-400 text-sm"
+                    className="px-4 py-16 text-center text-sm text-slate-400"
                   >
                     Belum ada tenant.
                   </td>

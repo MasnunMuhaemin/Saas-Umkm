@@ -348,3 +348,32 @@ h6 {
 .lp-navlink:hover::after {
   transform: scaleX(1);
 }
+
+/* =====================================================================
+   Admin dashboard (.admin) — heading pakai Inter (bukan Poppins) agar
+   bersih & konsisten dengan landing. Input & modal lebih premium.
+   ===================================================================== */
+.admin :is(h1, h2, h3, h4, h5) {
+  font-family: var(--font-sans);
+  letter-spacing: -0.015em;
+}
+
+/* Input bersih ala design system (putih + focus ring azure halus) */
+.admin-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #171717;
+  transition: all 0.15s ease;
+}
+.admin-input::placeholder {
+  color: #a3a3a3;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: var(--color-azure);
+  box-shadow: 0 0 0 4px rgba(0, 158, 245, 0.15);
+}

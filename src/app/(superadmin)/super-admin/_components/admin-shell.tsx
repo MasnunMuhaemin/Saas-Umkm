@@ -48,7 +48,7 @@ export function AdminShell({
     });
 
   return (
-    <div className="flex h-screen bg-slate-50">
+    <div className="admin flex h-screen bg-slate-50">
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"

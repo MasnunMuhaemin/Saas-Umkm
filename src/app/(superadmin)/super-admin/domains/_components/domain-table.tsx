@@ -3,16 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  AlertTriangle,
-  ExternalLink,
-  Loader2,
-  Pencil,
-  Trash2,
-  X,
-} from "lucide-react";
+import { AlertTriangle, ExternalLink, Loader2, Pencil, Trash2 } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { AdminModal } from "@/components/shared/admin-modal";
 import type { AdminTenantRow } from "@/server/services/superadmin/tenant.service";
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
@@ -37,72 +31,51 @@ function EditDomainModal({
   });
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
-      onClick={onClose}
+    <AdminModal
+      onClose={onClose}
+      title={tenant.customDomain ? "Ubah Domain Custom" : "Tambah Domain Custom"}
     >
-      <div
-        className="w-full max-w-md animate-fade-up rounded-2xl bg-white shadow-float"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between border-b border-slate-100 p-6">
-          <h3 className="font-display text-lg font-bold text-slate-900">
-            {tenant.customDomain ? "Ubah Domain" : "Tambah Domain Custom"}
-          </h3>
-          <button
-            onClick={onClose}
-            aria-label="Tutup"
-            className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        <div className="space-y-3 p-6">
-          <p className="text-sm text-slate-500">
-            Tenant: <b className="text-slate-700">{tenant.name}</b>
-          </p>
-          <div>
-            <label className="mb-1 block text-sm font-bold text-slate-700">
-              Domain Custom
-            </label>
-            <input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="tokosaya.com"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-azure-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-azure-100"
-            />
-            <p className="mt-1 text-xs text-slate-400">
-              Kosongkan untuk kembali ke subdomain bawaan ({tenant.slug}.
-              {ROOT_DOMAIN}).
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-3 border-t border-slate-100 p-6">
-          <button
-            onClick={onClose}
-            disabled={setDomain.isPending}
-            className="btn-admin btn-admin-outline flex-1"
-          >
-            Batal
-          </button>
-          <button
-            onClick={() =>
-              setDomain.mutate({
-                id: tenant.id,
-                customDomain: value.trim() ? value.trim() : null,
-              })
-            }
-            disabled={setDomain.isPending}
-            className="btn-admin btn-admin-primary flex-1"
-          >
-            {setDomain.isPending && (
-              <Loader2 size={16} className="animate-spin" />
-            )}
-            {setDomain.isPending ? "Menyimpan..." : "Simpan"}
-          </button>
-        </div>
+      <p className="text-sm text-neutral-500">
+        Tenant <b className="font-semibold text-neutral-800">{tenant.name}</b>
+      </p>
+      <div className="mt-4">
+        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+          Domain Custom
+        </label>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="tokosaya.com"
+          className="admin-input"
+        />
+        <p className="mt-1.5 text-xs text-neutral-400">
+          Kosongkan untuk kembali ke subdomain bawaan ({tenant.slug}.
+          {ROOT_DOMAIN}).
+        </p>
       </div>
-    </div>
+      <div className="mt-6 flex justify-end gap-2.5">
+        <button
+          onClick={onClose}
+          disabled={setDomain.isPending}
+          className="btn-admin btn-admin-outline"
+        >
+          Batal
+        </button>
+        <button
+          onClick={() =>
+            setDomain.mutate({
+              id: tenant.id,
+              customDomain: value.trim() ? value.trim() : null,
+            })
+          }
+          disabled={setDomain.isPending}
+          className="btn-admin btn-admin-primary"
+        >
+          {setDomain.isPending && <Loader2 size={16} className="animate-spin" />}
+          Simpan
+        </button>
+      </div>
+    </AdminModal>
   );
 }
 
@@ -124,26 +97,20 @@ function RemoveDomainDialog({
   });
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-sm animate-fade-up rounded-2xl bg-white p-6 text-center shadow-float"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
-          <AlertTriangle size={24} />
+    <AdminModal onClose={onClose} size="sm">
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-red-50 text-red-500">
+          <AlertTriangle size={22} />
         </div>
-        <h3 className="mb-1 font-display text-lg font-bold text-slate-900">
+        <h3 className="mb-1.5 text-lg font-semibold tracking-tight text-neutral-900">
           Hapus Domain Custom?
         </h3>
-        <p className="mb-6 text-sm text-slate-500">
-          <b className="font-mono">{tenant.customDomain}</b> akan dilepas dari{" "}
-          <b>{tenant.name}</b>. Toko kembali diakses lewat subdomain bawaan (
-          {tenant.slug}.{ROOT_DOMAIN}).
+        <p className="mb-6 text-sm leading-relaxed text-neutral-500">
+          <b className="font-mono text-neutral-700">{tenant.customDomain}</b>{" "}
+          akan dilepas dari <b>{tenant.name}</b>. Toko kembali diakses lewat
+          subdomain bawaan ({tenant.slug}.{ROOT_DOMAIN}).
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={onClose}
             disabled={setDomain.isPending}
@@ -161,19 +128,17 @@ function RemoveDomainDialog({
             {setDomain.isPending && (
               <Loader2 size={16} className="animate-spin" />
             )}
-            {setDomain.isPending ? "Menghapus..." : "Hapus"}
+            Hapus
           </button>
         </div>
       </div>
-    </div>
+    </AdminModal>
   );
 }
 
 export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
   const [editTarget, setEditTarget] = useState<AdminTenantRow | null>(null);
-  const [removeTarget, setRemoveTarget] = useState<AdminTenantRow | null>(
-    null,
-  );
+  const [removeTarget, setRemoveTarget] = useState<AdminTenantRow | null>(null);
 
   return (
     <div className="animate-fade-up p-6">
@@ -191,7 +156,7 @@ export function DomainTable({ tenants }: { tenants: AdminTenantRow[] }) {
       )}
 
       <div className="mb-5">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900">
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
           Domain Pool
         </h2>
         <p className="text-sm text-slate-500">
