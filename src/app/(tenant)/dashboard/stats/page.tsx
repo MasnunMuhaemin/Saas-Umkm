@@ -8,6 +8,7 @@ import {
 import { getServerTrpc } from "@/lib/trpc/server";
 import { formatRupiah } from "@/lib/helpers/format";
 import { RevenueChart } from "../_components/revenue-chart";
+import { ExportReportButton } from "./_components/export-report-button";
 
 const PAYMENT_LABEL: Record<string, string> = {
   cash: "Tunai",
@@ -52,13 +53,24 @@ export default async function StatsPage() {
 
   return (
     <div className="p-6 space-y-6 animate-fade-up">
-      <div>
-        <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900">
-          Statistik Penjualan
-        </h2>
-        <p className="text-sm text-slate-500">
-          Ringkasan performa toko Anda
-        </p>
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900">
+            Statistik Penjualan
+          </h2>
+          <p className="text-sm text-slate-500">Ringkasan performa toko Anda</p>
+        </div>
+        <ExportReportButton
+          stats={{
+            revenue: s.revenue,
+            txCount: s.txCount,
+            itemsSold: s.itemsSold,
+            avg: s.avg,
+            series: s.series,
+            topProducts: s.topProducts,
+            payments: s.payments,
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
