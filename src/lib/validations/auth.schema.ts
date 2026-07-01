@@ -1,4 +1,11 @@
 import { z } from "zod";
+import { createTenantSchema } from "./superadmin.schema";
+
+/** Registrasi merchant mandiri = data tenant + kode kupon opsional. */
+export const registerSchema = createTenantSchema.extend({
+  couponCode: z.string().trim().max(64).optional(),
+});
+export type RegisterInput = z.infer<typeof registerSchema>;
 
 export const loginSchema = z.object({
   email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),

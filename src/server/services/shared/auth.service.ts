@@ -7,14 +7,14 @@ import { passwordResetEmail, welcomeEmail } from "@/lib/email/templates";
 import { checkRateLimit } from "@/lib/auth/rate-limit";
 import { captureError } from "@/lib/logger";
 import { billingService } from "@/server/services/shared/billing.service";
-import type { CreateTenantInput } from "@/lib/validations/superadmin.schema";
+import type { RegisterInput } from "@/lib/validations/auth.schema";
 
 const APP_URL = process.env.AUTH_URL ?? "http://localhost:3000";
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "tokopintar.id";
 
 export const authService = {
   /** Registrasi mandiri merchant: buat akun + langganan PENDING + invoice paket. */
-  async register(input: CreateTenantInput) {
+  async register(input: RegisterInput) {
     // Anti-abuse ringan per email.
     if (!checkRateLimit(`register:${input.ownerEmail}`, 5, 600_000)) {
       throw new TRPCError({
@@ -81,8 +81,8 @@ export const authService = {
       captureError(e, { where: "register.welcomeEmail" });
     }
 
-    // Buat tagihan paket pertama (QRIS Pakasir).
-    const invoice = await billingService.createInvoice(tenant.id);
+    // Buat tagihan paket pertama (QRIS Pakasir) — pakai kupon bila ada.
+    const invoice = await billingService.createInvoice(tenant.id, input.couponCode);
     return {
       tenantId: tenant.id,
       slug: input.slug,

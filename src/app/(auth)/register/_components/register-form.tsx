@@ -79,6 +79,7 @@ export function RegisterForm({
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [planSlug, setPlanSlug] = useState<"basic" | "plus">(defaultPlan);
+  const [couponCode, setCouponCode] = useState("");
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [invoice, setInvoice] = useState<Invoice | null>(null);
 
@@ -123,6 +124,7 @@ export function RegisterForm({
       ownerEmail: email.trim(),
       password,
       planSlug,
+      couponCode: couponCode.trim() || undefined,
     });
   };
 
@@ -436,6 +438,19 @@ export function RegisterForm({
                   );
                 })}
               </div>
+            </div>
+
+            {/* Kode kupon (opsional) */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                Kode Kupon <span className="text-slate-400">(opsional)</span>
+              </label>
+              <input
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder="Punya kode promo? Masukkan di sini"
+                className={inputCls}
+              />
             </div>
 
             <button

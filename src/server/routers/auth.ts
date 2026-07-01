@@ -2,14 +2,14 @@ import { router, publicProcedure } from "@/server/trpc";
 import { authService } from "@/server/services/shared/auth.service";
 import {
   forgotPasswordSchema,
+  registerSchema,
   resetPasswordSchema,
 } from "@/lib/validations/auth.schema";
-import { createTenantSchema } from "@/lib/validations/superadmin.schema";
 
 export const authRouter = router({
-  /** Registrasi mandiri merchant (pilih paket + bayar QRIS). */
+  /** Registrasi mandiri merchant (pilih paket + bayar QRIS + kupon opsional). */
   register: publicProcedure
-    .input(createTenantSchema)
+    .input(registerSchema)
     .mutation(({ input }) => authService.register(input)),
 
   forgotPassword: publicProcedure
